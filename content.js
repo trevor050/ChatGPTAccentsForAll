@@ -5,6 +5,7 @@ const THEME_KEYS = [
   "--link",
   "--link-hover",
   "--selection",
+  "--theme-user-selection-bg",
   "--interactive-bg-accent-default",
   "--interactive-bg-accent-hover",
   "--interactive-bg-accent-press",
@@ -20,7 +21,15 @@ const THEME_KEYS = [
   "--theme-submit-btn-bg",
   "--theme-submit-btn-text",
   "--theme-secondary-btn-bg",
-  "--theme-secondary-btn-text"
+  "--theme-secondary-btn-text",
+  // Surfaces / backgrounds (optional)
+  "--bg-primary",
+  "--bg-secondary",
+  "--bg-tertiary",
+  "--message-surface",
+  "--main-surface-background",
+  "--composer-surface",
+  "--sidebar-surface"
 ];
 
 function clearThemeVars() {

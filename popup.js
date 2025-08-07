@@ -38,12 +38,13 @@ function buildVarsFromCore(core) {
   const mutedHover = shade(accent, -40);
   const mutedPress = shade(accent, -34);
 
-  return {
+  const base = {
     "--text-accent": accent,
     "--icon-accent": accent,
     "--link": accent,
     "--link-hover": linkHover,
     "--selection": accent,
+    "--theme-user-selection-bg": accent,
 
     "--interactive-bg-accent-default": accent,
     "--interactive-bg-accent-hover": hover,
@@ -66,6 +67,7 @@ function buildVarsFromCore(core) {
     "--theme-secondary-btn-bg": mutedHover,
     "--theme-secondary-btn-text": "#ffffff"
   };
+  return core.extras ? { ...base, ...core.extras } : base;
 }
 
 function buildVarsFromInputs() {
@@ -88,9 +90,10 @@ const PRESETS = [
   { id: "pink", name: "Pink", accent: "#ec4899", userBg: "#831843", userText: "#fce7f3", submitBg: "#db2777", submitText: "#ffffff" },
   { id: "orange", name: "Orange", accent: "#f97316", userBg: "#7c2d12", userText: "#ffedd5", submitBg: "#ea580c", submitText: "#111111" },
   { id: "purple_plus", name: "Purple", badge: "plus", accent: "#8b5cf6", userBg: "#3b0764", userText: "#f3e8ff", submitBg: "#7c3aed", submitText: "#ffffff" },
-  { id: "black_pro", name: "Black", badge: "pro", accent: "#111213", userBg: "#0b0b0c", userText: "#ededed", submitBg: "#151516", submitText: "#f5f5f5" },
+  { id: "black_pro", name: "Black", badge: "pro", accent: "#111213", userBg: "#0b0b0c", userText: "#ededed", submitBg: "#151516", submitText: "#f5f5f5",
+    extras: { "--bg-primary": "#0f0f10", "--bg-secondary": "#141416", "--bg-tertiary": "#18181b", "--message-surface": "#232326d9", "--main-surface-background": "#101012e6" } },
 
-  // Additional curated sets
+  // Curated
   { id: "emerald", name: "Emerald", accent: "#10b981", userBg: "#064e3b", userText: "#d1fae5", submitBg: "#059669", submitText: "#ffffff" },
   { id: "sky", name: "Sky", accent: "#0ea5e9", userBg: "#0c4a6e", userText: "#e0f2fe", submitBg: "#0284c7", submitText: "#ffffff" },
   { id: "rose", name: "Rose", accent: "#f43f5e", userBg: "#7f1d1d", userText: "#ffe4e6", submitBg: "#e11d48", submitText: "#ffffff" },
@@ -98,7 +101,19 @@ const PRESETS = [
   { id: "indigo", name: "Indigo", accent: "#6366f1", userBg: "#1e1b4b", userText: "#e0e7ff", submitBg: "#4f46e5", submitText: "#ffffff" },
   { id: "teal", name: "Teal", accent: "#14b8a6", userBg: "#064e4e", userText: "#ccfbf1", submitBg: "#0d9488", submitText: "#ffffff" },
   { id: "magenta", name: "Magenta", accent: "#d946ef", userBg: "#581c87", userText: "#f5d0fe", submitBg: "#a21caf", submitText: "#ffffff" },
-  { id: "sunset", name: "Sunset", accent: "#fb7185", userBg: "#7c2d12", userText: "#fde2e4", submitBg: "#f97316", submitText: "#111111" }
+  { id: "sunset", name: "Sunset", accent: "#fb7185", userBg: "#7c2d12", userText: "#fde2e4", submitBg: "#f97316", submitText: "#111111" },
+
+  // Experimental (tweak surfaces too)
+  { id: "ocean", name: "Ocean", accent: "#2dd4bf", userBg: "#073642", userText: "#e0fbfc", submitBg: "#0ea5a4", submitText: "#002b36",
+    extras: { "--bg-primary": "#0b1f26", "--bg-secondary": "#0f2730", "--message-surface": "#10313ad9", "--link": "#38bdf8", "--link-hover": "#7dd3fc" } },
+  { id: "mocha", name: "Mocha", accent: "#d6b28d", userBg: "#3b2f2a", userText: "#fff7ed", submitBg: "#7a5c49", submitText: "#ffffff",
+    extras: { "--bg-primary": "#221b18", "--bg-secondary": "#2a231f", "--message-surface": "#332a26d9" } },
+  { id: "solar", name: "Solarized", accent: "#b58900", userBg: "#073642", userText: "#eee8d5", submitBg: "#b58900", submitText: "#002b36",
+    extras: { "--bg-primary": "#002b36", "--bg-secondary": "#073642", "--message-surface": "#0f3944d9", "--link": "#268bd2", "--link-hover": "#409ad9" } },
+  { id: "forest", name: "Forest", accent: "#22c55e", userBg: "#052e1c", userText: "#d1fae5", submitBg: "#15803d", submitText: "#ffffff",
+    extras: { "--bg-primary": "#0a1a12", "--bg-secondary": "#0f2419", "--message-surface": "#123021d9" } },
+  { id: "miami", name: "Miami", accent: "#22d3ee", userBg: "#3b0d47", userText: "#fdf4ff", submitBg: "#e11d48", submitText: "#ffffff",
+    extras: { "--bg-primary": "#0d1320", "--bg-secondary": "#131a2a", "--message-surface": "#1b2033cc", "--link": "#22d3ee", "--link-hover": "#67e8f9" } }
 ];
 
 function renderPresets() {

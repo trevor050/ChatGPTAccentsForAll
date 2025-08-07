@@ -8,146 +8,106 @@
     <style>
       :root {
         color-scheme: light dark;
-        --glass-bg: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.35));
-        --glass-border: rgba(255,255,255,0.35);
-        --glass-shadow: 0 6px 24px rgba(0,0,0,0.18);
-        --chip-bg: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.6));
-        --seg-active: linear-gradient(135deg, #4d8dff, #2a66ff);
+        --bg-grad: radial-gradient(120% 120% at 0% 0%, rgba(255,255,255,.20), rgba(255,255,255,.06) 40%, rgba(255,255,255,0) 70%),
+                    linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+        --card-bg: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+        --card-border: rgba(255,255,255,.16);
+        --ring: rgba(77,141,255,0.95);
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --glass-bg: linear-gradient(135deg, rgba(25,25,35,0.55), rgba(25,25,35,0.32));
-          --glass-border: rgba(255,255,255,0.12);
-          --glass-shadow: 0 6px 26px rgba(0,0,0,0.55);
-          --chip-bg: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.08));
-          --seg-active: linear-gradient(135deg, #4d8dff, #2a66ff);
+          --bg-grad: radial-gradient(120% 120% at 0% 0%, rgba(30,30,40,.50), rgba(30,30,40,.20) 40%, rgba(30,30,40,0) 70%),
+                      linear-gradient(180deg, rgba(30,30,40,.35), rgba(30,30,40,.15));
+          --card-bg: linear-gradient(180deg, rgba(20,20,28,.55), rgba(20,20,28,.40));
+          --card-border: rgba(255,255,255,.12);
         }
       }
 
       html, body { height: 100%; }
       body {
         font: 14px system-ui, -apple-system, Segoe UI, Helvetica, Arial;
-        margin: 0; padding: 12px; width: 360px;
-        color: CanvasText; background: transparent;
-        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+        margin: 0; width: 360px; color: CanvasText; background: var(--bg-grad);
+        padding: 14px; backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px);
       }
 
-      .shell {
-        position: relative;
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-        border-radius: 16px;
-        box-shadow: var(--glass-shadow);
-        backdrop-filter: saturate(160%) blur(16px);
-        -webkit-backdrop-filter: saturate(160%) blur(16px);
-        overflow: hidden;
-      }
-      .content { padding: 14px; }
-
-      .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+      .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
       h3 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: .2px; }
 
-      .segment {
-        display: inline-flex; padding: 3px; border-radius: 12px; gap: 3px;
-        background: var(--chip-bg); border: 1px solid var(--glass-border);
-      }
-      .seg-btn {
-        appearance: none; border: 0; padding: 6px 12px; border-radius: 9px; cursor: pointer; font-weight: 700;
-        color: inherit; background: transparent; transition: background .18s ease, transform .12s ease, color .18s ease;
-      }
-      .seg-btn.active { background: var(--seg-active); color: white; box-shadow: 0 2px 10px rgba(0,0,0,.25) inset; }
+      .segment { display: inline-flex; padding: 3px; border-radius: 12px; gap: 3px; background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08)); border: 1px solid var(--card-border); }
+      .seg-btn { appearance: none; border: 0; padding: 6px 12px; border-radius: 9px; cursor: pointer; font-weight: 700; color: inherit; background: transparent; transition: background .18s ease, transform .12s ease, color .18s ease; }
+      .seg-btn.active { background: linear-gradient(135deg, #4d8dff, #2a66ff); color: white; }
       .seg-btn:active { transform: translateY(1px); }
 
       .section { display: none; }
       .section.active { display: block; }
 
       .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-      .theme-card {
-        position: relative; text-align: left;
-        background: var(--glass-bg);
-        border: 1px solid var(--glass-border);
-        border-radius: 14px; padding: 12px;
-        backdrop-filter: saturate(160%) blur(12px);
-        -webkit-backdrop-filter: saturate(160%) blur(12px);
-        box-shadow: var(--glass-shadow);
-        transition: transform .12s ease, box-shadow .18s ease, background .18s ease;
-        cursor: pointer;
-      }
-      .theme-card:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(0,0,0,0.22); }
+      .theme-card { position: relative; text-align: left; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 12px; transition: transform .12s ease, box-shadow .18s ease, border-color .18s ease; cursor: pointer; }
+      .theme-card:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(0,0,0,.25); }
       .theme-card:active { transform: translateY(0); }
 
-      .selected-ring { position: absolute; inset: 0; border-radius: 14px; border: 2px solid rgba(77,141,255,0.95); pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25); }
+      .selected-ring { position: absolute; inset: 0; border-radius: 14px; border: 2px solid var(--ring); pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.20); }
 
       .theme-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
       .theme-title { font-weight: 700; font-size: 12.5px; letter-spacing: .2px; display: flex; align-items: center; gap: 8px; }
-      .dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--glass-border); }
-
-      .badge { font-size: 10px; font-weight: 800; padding: 3px 6px; border-radius: 999px; letter-spacing: .25px;
-        background: var(--chip-bg); border: 1px solid var(--glass-border); }
+      .dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--card-border); }
+      .badge { font-size: 10px; font-weight: 800; padding: 3px 6px; border-radius: 999px; letter-spacing: .25px; background: linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.12)); border: 1px solid var(--card-border); }
       .badge.plus { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white; border-color: rgba(255,255,255,0.25); }
       .badge.pro { background: linear-gradient(135deg, #0f0f10, #1b1b1d); color: #f3f3f3; border-color: rgba(255,255,255,0.15); }
 
       .swatches { display: flex; gap: 8px; margin-top: 10px; }
-      .pill { border-radius: 999px; height: 14px; width: 38px; border: 1px solid var(--glass-border); opacity: .95; }
+      .pill { border-radius: 999px; height: 14px; width: 38px; border: 1px solid var(--card-border); opacity: .95; }
 
-      /* Advanced */
-      .card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 12px; box-shadow: var(--glass-shadow); }
+      .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 12px; }
       .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 10px 0; }
       label { white-space: nowrap; font-weight: 600; }
-      input[type="color"] { width: 44px; height: 30px; padding: 0; border: 1px solid var(--glass-border); border-radius: 8px; background: transparent; cursor: pointer; }
+      input[type="color"] { width: 44px; height: 30px; padding: 0; border: 1px solid var(--card-border); border-radius: 8px; background: transparent; cursor: pointer; }
       .actions { display: flex; gap: 8px; margin-top: 12px; }
-      .btn { padding: 9px 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--chip-bg); color: inherit; cursor: pointer; font-weight: 800; letter-spacing: .2px; transition: transform .12s ease, filter .18s ease; }
-      .btn.primary { background: linear-gradient(135deg, #4d8dff, #2a66ff); color: white; border-color: rgba(255,255,255,0.22); }
+      .btn { padding: 9px 12px; border-radius: 12px; border: 1px solid var(--card-border); background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.12)); color: inherit; cursor: pointer; font-weight: 800; letter-spacing: .2px; transition: transform .12s ease, filter .18s ease; }
+      .btn.primary { background: linear-gradient(135deg, #4d8dff, #2a66ff); color: white; border-color: rgba(255,255,255,.22); }
       .btn:active { transform: translateY(1px); filter: saturate(1.05); }
 
-      @media (prefers-reduced-motion: reduce) {
-        .seg-btn, .theme-card, .btn { transition: none; }
-      }
+      @media (prefers-reduced-motion: reduce) { .seg-btn, .theme-card, .btn { transition: none; } }
     </style>
   </head>
   <body>
-    <div class="shell">
-      <div class="content">
-        <div class="header">
-          <h3>ChatGPT Accent</h3>
-          <div class="segment" role="tablist" aria-label="Mode">
-            <button id="seg-basic" class="seg-btn active" role="tab" aria-selected="true">Basic</button>
-            <button id="seg-advanced" class="seg-btn" role="tab" aria-selected="false">Advanced</button>
-          </div>
-        </div>
+    <div class="header">
+      <h3>ChatGPT Accent</h3>
+      <div class="segment" role="tablist" aria-label="Mode">
+        <button id="seg-basic" class="seg-btn active" role="tab" aria-selected="true">Basic</button>
+        <button id="seg-advanced" class="seg-btn" role="tab" aria-selected="false">Advanced</button>
+      </div>
+    </div>
 
-        <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
-          <div id="themeGrid" class="grid"></div>
-        </div>
+    <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
+      <div id="themeGrid" class="grid"></div>
+    </div>
 
-        <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced">
-          <div class="card">
-            <div class="row">
-              <label for="accent">Accent</label>
-              <input id="accent" type="color" value="#66b5ff" />
-            </div>
-            <div class="row">
-              <label for="userBg">User bubble bg</label>
-              <input id="userBg" type="color" value="#003f7a" />
-            </div>
-            <div class="row">
-              <label for="userText">User bubble text</label>
-              <input id="userText" type="color" value="#f5faff" />
-            </div>
-            <div class="row">
-              <label for="submitBg">Submit btn bg</label>
-              <input id="submitBg" type="color" value="#0169cc" />
-            </div>
-            <div class="row">
-              <label for="submitText">Submit btn text</label>
-              <input id="submitText" type="color" value="#ffffff" />
-            </div>
-            <div class="actions">
-              <button id="save" class="btn primary">Save & Apply</button>
-              <button id="reset" class="btn">Reset to site</button>
-            </div>
-          </div>
+    <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced">
+      <div class="card">
+        <div class="row">
+          <label for="accent">Accent</label>
+          <input id="accent" type="color" value="#66b5ff" />
+        </div>
+        <div class="row">
+          <label for="userBg">User bubble bg</label>
+          <input id="userBg" type="color" value="#003f7a" />
+        </div>
+        <div class="row">
+          <label for="userText">User bubble text</label>
+          <input id="userText" type="color" value="#f5faff" />
+        </div>
+        <div class="row">
+          <label for="submitBg">Submit btn bg</label>
+          <input id="submitBg" type="color" value="#0169cc" />
+        </div>
+        <div class="row">
+          <label for="submitText">Submit btn text</label>
+          <input id="submitText" type="color" value="#ffffff" />
+        </div>
+        <div class="actions">
+          <button id="save" class="btn primary">Save & Apply</button>
+          <button id="reset" class="btn">Reset to site</button>
         </div>
       </div>
     </div>
