@@ -140,8 +140,13 @@ function renderPresets() {
     const s2 = document.createElement("div"); s2.className = "pill"; s2.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : preset.userBg; swatches.appendChild(s2);
     const s3 = document.createElement("div"); s3.className = "pill"; s3.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : preset.submitBg; swatches.appendChild(s3);
 
+    const ring = document.createElement("div");
+    ring.className = "selected-ring";
+    ring.style.display = "none";
+
     row.appendChild(title);
 
+    card.appendChild(ring);
     card.appendChild(row);
     card.appendChild(swatches);
 
@@ -156,7 +161,40 @@ function renderPresets() {
 
     grid.appendChild(card);
   }
+
+  // initial selection state
+  syncSelectedFromStorage();
 }
+
+function syncSelectedFromStorage() {
+  chrome.storage.sync.get(["themeVars"], ({ themeVars }) => {
+    const grid = document.getElementById("themeGrid");
+    const cards = Array.from(grid.querySelectorAll(".theme-card"));
+
+    // Determine which preset matches storage
+    let selectedId = "reset";
+    if (themeVars && themeVars["--interactive-bg-accent-default"]) {
+      const accent = themeVars["--interactive-bg-accent-default"]; 
+      const userBg = themeVars["--theme-user-msg-bg"]; 
+      const submitBg = themeVars["--theme-submit-btn-bg"]; 
+      const match = PRESETS.find(p => !p.reset && p.accent === accent && p.userBg === userBg && p.submitBg === submitBg);
+      if (match) selectedId = match.id; else selectedId = "custom"; // custom selection
+    }
+
+    for (const card of cards) {
+      const ring = card.querySelector(".selected-ring");
+      if (!ring) continue;
+      ring.style.display = (card.dataset.id === selectedId) ? "block" : "none";
+    }
+  });
+}
+
+// react to changes from other popup actions
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "sync" && changes.themeVars) {
+    syncSelectedFromStorage();
+  }
+});
 
 // ===== Advanced controls =====
 function loadAdvanced() {
