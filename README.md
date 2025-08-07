@@ -1,32 +1,58 @@
 # ChatGPT Accent Customizer
 
-Override ChatGPT's accent and bubble colors by setting CSS variables inline on `<html>`. This sidesteps Tailwind utility classes and survives light/dark flips and SPA route changes.
+Glassy, modern Chrome Extension to override ChatGPT's theme CSS variables. Pick from curated presets (including Plus/Pro lookalikes), or craft your own in Advanced. Saves to `chrome.storage.sync` and survives SPA navigations.
 
-## What's new
-- Basic mode with 10 curated presets (+ Reset to Site)
-- Advanced mode for hand-picking colors
-- Modern segmented UI
-- Runs only on `chatgpt.com`
+## Features
+- Basic mode: preset cards with selection ring
+- Built-in themes: Default, Blue, Green, Yellow, Pink, Orange, Purple (Plus), Black (Pro)
+- Extra curated + experimental themes (some change background surfaces)
+- Advanced mode: tweak accent, user bubble, and submit button colors
+- Save current as custom theme, export/import themes (JSON)
+- Rearrange custom themes via drag-and-drop
+- About modal, glassy UI with smooth transitions
+- Only runs on `https://chatgpt.com/*`
 
-## Why it works
-ChatGPT resolves colors through CSS variables such as `--text-accent`, `--icon-accent`, `--theme-user-msg-bg`, and interactive `--interactive-bg-accent-*`. Inline styles on `document.documentElement` win the cascade, so your palette overrides the site's.
+## Install (Unpacked)
+1. Clone this repo or download the folder.
+2. Chrome → `chrome://extensions` → enable Developer mode.
+3. Click "Load unpacked" → select this folder.
+4. Open `https://chatgpt.com` → click the extension → choose a theme.
 
-## Install (Chrome / Edge / Brave)
-1. Clone or download this folder.
-2. Go to `chrome://extensions` (Edge: `edge://extensions`).
-3. Toggle Developer mode (top-right).
-4. Click "Load unpacked" and select this folder.
-5. Open `chatgpt.com`, click the extension icon. In Basic, choose a preset, or switch to Advanced to dial it in.
+## Usage
+- Basic: click a card to apply. Cards marked "BG" also adjust background/surfaces.
+- Advanced: fine-tune colors → Save & Apply.
+- Menu (⋮): Save current as theme, Export, Import, Rearrange, About.
+- Reset: choose "Default" in Basic or use Reset in Advanced.
 
-## Files
-- `manifest.json`: MV3 manifest with minimal permissions, scoped to `chatgpt.com`.
-- `content.js`: Applies/removes CSS variables inline on `<html>` based on saved values.
-- `popup.html` / `popup.js`: Segmented UI (Basic presets / Advanced custom).
+## Development
+- Manifest V3, content script applies inline variables on `<html>` at `document_start` and on focus/pageshow.
+- Variables list is in `content.js` (`THEME_KEYS`).
+- Popup UI is in `popup.html` + `popup.js`.
+
+### Publish to GitHub
+```bash
+# from project root
+git init
+git add .
+git commit -m "feat: glassy UI, presets, custom themes, import/export, rearrange"
+gh repo create ChatGPTAccentsForAll --public --source=. --remote=origin --push
+```
+
+## Export/Import format
+Exports `{ "customPresets": [...] }` where each preset is:
+```json
+{
+  "id": "custom_1710000000000",
+  "name": "My Theme",
+  "accent": "#66b5ff",
+  "userBg": "#003f7a",
+  "userText": "#f5faff",
+  "submitBg": "#0169cc",
+  "submitText": "#ffffff",
+  "extras": { "--bg-primary": "#0f0f10" }
+}
+```
 
 ## Notes
-- Reset fully clears inline variables so site defaults take over.
-- Works across light/dark and on SPA navigations.
-- If you want separate light/dark palettes or alpha selections, open an issue or tweak `popup.js` to store two sets and flip by `prefers-color-scheme`.
-
-## Privacy
-No network calls. Settings are stored in Chrome Sync storage so they follow you if you're signed in. 
+- Inline CSS on `<html>` wins against ChatGPT light/dark flips and `[data-chat-theme]`.
+- We clear all known keys before reapplying to avoid lingering styles. 
