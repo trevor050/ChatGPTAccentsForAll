@@ -6,105 +6,149 @@
     <meta name="color-scheme" content="light dark" />
     <title>ChatGPT Accent</title>
     <style>
-      :root { color-scheme: light dark; }
-      body {
-        font: 14px system-ui, -apple-system, Segoe UI, Helvetica, Arial;
-        margin: 0; padding: 10px 12px; width: 320px;
-        color: CanvasText; background: Canvas;
-      }
-      .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-      h3 { margin: 0; font-size: 16px; font-weight: 600; }
-      .segment {
-        display: inline-flex; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; overflow: hidden;
-        background: rgba(0,0,0,0.04);
+      :root {
+        color-scheme: light dark;
+        --glass-bg: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.35));
+        --glass-border: rgba(255,255,255,0.35);
+        --glass-shadow: 0 6px 24px rgba(0,0,0,0.18);
+        --chip-bg: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.6));
+        --seg-active: linear-gradient(135deg, #4d8dff, #2a66ff);
       }
       @media (prefers-color-scheme: dark) {
-        .segment { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.08); }
+        :root {
+          --glass-bg: linear-gradient(135deg, rgba(25,25,35,0.55), rgba(25,25,35,0.32));
+          --glass-border: rgba(255,255,255,0.12);
+          --glass-shadow: 0 6px 26px rgba(0,0,0,0.55);
+          --chip-bg: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.08));
+          --seg-active: linear-gradient(135deg, #4d8dff, #2a66ff);
+        }
+      }
+
+      html, body { height: 100%; }
+      body {
+        font: 14px system-ui, -apple-system, Segoe UI, Helvetica, Arial;
+        margin: 0; padding: 12px; width: 360px;
+        color: CanvasText; background: transparent;
+        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      }
+
+      .shell {
+        position: relative;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        box-shadow: var(--glass-shadow);
+        backdrop-filter: saturate(160%) blur(16px);
+        -webkit-backdrop-filter: saturate(160%) blur(16px);
+        overflow: hidden;
+      }
+      .content { padding: 14px; }
+
+      .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+      h3 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: .2px; }
+
+      .segment {
+        display: inline-flex; padding: 3px; border-radius: 12px; gap: 3px;
+        background: var(--chip-bg); border: 1px solid var(--glass-border);
       }
       .seg-btn {
-        appearance: none; border: 0; padding: 6px 10px; background: transparent; color: inherit; cursor: pointer; font-weight: 600;
+        appearance: none; border: 0; padding: 6px 12px; border-radius: 9px; cursor: pointer; font-weight: 700;
+        color: inherit; background: transparent; transition: background .18s ease, transform .12s ease, color .18s ease;
       }
-      .seg-btn.active { background: #0b5fff; color: white; }
+      .seg-btn.active { background: var(--seg-active); color: white; box-shadow: 0 2px 10px rgba(0,0,0,.25) inset; }
+      .seg-btn:active { transform: translateY(1px); }
 
       .section { display: none; }
       .section.active { display: block; }
 
-      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-      .theme-card {
-        display: flex; flex-direction: column; gap: 8px; align-items: flex-start; justify-content: center;
-        border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 10px; cursor: pointer;
-        background: rgba(0,0,0,0.02); transition: transform .08s ease, background .12s ease, border-color .12s ease;
-      }
-      .theme-card:hover { transform: translateY(-1px); background: rgba(0,0,0,0.04); }
-      @media (prefers-color-scheme: dark) {
-        .theme-card { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); }
-        .theme-card:hover { background: rgba(255,255,255,0.1); }
-      }
-      .theme-title { font-weight: 600; font-size: 12px; }
-      .swatches { display: flex; gap: 6px; align-items: center; }
-      .dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.16); }
-      @media (prefers-color-scheme: dark) { .dot { border-color: rgba(255,255,255,0.22); } }
-      .pill { border-radius: 999px; height: 14px; width: 34px; border: 1px solid rgba(0,0,0,0.16); }
-      @media (prefers-color-scheme: dark) { .pill { border-color: rgba(255,255,255,0.22); } }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-      .card { border: 1px solid rgba(0,0,0,0.08); background: rgba(0,0,0,0.02); border-radius: 12px; padding: 12px; margin-top: 8px; }
-      @media (prefers-color-scheme: dark) {
-        .card { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); }
+      .theme-card {
+        position: relative; text-align: left;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 14px; padding: 12px;
+        backdrop-filter: saturate(160%) blur(12px);
+        -webkit-backdrop-filter: saturate(160%) blur(12px);
+        box-shadow: var(--glass-shadow);
+        transition: transform .12s ease, box-shadow .18s ease, background .18s ease;
+        cursor: pointer;
       }
-      .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 8px 0; }
-      label { white-space: nowrap; font-weight: 500; }
-      input[type="color"] { width: 42px; height: 28px; padding: 0; border: 1px solid rgba(0,0,0,0.15); border-radius: 6px; background: transparent; }
+      .theme-card:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(0,0,0,0.22); }
+      .theme-card:active { transform: translateY(0); }
+
+      .theme-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .theme-title { font-weight: 700; font-size: 12.5px; letter-spacing: .2px; display: flex; align-items: center; gap: 8px; }
+      .dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--glass-border); }
+
+      .badge { font-size: 10px; font-weight: 800; padding: 3px 6px; border-radius: 999px; letter-spacing: .25px;
+        background: var(--chip-bg); border: 1px solid var(--glass-border); }
+      .badge.plus { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white; border-color: rgba(255,255,255,0.25); }
+      .badge.pro { background: linear-gradient(135deg, #0f0f10, #1b1b1d); color: #f3f3f3; border-color: rgba(255,255,255,0.15); }
+
+      .swatches { display: flex; gap: 8px; margin-top: 10px; }
+      .pill { border-radius: 999px; height: 14px; width: 38px; border: 1px solid var(--glass-border); opacity: .95; }
+
+      /* Advanced */
+      .card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 12px; box-shadow: var(--glass-shadow); }
+      .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 10px 0; }
+      label { white-space: nowrap; font-weight: 600; }
+      input[type="color"] { width: 44px; height: 30px; padding: 0; border: 1px solid var(--glass-border); border-radius: 8px; background: transparent; cursor: pointer; }
       .actions { display: flex; gap: 8px; margin-top: 12px; }
-      .btn { padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.14); background: rgba(0,0,0,0.04); color: inherit; cursor: pointer; font-weight: 600; }
-      .btn.primary { border-color: rgba(0,0,0,0.0); background: #0b5fff; color: white; }
-      @media (prefers-color-scheme: dark) { .btn { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.08); } }
-      .footer { margin-top: 8px; font-size: 11px; color: rgb(120,120,120); }
-      @media (prefers-color-scheme: dark) { .footer { color: rgb(170,170,170); } }
+      .btn { padding: 9px 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--chip-bg); color: inherit; cursor: pointer; font-weight: 800; letter-spacing: .2px; transition: transform .12s ease, filter .18s ease; }
+      .btn.primary { background: linear-gradient(135deg, #4d8dff, #2a66ff); color: white; border-color: rgba(255,255,255,0.22); }
+      .btn:active { transform: translateY(1px); filter: saturate(1.05); }
+
+      @media (prefers-reduced-motion: reduce) {
+        .seg-btn, .theme-card, .btn { transition: none; }
+      }
     </style>
   </head>
   <body>
-    <div class="header">
-      <h3>ChatGPT Accent</h3>
-      <div class="segment" role="tablist">
-        <button id="seg-basic" class="seg-btn active" role="tab" aria-selected="true">Basic</button>
-        <button id="seg-advanced" class="seg-btn" role="tab" aria-selected="false">Advanced</button>
+    <div class="shell">
+      <div class="content">
+        <div class="header">
+          <h3>ChatGPT Accent</h3>
+          <div class="segment" role="tablist" aria-label="Mode">
+            <button id="seg-basic" class="seg-btn active" role="tab" aria-selected="true">Basic</button>
+            <button id="seg-advanced" class="seg-btn" role="tab" aria-selected="false">Advanced</button>
+          </div>
+        </div>
+
+        <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
+          <div id="themeGrid" class="grid"></div>
+        </div>
+
+        <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced">
+          <div class="card">
+            <div class="row">
+              <label for="accent">Accent</label>
+              <input id="accent" type="color" value="#66b5ff" />
+            </div>
+            <div class="row">
+              <label for="userBg">User bubble bg</label>
+              <input id="userBg" type="color" value="#003f7a" />
+            </div>
+            <div class="row">
+              <label for="userText">User bubble text</label>
+              <input id="userText" type="color" value="#f5faff" />
+            </div>
+            <div class="row">
+              <label for="submitBg">Submit btn bg</label>
+              <input id="submitBg" type="color" value="#0169cc" />
+            </div>
+            <div class="row">
+              <label for="submitText">Submit btn text</label>
+              <input id="submitText" type="color" value="#ffffff" />
+            </div>
+            <div class="actions">
+              <button id="save" class="btn primary">Save & Apply</button>
+              <button id="reset" class="btn">Reset to site</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
-      <div id="themeGrid" class="grid"></div>
-    </div>
-
-    <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced">
-      <div class="card">
-        <div class="row">
-          <label for="accent">Accent</label>
-          <input id="accent" type="color" value="#66b5ff" />
-        </div>
-        <div class="row">
-          <label for="userBg">User bubble bg</label>
-          <input id="userBg" type="color" value="#003f7a" />
-        </div>
-        <div class="row">
-          <label for="userText">User bubble text</label>
-          <input id="userText" type="color" value="#f5faff" />
-        </div>
-        <div class="row">
-          <label for="submitBg">Submit btn bg</label>
-          <input id="submitBg" type="color" value="#0169cc" />
-        </div>
-        <div class="row">
-          <label for="submitText">Submit btn text</label>
-          <input id="submitText" type="color" value="#ffffff" />
-        </div>
-        <div class="actions">
-          <button id="save" class="btn primary">Save & Apply</button>
-          <button id="reset" class="btn">Reset to site</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">Only active on <code>chatgpt.com</code>. Inline CSS vars survive theme flips.</div>
 
     <script src="popup.js"></script>
   </body>

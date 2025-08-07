@@ -78,18 +78,27 @@ function buildVarsFromInputs() {
 }
 
 // ===== Preset themes =====
+// Includes built-in: Default, Blue, Green, Yellow, Pink, Orange, Purple (Plus), Black (Pro)
+// And extra curated themes.
 const PRESETS = [
-  { id: "reset", name: "Reset (Site)", reset: true },
+  { id: "reset", name: "Default", reset: true, badge: null },
+  { id: "blue", name: "Blue", accent: "#1d74ff", userBg: "#0b3a7a", userText: "#e6f0ff", submitBg: "#0b5fff", submitText: "#ffffff" },
+  { id: "green", name: "Green", accent: "#16a34a", userBg: "#064e3b", userText: "#d1fae5", submitBg: "#0f9d58", submitText: "#ffffff" },
+  { id: "yellow", name: "Yellow", accent: "#f59e0b", userBg: "#78350f", userText: "#fff7ed", submitBg: "#d97706", submitText: "#0b0b0b" },
+  { id: "pink", name: "Pink", accent: "#ec4899", userBg: "#831843", userText: "#fce7f3", submitBg: "#db2777", submitText: "#ffffff" },
+  { id: "orange", name: "Orange", accent: "#f97316", userBg: "#7c2d12", userText: "#ffedd5", submitBg: "#ea580c", submitText: "#111111" },
+  { id: "purple_plus", name: "Purple", badge: "plus", accent: "#8b5cf6", userBg: "#3b0764", userText: "#f3e8ff", submitBg: "#7c3aed", submitText: "#ffffff" },
+  { id: "black_pro", name: "Black", badge: "pro", accent: "#111213", userBg: "#0b0b0c", userText: "#ededed", submitBg: "#151516", submitText: "#f5f5f5" },
+
+  // Additional curated sets
   { id: "emerald", name: "Emerald", accent: "#10b981", userBg: "#064e3b", userText: "#d1fae5", submitBg: "#059669", submitText: "#ffffff" },
   { id: "sky", name: "Sky", accent: "#0ea5e9", userBg: "#0c4a6e", userText: "#e0f2fe", submitBg: "#0284c7", submitText: "#ffffff" },
-  { id: "violet", name: "Violet", accent: "#8b5cf6", userBg: "#3b0764", userText: "#f3e8ff", submitBg: "#7c3aed", submitText: "#ffffff" },
-  { id: "amber", name: "Amber", accent: "#f59e0b", userBg: "#78350f", userText: "#fff7ed", submitBg: "#d97706", submitText: "#0b0b0b" },
   { id: "rose", name: "Rose", accent: "#f43f5e", userBg: "#7f1d1d", userText: "#ffe4e6", submitBg: "#e11d48", submitText: "#ffffff" },
   { id: "slate", name: "Slate", accent: "#64748b", userBg: "#111827", userText: "#e5e7eb", submitBg: "#374151", submitText: "#ffffff" },
-  { id: "cyan", name: "Cyan", accent: "#06b6d4", userBg: "#134e4a", userText: "#cffafe", submitBg: "#0891b2", submitText: "#ffffff" },
-  { id: "lime", name: "Lime", accent: "#84cc16", userBg: "#1a2e05", userText: "#ecfccb", submitBg: "#65a30d", submitText: "#111111" },
   { id: "indigo", name: "Indigo", accent: "#6366f1", userBg: "#1e1b4b", userText: "#e0e7ff", submitBg: "#4f46e5", submitText: "#ffffff" },
-  { id: "mono", name: "Mono", accent: "#7a7a7a", userBg: "#1a1a1a", userText: "#f2f2f2", submitBg: "#2a2a2a", submitText: "#ffffff" }
+  { id: "teal", name: "Teal", accent: "#14b8a6", userBg: "#064e4e", userText: "#ccfbf1", submitBg: "#0d9488", submitText: "#ffffff" },
+  { id: "magenta", name: "Magenta", accent: "#d946ef", userBg: "#581c87", userText: "#f5d0fe", submitBg: "#a21caf", submitText: "#ffffff" },
+  { id: "sunset", name: "Sunset", accent: "#fb7185", userBg: "#7c2d12", userText: "#fde2e4", submitBg: "#f97316", submitText: "#111111" }
 ];
 
 function renderPresets() {
@@ -101,37 +110,39 @@ function renderPresets() {
     card.setAttribute("type", "button");
     card.dataset.id = preset.id;
 
+    const row = document.createElement("div");
+    row.className = "theme-row";
+
     const title = document.createElement("div");
     title.className = "theme-title";
-    title.textContent = preset.name;
+
+    const titleDot = document.createElement("div");
+    titleDot.className = "dot";
+    titleDot.style.background = preset.reset ? "#bdbdbd" : preset.accent;
+
+    const titleText = document.createElement("span");
+    titleText.textContent = preset.name;
+
+    title.appendChild(titleDot);
+    title.appendChild(titleText);
+
+    if (preset.badge) {
+      const badge = document.createElement("span");
+      badge.className = `badge ${preset.badge}`;
+      badge.textContent = preset.badge === "plus" ? "Plus" : "Pro";
+      title.appendChild(badge);
+    }
 
     const swatches = document.createElement("div");
     swatches.className = "swatches";
 
-    if (preset.reset) {
-      const pill = document.createElement("div");
-      pill.className = "pill";
-      pill.style.background = "linear-gradient(90deg, #bbb, #ddd)";
-      swatches.appendChild(pill);
-    } else {
-      const dot = document.createElement("div");
-      dot.className = "dot";
-      dot.style.background = preset.accent;
+    const s1 = document.createElement("div"); s1.className = "pill"; s1.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : preset.accent; swatches.appendChild(s1);
+    const s2 = document.createElement("div"); s2.className = "pill"; s2.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : preset.userBg; swatches.appendChild(s2);
+    const s3 = document.createElement("div"); s3.className = "pill"; s3.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : preset.submitBg; swatches.appendChild(s3);
 
-      const userPill = document.createElement("div");
-      userPill.className = "pill";
-      userPill.style.background = preset.userBg;
+    row.appendChild(title);
 
-      const submitPill = document.createElement("div");
-      submitPill.className = "pill";
-      submitPill.style.background = preset.submitBg;
-
-      swatches.appendChild(dot);
-      swatches.appendChild(userPill);
-      swatches.appendChild(submitPill);
-    }
-
-    card.appendChild(title);
+    card.appendChild(row);
     card.appendChild(swatches);
 
     card.addEventListener("click", () => {
