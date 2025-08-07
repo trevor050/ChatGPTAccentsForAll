@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>ChatGPT Accent</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body { font: 14px system-ui, -apple-system, Segoe UI, Helvetica, Arial; margin: 0; padding: 12px; width: 300px; color: CanvasText; background: Canvas; }
+      h3 { margin: 0 0 10px; font-size: 16px; }
+      .card { border: 1px solid rgba(0,0,0,0.08); background: rgba(0,0,0,0.02); border-radius: 10px; padding: 10px; }
+      @media (prefers-color-scheme: dark) {
+        .card { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); }
+      }
+      .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 8px 0; }
+      label { white-space: nowrap; font-weight: 500; }
+      input[type="color"] { width: 42px; height: 28px; padding: 0; border: 1px solid rgba(0,0,0,0.15); border-radius: 6px; background: transparent; }
+      input[type="text"] { width: 120px; }
+      .hint { color: rgb(120, 120, 120); font-size: 12px; margin-top: 8px; }
+      @media (prefers-color-scheme: dark) { .hint { color: rgb(170, 170, 170); } }
+      .actions { display: flex; gap: 8px; margin-top: 12px; }
+      .btn { padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.14); background: rgba(0,0,0,0.04); color: inherit; cursor: pointer; }
+      .btn.primary { border-color: rgba(0,0,0,0.0); background: #0b5fff; color: white; }
+      @media (prefers-color-scheme: dark) { .btn { border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.08); } }
+      .footer { margin-top: 8px; font-size: 11px; color: rgb(120, 120, 120); }
+      @media (prefers-color-scheme: dark) { .footer { color: rgb(170, 170, 170); } }
+    </style>
+  </head>
+  <body>
+    <h3>ChatGPT Accent</h3>
+    <div class="card">
+      <div class="row">
+        <label for="accent">Accent</label>
+        <input id="accent" type="color" value="#66b5ff" />
+      </div>
+      <div class="row">
+        <label for="userBg">User bubble bg</label>
+        <input id="userBg" type="color" value="#003f7a" />
+      </div>
+      <div class="row">
+        <label for="userText">User bubble text</label>
+        <input id="userText" type="color" value="#f5faff" />
+      </div>
+      <div class="row">
+        <label for="submitBg">Submit btn bg</label>
+        <input id="submitBg" type="color" value="#0169cc" />
+      </div>
+      <div class="row">
+        <label for="submitText">Submit btn text</label>
+        <input id="submitText" type="color" value="#ffffff" />
+      </div>
+      <div class="hint">
+        Sets CSS vars like <code>--text-accent</code>, <code>--icon-accent</code>, <code>--theme-user-msg-bg</code>, <code>--theme-submit-btn-bg</code>, etc.
+      </div>
+      <div class="actions">
+        <button id="save" class="btn primary">Save & Apply</button>
+        <button id="reset" class="btn">Reset</button>
+      </div>
+    </div>
+    <div class="footer">Overrides apply inline on <code>&lt;html&gt;</code> and survive theme flips.</div>
+
+    <script src="popup.js"></script>
+  </body>
+</html> 

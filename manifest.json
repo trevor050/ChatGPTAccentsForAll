@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT Accent Customizer",
+  "version": "1.0.0",
+  "description": "Override ChatGPT's accent and chat bubble colors using CSS variables.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*"
+  ],
+  "action": {
+    "default_title": "ChatGPT Accent",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+} 
