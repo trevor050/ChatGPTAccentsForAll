@@ -18,6 +18,14 @@ Works on the web at `chatgpt.com`. Not on mobile. If I could make it work there 
 - Runs only on `chatgpt.com`
 - No tracking and no network calls at all, check the code yourself if you don't believe me
 
+### Screenshots
+Same chat, different themes.
+
+![Screenshot 1](readme-imgs/Image 1.png)
+![Screenshot 2](readme-imgs/Image 2.png)
+![Screenshot 3](readme-imgs/Image 3.png)
+![Screenshot 4](readme-imgs/Image 4.png)
+
 ### Install from GitHub Releases
 You can grab a zip from Releases and load it unpacked.
 
