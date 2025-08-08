@@ -13,7 +13,6 @@
         --card-bg: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
         --card-border: rgba(255,255,255,.16);
         --ring: rgba(77,141,255,0.95);
-        --menu-bg: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.12));
       }
       @media (prefers-color-scheme: dark) {
         :root {
@@ -29,23 +28,16 @@
         font: 14px system-ui, -apple-system, Segoe UI, Helvetica, Arial;
         margin: 0; width: 360px; color: CanvasText; background: var(--bg-grad);
         padding: 14px; backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px);
-        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
       }
 
-      .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 8px; }
-      .segment { display: inline-flex; padding: 3px; border-radius: 12px; gap: 3px; background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08)); border: 1px solid var(--card-border); }
-      .seg-btn { appearance: none; border: 0; padding: 6px 12px; border-radius: 9px; cursor: pointer; font-weight: 700; color: inherit; background: transparent; transition: background .18s ease, transform .12s ease, color .18s ease; }
-      .seg-btn.active { background: linear-gradient(135deg, #4d8dff, #2a66ff); color: white; }
+      .header { display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+
+      .segment { position: relative; display: inline-flex; padding: 3px; border-radius: 12px; gap: 3px; background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08)); border: 1px solid var(--card-border); overflow: hidden; }
+      .seg-thumb { position: absolute; top: 3px; left: 3px; height: calc(100% - 6px); width: calc(50% - 6px); border-radius: 9px; background: linear-gradient(135deg, #4d8dff, #2a66ff); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); transition: transform .24s var(--spring-standard, ease); will-change: transform; }
+      .segment[data-active="advanced"] .seg-thumb { transform: translateX(100%); }
+      .seg-btn { appearance: none; position: relative; border: 0; padding: 6px 12px; border-radius: 9px; cursor: pointer; font-weight: 700; color: inherit; background: transparent; transition: transform .12s ease, color .18s ease; z-index: 1; }
+      .seg-btn.active { color: white; }
       .seg-btn:active { transform: translateY(1px); }
-
-      .kebab { appearance: none; border: 1px solid var(--card-border); border-radius: 10px; background: var(--card-bg); width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; }
-      .kebab:active { transform: translateY(1px); }
-      .kebab-dot { width: 3px; height: 3px; background: currentColor; border-radius: 50%; box-shadow: 0 6px 0 currentColor, 0 -6px 0 currentColor; }
-
-      .menu { position: absolute; right: 14px; top: 46px; background: var(--menu-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 6px; display: none; min-width: 180px; backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px); }
-      .menu.open { display: block; }
-      .menu button { display: flex; width: 100%; text-align: left; gap: 8px; align-items: center; padding: 8px 10px; border: 0; background: transparent; color: inherit; border-radius: 8px; cursor: pointer; }
-      .menu button:hover { background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.10)); }
 
       .section { display: none; }
       .section.active { display: block; }
@@ -63,10 +55,10 @@
       .badge { font-size: 10px; font-weight: 800; padding: 3px 6px; border-radius: 999px; letter-spacing: .25px; background: linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.12)); border: 1px solid var(--card-border); }
       .badge.plus { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white; border-color: rgba(255,255,255,0.25); }
       .badge.pro { background: linear-gradient(135deg, #0f0f10, #1b1b1d); color: #f3f3f3; border-color: rgba(255,255,255,0.15); }
+      .badge.bg { background: linear-gradient(135deg, #0ea5e944, #22d3ee66); color: #0b3a7a; border-color: rgba(255,255,255,0.18); }
 
-      .swatches { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+      .swatches { display: flex; gap: 8px; margin-top: 10px; }
       .pill { border-radius: 999px; height: 14px; width: 38px; border: 1px solid var(--card-border); opacity: .95; }
-      .bg-flag { margin-left: auto; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 999px; border: 1px solid var(--card-border); background: linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.12)); }
 
       .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 12px; }
       .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 10px 0; }
@@ -77,75 +69,60 @@
       .btn.primary { background: linear-gradient(135deg, #4d8dff, #2a66ff); color: white; border-color: rgba(255,255,255,.22); }
       .btn:active { transform: translateY(1px); filter: saturate(1.05); }
 
-      .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; }
-      .modal.open { display: flex; }
-      .modal-card { width: 320px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 12px; backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px); }
-      .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
-      .dragging { opacity: .7; }
-
       @media (prefers-reduced-motion: reduce) { .seg-btn, .theme-card, .btn { transition: none; } }
     </style>
   </head>
   <body>
-    <div class="header">
-      <div class="segment" role="tablist" aria-label="Mode">
-        <button id="seg-basic" class="seg-btn active" role="tab" aria-selected="true">Basic</button>
-        <button id="seg-advanced" class="seg-btn" role="tab" aria-selected="false">Advanced</button>
+      <div class="header">
+        <div id="segment" class="segment" role="tablist" aria-label="Mode" data-active="basic">
+          <div class="seg-thumb" aria-hidden="true"></div>
+          <button id="seg-basic" class="seg-btn active" role="tab" aria-selected="true">Basic</button>
+          <button id="seg-advanced" class="seg-btn" role="tab" aria-selected="false">Advanced</button>
+        </div>
       </div>
-      <button id="kebab" class="kebab" aria-label="Menu"><span class="kebab-dot"></span></button>
-      <div id="menu" class="menu" role="menu" aria-label="More actions">
-        <button id="saveTheme" role="menuitem">Save current as theme</button>
-        <button id="exportThemes" role="menuitem">Export themes</button>
-        <button id="importThemes" role="menuitem">Import themes</button>
-        <button id="rearrangeThemes" role="menuitem">Rearrange</button>
-        <button id="about" role="menuitem">About</button>
-      </div>
-    </div>
 
     <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
       <div id="themeGrid" class="grid"></div>
     </div>
 
-    <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced">
-      <div class="card">
-        <div class="row">
-          <label for="accent">Accent</label>
-          <input id="accent" type="color" value="#66b5ff" />
-        </div>
-        <div class="row">
-          <label for="userBg">User bubble bg</label>
-          <input id="userBg" type="color" value="#003f7a" />
-        </div>
-        <div class="row">
-          <label for="userText">User bubble text</label>
-          <input id="userText" type="color" value="#f5faff" />
-        </div>
-        <div class="row">
-          <label for="submitBg">Submit btn bg</label>
-          <input id="submitBg" type="color" value="#0169cc" />
-        </div>
-        <div class="row">
-          <label for="submitText">Submit btn text</label>
-          <input id="submitText" type="color" value="#ffffff" />
-        </div>
-        <div class="actions">
-          <button id="save" class="btn primary">Save & Apply</button>
-          <button id="reset" class="btn">Reset to site</button>
+      <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced">
+        <div class="card">
+          <div class="row">
+            <label for="accent">Accent</label>
+            <input id="accent" type="color" value="#66b5ff" />
+          </div>
+          <div class="row">
+            <label for="userBg">User bubble bg</label>
+            <input id="userBg" type="color" value="#003f7a" />
+          </div>
+          <div class="row">
+            <label for="userText">User bubble text</label>
+            <input id="userText" type="color" value="#f5faff" />
+          </div>
+          <div class="row">
+            <label for="submitBg">Submit btn bg</label>
+            <input id="submitBg" type="color" value="#0169cc" />
+          </div>
+          <div class="row">
+            <label for="submitText">Submit btn text</label>
+            <input id="submitText" type="color" value="#ffffff" />
+          </div>
+
+          <div class="row">
+            <label for="sidebarColor"><input id="toggleSidebar" type="checkbox" /> Sidebar color</label>
+            <input id="sidebarColor" type="color" value="#2b2b2b" disabled />
+          </div>
+          <div class="row">
+            <label for="topbarColor"><input id="toggleTopbar" type="checkbox" /> Top bar color</label>
+            <input id="topbarColor" type="color" value="#1a1a1a" disabled />
+          </div>
+
+          <div class="actions">
+            <button id="save" class="btn primary">Save & Apply</button>
+            <button id="reset" class="btn">Reset to site</button>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div id="modal-about" class="modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
-      <div class="modal-card">
-        <div id="about-title" style="font-weight:800;margin-bottom:6px;">About</div>
-        <div style="opacity:.9;line-height:1.4;">ChatGPT Accent Customizer — glassy themes, including Plus/Pro lookalikes and experimental backgrounds. Open source. ✨</div>
-        <div class="modal-actions">
-          <button id="about-close" class="btn">Close</button>
-        </div>
-      </div>
-    </div>
-
-    <input id="fileInput" type="file" accept="application/json" style="display:none" />
 
     <script src="popup.js"></script>
   </body>

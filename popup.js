@@ -80,7 +80,9 @@ function buildVarsFromInputs() {
 }
 
 // ===== Preset themes =====
-const BASE_PRESETS = [
+// Includes built-in: Default, Blue, Green, Yellow, Pink, Orange, Purple (Plus), Black (Pro)
+// And extra curated themes.
+const PRESETS = [
   { id: "reset", name: "Default", reset: true, badge: null },
   { id: "blue", name: "Blue", accent: "#1d74ff", userBg: "#0b3a7a", userText: "#e6f0ff", submitBg: "#0b5fff", submitText: "#ffffff" },
   { id: "green", name: "Green", accent: "#16a34a", userBg: "#064e3b", userText: "#d1fae5", submitBg: "#0f9d58", submitText: "#ffffff" },
@@ -114,27 +116,14 @@ const BASE_PRESETS = [
     extras: { "--bg-primary": "#0d1320", "--bg-secondary": "#131a2a", "--message-surface": "#1b2033cc", "--link": "#22d3ee", "--link-hover": "#67e8f9" } }
 ];
 
-let customPresets = [];
-let selectedPresetId = "reset";
-
-function getAllPresets() {
-  return [...BASE_PRESETS, ...customPresets];
-}
-
-function presetChangesBackground(preset) {
-  return !!(preset.extras && (preset.extras["--bg-primary"] || preset.extras["--main-surface-background"] || preset.extras["--message-surface"]));
-}
-
 function renderPresets() {
   const grid = document.getElementById("themeGrid");
   grid.innerHTML = "";
-  const all = getAllPresets();
-  for (const preset of all) {
+  for (const preset of PRESETS) {
     const card = document.createElement("button");
     card.className = "theme-card";
     card.setAttribute("type", "button");
     card.dataset.id = preset.id;
-    card.draggable = document.body.dataset.rearrange === "true" && !preset.reset;
 
     const row = document.createElement("div");
     row.className = "theme-row";
@@ -159,6 +148,14 @@ function renderPresets() {
       title.appendChild(badge);
     }
 
+    // Background-changing indicator
+    if (preset.extras && (preset.extras["--bg-primary"] || preset.extras["--main-surface-background"] || preset.extras["--sidebar-surface"])) {
+      const bgBadge = document.createElement("span");
+      bgBadge.className = "badge bg";
+      bgBadge.textContent = "BG";
+      title.appendChild(bgBadge);
+    }
+
     const swatches = document.createElement("div");
     swatches.className = "swatches";
 
@@ -166,16 +163,9 @@ function renderPresets() {
     const s2 = document.createElement("div"); s2.className = "pill"; s2.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : preset.userBg; swatches.appendChild(s2);
     const s3 = document.createElement("div"); s3.className = "pill"; s3.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : preset.submitBg; swatches.appendChild(s3);
 
-    if (!preset.reset && presetChangesBackground(preset)) {
-      const flag = document.createElement("span");
-      flag.className = "bg-flag";
-      flag.textContent = "BG";
-      swatches.appendChild(flag);
-    }
-
     const ring = document.createElement("div");
     ring.className = "selected-ring";
-    ring.style.display = preset.id === selectedPresetId ? "block" : "none";
+    ring.style.display = "none";
 
     row.appendChild(title);
 
@@ -185,71 +175,47 @@ function renderPresets() {
 
     card.addEventListener("click", () => {
       if (preset.reset) {
-        selectedPresetId = "reset";
-        chrome.storage.sync.remove(["themeVars", "selectedPresetId"], () => syncSelectedFromStorage());
+        chrome.storage.sync.remove("themeVars");
       } else {
         const themeVars = buildVarsFromCore(preset);
-        selectedPresetId = preset.id;
-        chrome.storage.sync.set({ themeVars, selectedPresetId }, () => syncSelectedFromStorage());
+        chrome.storage.sync.set({ themeVars });
       }
-    });
-
-    // Drag & drop for rearrange
-    card.addEventListener("dragstart", e => {
-      if (document.body.dataset.rearrange !== "true" || preset.reset) return e.preventDefault();
-      card.classList.add("dragging");
-      e.dataTransfer.setData("text/plain", preset.id);
-    });
-    card.addEventListener("dragend", () => card.classList.remove("dragging"));
-    card.addEventListener("dragover", e => {
-      if (document.body.dataset.rearrange !== "true") return;
-      e.preventDefault();
-    });
-    card.addEventListener("drop", e => {
-      if (document.body.dataset.rearrange !== "true") return;
-      e.preventDefault();
-      const fromId = e.dataTransfer.getData("text/plain");
-      const toId = preset.id;
-      reorderCustomPresets(fromId, toId);
     });
 
     grid.appendChild(card);
   }
-}
 
-function reorderCustomPresets(fromId, toId) {
-  if (!fromId || !toId || fromId === toId) return;
-  const ids = customPresets.map(p => p.id);
-  const fromIdx = ids.indexOf(fromId);
-  const toIdx = ids.indexOf(toId);
-  if (fromIdx === -1 || toIdx === -1) return;
-  const [moved] = customPresets.splice(fromIdx, 1);
-  customPresets.splice(toIdx, 0, moved);
-  persistPresets();
-  renderPresets();
+  // initial selection state
+  syncSelectedFromStorage();
 }
 
 function syncSelectedFromStorage() {
-  chrome.storage.sync.get(["themeVars", "selectedPresetId"], ({ themeVars, selectedPresetId: storedId }) => {
-    selectedPresetId = storedId || (themeVars ? "custom" : "reset");
+  chrome.storage.sync.get(["themeVars"], ({ themeVars }) => {
     const grid = document.getElementById("themeGrid");
     const cards = Array.from(grid.querySelectorAll(".theme-card"));
+
+    // Determine which preset matches storage
+    let selectedId = "reset";
+    if (themeVars && themeVars["--interactive-bg-accent-default"]) {
+      const accent = themeVars["--interactive-bg-accent-default"]; 
+      const userBg = themeVars["--theme-user-msg-bg"]; 
+      const submitBg = themeVars["--theme-submit-btn-bg"]; 
+      const match = PRESETS.find(p => !p.reset && p.accent === accent && p.userBg === userBg && p.submitBg === submitBg);
+      if (match) selectedId = match.id; else selectedId = "custom"; // custom selection
+    }
+
     for (const card of cards) {
       const ring = card.querySelector(".selected-ring");
       if (!ring) continue;
-      ring.style.display = (card.dataset.id === selectedPresetId) ? "block" : "none";
+      ring.style.display = (card.dataset.id === selectedId) ? "block" : "none";
     }
   });
 }
 
+// react to changes from other popup actions
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "sync" && (changes.themeVars || changes.selectedPresetId || changes.customPresets)) {
-    if (changes.customPresets) {
-      customPresets = changes.customPresets.newValue || [];
-      renderPresets();
-    } else {
-      syncSelectedFromStorage();
-    }
+  if (area === "sync" && changes.themeVars) {
+    syncSelectedFromStorage();
   }
 });
 
@@ -273,10 +239,10 @@ function loadAdvanced() {
 
 function saveAdvanced() {
   const themeVars = buildVarsFromInputs();
-  chrome.storage.sync.set({ themeVars, selectedPresetId: "custom" });
+  chrome.storage.sync.set({ themeVars });
 }
 
-function resetSite() { chrome.storage.sync.remove(["themeVars", "selectedPresetId"]); }
+function resetSite() { chrome.storage.sync.remove("themeVars"); }
 
 // ===== Segmented control =====
 function setSection(which) {
@@ -284,17 +250,20 @@ function setSection(which) {
   const advanced = document.getElementById("advanced");
   const segBasic = document.getElementById("seg-basic");
   const segAdvanced = document.getElementById("seg-advanced");
+  const segment = document.getElementById("segment");
 
   if (which === "basic") {
     basic.classList.add("active");
     advanced.classList.remove("active");
     segBasic.classList.add("active"); segBasic.setAttribute("aria-selected", "true");
     segAdvanced.classList.remove("active"); segAdvanced.setAttribute("aria-selected", "false");
+    segment.dataset.active = "basic";
   } else {
     advanced.classList.add("active");
     basic.classList.remove("active");
     segAdvanced.classList.add("active"); segAdvanced.setAttribute("aria-selected", "true");
     segBasic.classList.remove("active"); segBasic.setAttribute("aria-selected", "false");
+    segment.dataset.active = "advanced";
   }
 }
 
@@ -304,116 +273,50 @@ document.getElementById("seg-advanced").addEventListener("click", () => setSecti
 document.getElementById("save").addEventListener("click", saveAdvanced);
 document.getElementById("reset").addEventListener("click", resetSite);
 
-// ===== Menu actions =====
-const kebab = document.getElementById("kebab");
-const menu = document.getElementById("menu");
-kebab.addEventListener("click", () => {
-  menu.classList.toggle("open");
-});
-
-document.addEventListener("click", e => {
-  if (!menu.contains(e.target) && e.target !== kebab) menu.classList.remove("open");
-});
-
-function persistPresets() {
-  chrome.storage.sync.set({ customPresets });
-}
-
-function loadPresets() {
-  chrome.storage.sync.get(["customPresets", "selectedPresetId"], ({ customPresets: stored, selectedPresetId: storedSel }) => {
-    customPresets = stored || [];
-    selectedPresetId = storedSel || selectedPresetId;
-    renderPresets();
-    syncSelectedFromStorage();
-  });
-}
-
-function saveCurrentAsTheme() {
-  chrome.storage.sync.get(["themeVars"], ({ themeVars }) => {
-    const name = prompt("Name your theme");
-    if (!name) return;
-    // extract core colors from themeVars if possible, else from inputs
-    const accent = themeVars?.["--interactive-bg-accent-default"] || document.getElementById("accent").value;
-    const userBg = themeVars?.["--theme-user-msg-bg"] || document.getElementById("userBg").value;
-    const userText = themeVars?.["--theme-user-msg-text"] || document.getElementById("userText").value;
-    const submitBg = themeVars?.["--theme-submit-btn-bg"] || document.getElementById("submitBg").value;
-    const submitText = themeVars?.["--theme-submit-btn-text"] || document.getElementById("submitText").value;
-
-    // extras: include any known background vars present in themeVars
-    const extras = {};
-    const extraKeys = ["--bg-primary", "--bg-secondary", "--bg-tertiary", "--message-surface", "--main-surface-background", "--composer-surface", "--sidebar-surface", "--link", "--link-hover"];
-    for (const k of extraKeys) {
-      if (themeVars && themeVars[k]) extras[k] = themeVars[k];
-    }
-
-    const id = `custom_${Date.now()}`;
-    customPresets.push({ id, name, accent, userBg, userText, submitBg, submitText, ...(Object.keys(extras).length ? { extras } : {}) });
-    persistPresets();
-    renderPresets();
-  });
-}
-
-function exportThemes() {
-  const data = { customPresets };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "chatgpt-accent-themes.json";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-function importThemes() {
-  const input = document.getElementById("fileInput");
-  input.value = "";
-  input.onchange = async () => {
-    const file = input.files?.[0];
-    if (!file) return;
-    const text = await file.text();
-    try {
-      const obj = JSON.parse(text);
-      if (Array.isArray(obj)) {
-        customPresets = obj; // legacy flat array support
-      } else if (obj && Array.isArray(obj.customPresets)) {
-        customPresets = obj.customPresets;
-      } else {
-        alert("Invalid JSON");
-        return;
-      }
-      persistPresets();
-      renderPresets();
-    } catch (e) {
-      alert("Failed to parse JSON");
-    }
-  };
-  input.click();
-}
-
-function toggleRearrange() {
-  const on = document.body.dataset.rearrange === "true" ? false : true;
-  document.body.dataset.rearrange = String(on);
-  renderPresets();
-}
-
-function openAbout() {
-  document.getElementById("modal-about").classList.add("open");
-}
-function closeAbout() {
-  document.getElementById("modal-about").classList.remove("open");
-}
-
-// Bind menu buttons
-document.getElementById("saveTheme").addEventListener("click", () => { saveCurrentAsTheme(); menu.classList.remove("open"); });
-document.getElementById("exportThemes").addEventListener("click", () => { exportThemes(); menu.classList.remove("open"); });
-document.getElementById("importThemes").addEventListener("click", () => { importThemes(); menu.classList.remove("open"); });
-document.getElementById("rearrangeThemes").addEventListener("click", () => { toggleRearrange(); menu.classList.remove("open"); });
-document.getElementById("about").addEventListener("click", () => { openAbout(); menu.classList.remove("open"); });
-document.getElementById("about-close").addEventListener("click", closeAbout);
-
-// Init
 renderPresets();
-loadAdvanced();
-loadPresets(); 
+loadAdvanced(); 
+
+// ===== Advanced toggles for sidebar/top bar =====
+(function initAdvancedExtras() {
+  const toggleSidebar = document.getElementById("toggleSidebar");
+  const sidebarColor = document.getElementById("sidebarColor");
+  const toggleTopbar = document.getElementById("toggleTopbar");
+  const topbarColor = document.getElementById("topbarColor");
+
+  function syncTogglesFromStorage() {
+    chrome.storage.sync.get(["themeVars"], ({ themeVars }) => {
+      const sv = themeVars || {};
+      const hasSidebar = Boolean(sv["--sidebar-surface"]);
+      const hasTopbar = Boolean(sv["--main-surface-background"]);
+      toggleSidebar.checked = hasSidebar;
+      toggleTopbar.checked = hasTopbar;
+      sidebarColor.disabled = !hasSidebar;
+      topbarColor.disabled = !hasTopbar;
+      if (hasSidebar) sidebarColor.value = sv["--sidebar-surface"]; 
+      if (hasTopbar) topbarColor.value = sv["--main-surface-background"]; 
+    });
+  }
+
+  toggleSidebar.addEventListener("change", () => {
+    sidebarColor.disabled = !toggleSidebar.checked;
+  });
+  toggleTopbar.addEventListener("change", () => {
+    topbarColor.disabled = !toggleTopbar.checked;
+  });
+
+  // Enhance save to include these opts
+  const originalSave = saveAdvanced;
+  function saveWithExtras() {
+    const themeVars = buildVarsFromInputs();
+    if (toggleSidebar.checked) themeVars["--sidebar-surface"] = sidebarColor.value;
+    if (toggleTopbar.checked) themeVars["--main-surface-background"] = topbarColor.value;
+    chrome.storage.sync.set({ themeVars });
+  }
+  document.getElementById("save").removeEventListener("click", originalSave);
+  document.getElementById("save").addEventListener("click", saveWithExtras);
+
+  syncTogglesFromStorage();
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "sync" && changes.themeVars) syncTogglesFromStorage();
+  });
+})();
