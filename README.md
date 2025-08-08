@@ -1,34 +1,51 @@
-# ChatGPT Accent Customizer
+## ChatGPT Accents For All
 
-Override ChatGPT's accent and bubble colors by setting CSS variables inline on `<html>`. This sidesteps Tailwind utility classes and survives light/dark flips and SPA route changes.
+A simple browser extension that lets you change ChatGPT's accent color (and background) without paying for the $200 a month pro plan. I wanted the black accent. They wanted 200 bucks a month. So I built this instead.
 
-## What's new
-- Basic mode with 10 curated presets (+ Reset to Site)
-- Advanced mode for hand-picking colors
-- Modern glassy segmented UI with sliding animation
+Works on the web at `chatgpt.com`. Not on mobile. If I could make it work there I would.
+
+### Why this exists
+- I wanted clean accents like true black and other vibes without a paywall
+- Paying to change a color felt scummy and weird
+- CSS variables are free and I can type
+
+### Features
+- Basic mode with curated presets including proper black
+- Advanced mode where you can pick exact colors
+- Optional tweaks for surfaces like sidebar and main area
+- Reset button to go back to the site's defaults
 - Runs only on `chatgpt.com`
+- No tracking and no network calls at all
 
-## Why it works
-ChatGPT resolves colors through CSS variables such as `--text-accent`, `--icon-accent`, `--theme-user-msg-bg`, and interactive `--interactive-bg-accent-*`. Inline styles on `document.documentElement` win the cascade, so your palette overrides the site's.
+### Install from GitHub Releases
+You can grab a zip from Releases and load it unpacked.
 
-## Install (Chrome / Edge / Brave)
-1. Clone or download this folder.
-2. Go to `chrome://extensions` (Edge: `edge://extensions`).
-3. Toggle Developer mode (top-right).
-4. Click "Load unpacked" and select this folder.
-5. Open `chatgpt.com`, click the extension icon. In Basic, choose a preset, or switch to Advanced to dial it in.
+1. Go to Releases: `https://github.com/trevor050/ChatGPTAccentsForAll/releases`
+2. Download the latest zip
+3. Unzip it somewhere you can find later
+4. Load it unpacked using the steps below
 
-## Files
-- `manifest.json`: MV3 manifest with minimal permissions, scoped to `chatgpt.com`.
-- `content.js`: Applies/removes CSS variables inline on `<html>` based on saved values.
-- `popup.html` / `popup.js`: Segmented UI (Basic presets / Advanced custom).
-  - Preset badges: Plus / Pro. "BG" badge marks presets that also tweak background/surfaces.
-  - Advanced toggles to optionally set `--sidebar-surface` and `--main-surface-background`.
+### Load unpacked
+Chrome, Edge, Brave are all the same idea.
 
-## Notes
-- Reset fully clears inline variables so site defaults take over.
-- Works across light/dark and on SPA navigations.
-- If you want separate light/dark palettes or alpha selections, open an issue or tweak `popup.js` to store two sets and flip by `prefers-color-scheme`.
+1. Open `chrome://extensions` or `edge://extensions`
+2. Turn on Developer mode
+3. Click Load unpacked
+4. Select the unzipped folder you downloaded
+5. Open `chatgpt.com`, click the extension icon, and pick a preset or hop into Advanced mode
 
-## Privacy
-No network calls. Settings are stored in Chrome Sync storage so they follow you if you're signed in. 
+### Roadmap
+- Publishing on the Chrome Web Store is in progress
+- A Firefox port is in progress
+
+### Contributing
+There are some bugs and rough edges. PRs are very welcome. If you see something cursed, fix it and flex those commits. If you want a preset added, drop an issue with the colors.
+
+### How it works in plain English
+The extension sets CSS variables directly on the `<html>` element. That wins the cascade so it overrides the site's theme tokens like `--text-accent` and friends. It survives SPA route changes and light or dark mode flips.
+
+### Privacy
+Zero network calls. Your settings live in browser sync storage so they follow your profile.
+
+### Credits
+Made by someone who prefers vibes over paywalls.
