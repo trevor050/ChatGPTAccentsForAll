@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ChatGPT Accent Customizer",
-  "version": "1.2.0",
+  "version": "1.1.0",
   "description": "Override ChatGPT's accent and chat bubble colors using CSS variables.",
   "permissions": ["storage"],
   "host_permissions": [

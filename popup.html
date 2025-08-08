@@ -5,121 +5,210 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <title>ChatGPT Accent</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
       :root {
         color-scheme: light dark;
-        --bg-grad: radial-gradient(120% 120% at 0% 0%, rgba(255,255,255,.20), rgba(255,255,255,.06) 40%, rgba(255,255,255,0) 70%),
-                    linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-        --card-bg: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-        --card-border: rgba(255,255,255,.16);
-        --ring: rgba(77,141,255,0.95);
+        /* Vertical gradient, slow fade top to bottom */
+         /* Subtle, minimal blue tint */
+         --bg-grad: linear-gradient(180deg, rgba(74, 144, 226, 0.06) 0%, rgba(74, 144, 226, 0.00) 100%);
+        --card-bg: color-mix(in oklab, #ffffff 8%, transparent);
+        --card-border: color-mix(in oklab, CanvasText 18%, transparent);
+        --ring: color-mix(in oklab, #4d8dff 85%, transparent);
+        --shadow: 0 10px 30px rgba(0,0,0,.25);
+        --radius: 14px;
+        --ease: cubic-bezier(.2,.8,.2,1);
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg-grad: radial-gradient(120% 120% at 0% 0%, rgba(30,30,40,.50), rgba(30,30,40,.20) 40%, rgba(30,30,40,0) 70%),
-                      linear-gradient(180deg, rgba(30,30,40,.35), rgba(30,30,40,.15));
-          --card-bg: linear-gradient(180deg, rgba(20,20,28,.55), rgba(20,20,28,.40));
-          --card-border: rgba(255,255,255,.12);
+           /* Slight blue whisper for dark mode */
+           --bg-grad: linear-gradient(180deg, rgba(74, 144, 226, 0.12) 0%, rgba(74, 144, 226, 0.00) 100%);
+          --card-bg: linear-gradient(180deg, rgba(26,28,34,.70), rgba(26,28,34,.45));
+          --card-border: rgba(255,255,255,.10);
         }
       }
 
       html, body { height: 100%; }
       body {
-        font: 14px system-ui, -apple-system, Segoe UI, Helvetica, Arial;
-        margin: 0; width: 360px; color: CanvasText; background: var(--bg-grad);
-        padding: 14px; backdrop-filter: saturate(140%) blur(10px); -webkit-backdrop-filter: saturate(140%) blur(10px);
+        font: 13.5px "DM Sans", ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial;
+         margin: 0; width: 352px; color: CanvasText;
+         /* Non-repeating, full-bleed subtle gradient over system canvas */
+         background-color: Canvas;
+         background-image: var(--bg-grad);
+         background-repeat: no-repeat;
+         background-size: 100% 100%;
+         background-attachment: fixed;
+        padding: 14px; backdrop-filter: saturate(140%) blur(14px);
+        -webkit-backdrop-filter: saturate(140%) blur(14px);
       }
 
       .header { display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
 
-      .segment { position: relative; display: inline-flex; padding: 3px; border-radius: 12px; gap: 3px; background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08)); border: 1px solid var(--card-border); overflow: hidden; }
-      .seg-thumb { position: absolute; top: 3px; left: 3px; height: calc(100% - 6px); width: calc(50% - 6px); border-radius: 9px; background: linear-gradient(135deg, #4d8dff, #2a66ff); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); transition: transform .24s var(--spring-standard, ease); will-change: transform; }
-      .segment[data-active="advanced"] .seg-thumb { transform: translateX(100%); }
-      .seg-btn { appearance: none; position: relative; border: 0; padding: 6px 12px; border-radius: 9px; cursor: pointer; font-weight: 700; color: inherit; background: transparent; transition: transform .12s ease, color .18s ease; z-index: 1; }
-      .seg-btn.active { color: white; }
-      .seg-btn:active { transform: translateY(1px); }
+      /* Segmented control */
+      .segment { position: relative; display: inline-flex; padding: 2px; border-radius: 10px; gap: 2px; border: 1px solid var(--card-border); background: color-mix(in oklab, CanvasText 3%, transparent); }
+      .seg-btn { appearance: none; position: relative; border: 0; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; letter-spacing: .1px; color: inherit; background: transparent; transition: background .18s var(--ease), color .18s var(--ease); }
+      .seg-btn.active { background: color-mix(in oklab, CanvasText 8%, transparent); color: inherit; }
+      .seg-btn:active { transform: none; }
 
-      .section { display: none; }
-      .section.active { display: block; }
+      /* Stack that crossfades between sections */
+      .stack { position: relative; overflow: hidden; transition: height .28s var(--ease); }
+      .section { position: absolute; inset: 0; opacity: 0; transform: translateY(6px) scale(.985); pointer-events: none; transition: opacity .28s var(--ease), transform .28s var(--ease); }
+      .section.active { opacity: 1; transform: none; pointer-events: auto; }
 
-      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-      .theme-card { position: relative; text-align: left; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 12px; transition: transform .12s ease, box-shadow .18s ease, border-color .18s ease; cursor: pointer; }
-      .theme-card:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(0,0,0,.25); }
-      .theme-card:active { transform: translateY(0); }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+      .theme-card { position: relative; text-align: left; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 14px; cursor: pointer; min-width: 0;
+        transition: transform .14s var(--ease), box-shadow .22s var(--ease), border-color .22s var(--ease), background .22s var(--ease); }
+      .theme-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,.15), 0 2px 6px rgba(0,0,0,.08); }
+      .theme-card:active { transform: translateY(-1px); }
 
-      .selected-ring { position: absolute; inset: 0; border-radius: 14px; border: 2px solid var(--ring); pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.20); }
+      .selected-ring { position: absolute; inset: -1px; border-radius: var(--radius); border: 2px solid var(--ring); pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.20), 0 0 0 6px color-mix(in oklab, var(--ring) 10%, transparent);
+        opacity: 0; transform: scale(.98); transition: opacity .22s var(--ease), transform .22s var(--ease); }
+      .theme-card.selected .selected-ring { opacity: 1; transform: scale(1); }
 
       .theme-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-      .theme-title { font-weight: 700; font-size: 12.5px; letter-spacing: .2px; display: flex; align-items: center; gap: 8px; }
-      .dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--card-border); }
-      .badge { font-size: 10px; font-weight: 800; padding: 3px 6px; border-radius: 999px; letter-spacing: .25px; background: linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.12)); border: 1px solid var(--card-border); }
-      .badge.plus { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white; border-color: rgba(255,255,255,0.25); }
-      .badge.pro { background: linear-gradient(135deg, #0f0f10, #1b1b1d); color: #f3f3f3; border-color: rgba(255,255,255,0.15); }
-      .badge.bg { background: linear-gradient(135deg, #0ea5e944, #22d3ee66); color: #0b3a7a; border-color: rgba(255,255,255,0.18); }
+      .theme-title { font-weight: 800; font-size: 12.5px; letter-spacing: .2px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+      .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--card-border); box-shadow: 0 0 0 3px color-mix(in oklab, var(--card-border) 60%, transparent) inset; }
+      .badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: .15px; background: color-mix(in oklab, CanvasText 8%, transparent); border: none; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+      .badge.plus { background: #7c3aed; color: white; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3); }
+      .badge.pro { background: #0f0f10; color: #f3f3f3; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
+      .badge.bg-light { background: rgba(255, 255, 255, 0.9); color: #2a2a2a; font-weight: 600; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+      .badge.bg-dark { background: rgba(26, 26, 30, 0.85); color: #f0f0f0; font-weight: 600; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 
-      .swatches { display: flex; gap: 8px; margin-top: 10px; }
-      .pill { border-radius: 999px; height: 14px; width: 38px; border: 1px solid var(--card-border); opacity: .95; }
+      .swatches { display: flex; gap: 8px; margin-top: 10px; min-width: 0; flex-wrap: nowrap; }
+      .pill { border-radius: 999px; height: 16px; width: 38px; border: 1px solid color-mix(in oklab, CanvasText 10%, transparent); opacity: .95; box-shadow: inset 0 1px 2px rgba(0,0,0,.1); }
 
-      .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 12px; }
-      .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 10px 0; }
-      label { white-space: nowrap; font-weight: 600; }
-      input[type="color"] { width: 44px; height: 30px; padding: 0; border: 1px solid var(--card-border); border-radius: 8px; background: transparent; cursor: pointer; }
-      .actions { display: flex; gap: 8px; margin-top: 12px; }
-      .btn { padding: 9px 12px; border-radius: 12px; border: 1px solid var(--card-border); background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.12)); color: inherit; cursor: pointer; font-weight: 800; letter-spacing: .2px; transition: transform .12s ease, filter .18s ease; }
-      .btn.primary { background: linear-gradient(135deg, #4d8dff, #2a66ff); color: white; border-color: rgba(255,255,255,.22); }
-      .btn:active { transform: translateY(1px); filter: saturate(1.05); }
+      /* Advanced section layout */
+      .settings-grid { display: grid; gap: 16px; }
+      .setting-group { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px; }
+      .setting-group h3 { margin: 0 0 12px 0; font-size: 13px; font-weight: 700; opacity: .8; text-transform: uppercase; letter-spacing: .3px; }
+      .color-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; }
+      .color-row label { font-weight: 500; font-size: 13px; }
+      .toggle-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+      .toggle-row input[type="checkbox"] { margin: 0; }
+      .toggle-row label { font-weight: 500; font-size: 13px; flex: 1; }
+      input[type="color"] { width: 40px; height: 28px; padding: 0; border: 1px solid var(--card-border); border-radius: 6px; background: transparent; cursor: pointer; }
+      .actions { display: flex; gap: 8px; justify-content: flex-end; }
+      /* Minimal ghost buttons with subtle borders */
+      .btn { padding: 8px 16px; border-radius: 8px; border: 1.5px solid color-mix(in oklab, CanvasText 25%, transparent); background: transparent; color: inherit; cursor: pointer; font-weight: 500; letter-spacing: .1px; transition: all .2s var(--ease); }
+      .btn:hover { border-color: color-mix(in oklab, CanvasText 40%, transparent); background: color-mix(in oklab, CanvasText 6%, transparent); }
+      .btn.primary { background: CanvasText; color: Canvas; border-color: CanvasText; font-weight: 700; }
+      .btn.primary:hover { background: color-mix(in oklab, CanvasText 85%, transparent); }
+      .btn:active { transform: scale(.98); }
 
-      @media (prefers-reduced-motion: reduce) { .seg-btn, .theme-card, .btn { transition: none; } }
+      @media (prefers-reduced-motion: reduce) { .seg-btn, .theme-card, .btn, .section, .selected-ring { transition: none; } }
+
+       /* Advanced: reimagined */
+       .preview-group { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 12px; }
+       .preview-card { position: relative; border-radius: 12px; border: 1px solid var(--card-border); padding: 12px; background:
+         linear-gradient(180deg, color-mix(in oklab, CanvasText 4%, transparent), transparent),
+         var(--bg-primary, Canvas);
+         box-shadow: inset 0 0 0 1px color-mix(in oklab, CanvasText 6%, transparent);
+       }
+       .chat { display: grid; gap: 10px; }
+       .msg { padding: 10px 12px; border-radius: 10px; font-size: 12.5px; line-height: 1.35; }
+       .msg.assistant { background: var(--message-surface, color-mix(in oklab, CanvasText 6%, transparent)); color: var(--text-primary); border: 1px solid color-mix(in oklab, CanvasText 12%, transparent); }
+       .msg.user { background: var(--theme-user-msg-bg); color: var(--theme-user-msg-text); border: 1px solid color-mix(in oklab, var(--theme-user-msg-text) 12%, transparent); }
+       .composer { display: flex; gap: 8px; justify-content: flex-end; padding-top: 6px; }
+       .composer .secondary { background: var(--theme-secondary-btn-bg); color: var(--theme-secondary-btn-text); border: 1px solid color-mix(in oklab, CanvasText 14%, transparent); padding: 6px 10px; border-radius: 8px; font-weight: 600; }
+       .composer .primary { background: var(--theme-submit-btn-bg); color: var(--theme-submit-btn-text); border: 1px solid color-mix(in oklab, CanvasText 16%, transparent); padding: 6px 10px; border-radius: 8px; font-weight: 800; }
+       .composer .secondary:active, .composer .primary:active { transform: translateY(1px); }
+
+       .setting-group.gridish { display: grid; gap: 8px; }
+       .color-row .hex { width: 86px; height: 28px; border-radius: 6px; border: 1px solid var(--card-border); background: transparent; color: inherit; padding: 0 8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; }
+       .color-row .pair { display: flex; align-items: center; gap: 8px; }
+       .hidden { display: none; }
+       .radio-seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+       .radio-seg input { display: none; }
+       .radio-seg label { user-select: none; text-align: center; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--card-border); background: color-mix(in oklab, CanvasText 3%, transparent); font-weight: 600; cursor: pointer; }
+       .radio-seg input:checked + label { outline: 2px solid var(--ring); outline-offset: 1px; background: color-mix(in oklab, CanvasText 8%, transparent); }
     </style>
   </head>
   <body>
       <div class="header">
         <div id="segment" class="segment" role="tablist" aria-label="Mode" data-active="basic">
-          <div class="seg-thumb" aria-hidden="true"></div>
           <button id="seg-basic" class="seg-btn active" role="tab" aria-selected="true">Basic</button>
           <button id="seg-advanced" class="seg-btn" role="tab" aria-selected="false">Advanced</button>
         </div>
       </div>
 
-    <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
-      <div id="themeGrid" class="grid"></div>
-    </div>
+      <div id="stack" class="stack">
+        <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
+          <div id="themeGrid" class="grid"></div>
+        </div>
 
-      <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced">
-        <div class="card">
-          <div class="row">
-            <label for="accent">Accent</label>
-            <input id="accent" type="color" value="#66b5ff" />
-          </div>
-          <div class="row">
-            <label for="userBg">User bubble bg</label>
-            <input id="userBg" type="color" value="#003f7a" />
-          </div>
-          <div class="row">
-            <label for="userText">User bubble text</label>
-            <input id="userText" type="color" value="#f5faff" />
-          </div>
-          <div class="row">
-            <label for="submitBg">Submit btn bg</label>
-            <input id="submitBg" type="color" value="#0169cc" />
-          </div>
-          <div class="row">
-            <label for="submitText">Submit btn text</label>
-            <input id="submitText" type="color" value="#ffffff" />
-          </div>
+        <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced">
+          <div class="settings-grid">
+            <div class="preview-group">
+              <h3 style="margin:0 0 10px 0; font-size:13px; font-weight:700; opacity:.8; text-transform:uppercase; letter-spacing:.3px;">Live preview</h3>
+              <div id="preview" class="preview-card">
+                <div class="chat">
+                  <div class="msg assistant">Assistant: Here’s how your theme feels. Links and accents use your accent color. This block matches app surfaces.</div>
+                  <div class="msg user">You: This is the user bubble. Make sure the text is readable on your color.</div>
+                  <div class="composer">
+                    <button class="secondary" type="button">Secondary</button>
+                    <button class="primary" type="button">Send</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <div class="row">
-            <label for="sidebarColor"><input id="toggleSidebar" type="checkbox" /> Sidebar color</label>
-            <input id="sidebarColor" type="color" value="#2b2b2b" disabled />
-          </div>
-          <div class="row">
-            <label for="topbarColor"><input id="toggleTopbar" type="checkbox" /> Top bar color</label>
-            <input id="topbarColor" type="color" value="#1a1a1a" disabled />
-          </div>
+            <div class="setting-group gridish">
+              <h3>Core palette</h3>
+              <div class="color-row"><label for="accent">Accent</label><div class="pair"><input id="accent" type="color" value="#66b5ff" /><input id="accentHex" class="hex" value="#66b5ff" /></div></div>
+              <div class="color-row"><label for="userBg">User bubble</label><div class="pair"><input id="userBg" type="color" value="#003f7a" /><input id="userBgHex" class="hex" value="#003f7a" /></div></div>
+              <div class="color-row"><label for="userText">User text</label><div class="pair"><input id="userText" type="color" value="#f5faff" /><input id="userTextHex" class="hex" value="#f5faff" /></div></div>
+              <div class="color-row"><label for="submitBg">Submit button</label><div class="pair"><input id="submitBg" type="color" value="#0169cc" /><input id="submitBgHex" class="hex" value="#0169cc" /></div></div>
+              <div class="color-row"><label for="submitText">Submit text</label><div class="pair"><input id="submitText" type="color" value="#ffffff" /><input id="submitTextHex" class="hex" value="#ffffff" /></div></div>
+            </div>
 
-          <div class="actions">
-            <button id="save" class="btn primary">Save & Apply</button>
-            <button id="reset" class="btn">Reset to site</button>
+            <div class="setting-group">
+              <h3>Surfaces</h3>
+              <div class="radio-seg" role="radiogroup" aria-label="Surface mode">
+                <div>
+                  <input type="radio" id="surface-default" name="surfaceMode" value="default" checked>
+                  <label for="surface-default">Default</label>
+                </div>
+                <div>
+                  <input type="radio" id="surface-dark" name="surfaceMode" value="dark">
+                  <label for="surface-dark">Dark</label>
+                </div>
+                <div>
+                  <input type="radio" id="surface-light" name="surfaceMode" value="light">
+                  <label for="surface-light">Light</label>
+                </div>
+                <div>
+                  <input type="radio" id="surface-custom" name="surfaceMode" value="custom">
+                  <label for="surface-custom">Custom</label>
+                </div>
+              </div>
+              <div id="customSurfaceRow" class="color-row hidden" style="margin-top:8px;">
+                <label for="surfaceColor">Base surface</label>
+                <div class="pair"><input id="surfaceColor" type="color" value="#0f0f10" /><input id="surfaceColorHex" class="hex" value="#0f0f10" /></div>
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <h3>Actions</h3>
+              <div class="actions" style="flex-wrap: wrap; justify-content: flex-start;">
+                <button id="save" class="btn primary">Apply</button>
+                <button id="reset" class="btn">Reset</button>
+                <button id="random" class="btn">Surprise me</button>
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <h3>Saved themes</h3>
+              <div class="color-row">
+                <label for="saveName">Name</label>
+                <div class="pair" style="gap:10px;">
+                  <input id="saveName" class="hex" placeholder="My theme" />
+                  <button id="saveThemeBtn" class="btn">Save current</button>
+                </div>
+              </div>
+              
+              <div id="savedList" style="margin-top:10px; display:grid; gap:8px;"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -127,3 +216,4 @@
     <script src="popup.js"></script>
   </body>
 </html> 
+
