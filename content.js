@@ -35,12 +35,11 @@ const THEME_KEYS = [
   "--main-surface-background",
   "--main-surface-primary",
   "--composer-surface",
-  "--sidebar-surface"
+  "--sidebar-surface",
 ];
 
 // Cache for currently applied vars to avoid redundant style work
 let appliedVars = {};
-let cachedThemeVars = null; // last value from storage
 let rafPending = false;
 
 // Ensure we have a stylesheet that can force composer background/text
@@ -78,95 +77,80 @@ function parseColorToRgb(color) {
   return null;
 }
 
-function pickReadableText(surfaceColor) {
-  const rgb = parseColorToRgb(surfaceColor);
-  if (!rgb) return null;
-  // Perceived luminance
-  const luma = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b;
-  return luma > 180 ? "#0d0d0d" : "#ffffff";
-}
-
 function applyTheme(vars) {
   const root = document.documentElement;
   const next = vars || {};
 
-  // Coalesce multiple calls into one animation frame to minimize layout thrash
-  if (rafPending) {
-    // Update cache and bail; the scheduled frame will pick it up
-    cachedThemeVars = next;
-    return;
-  }
-  cachedThemeVars = next;
+  if (rafPending) return;
   rafPending = true;
   requestAnimationFrame(() => {
     rafPending = false;
     const current = appliedVars;
 
-    // Remove vars that are no longer present
     for (const key of Object.keys(current)) {
-      if (!(key in cachedThemeVars)) {
+      if (!(key in next)) {
         root.style.removeProperty(key);
         delete appliedVars[key];
       }
     }
 
-    // Apply only changed values
-    for (const [k, v] of Object.entries(cachedThemeVars)) {
+    for (const [k, v] of Object.entries(next)) {
       if (v == null) continue;
       if (current[k] !== v) {
         root.style.setProperty(k, v);
         appliedVars[k] = v;
       }
     }
-
-    // Keep a style tag around to enforce composer background/text
     ensureComposerStyleElement();
-
-    // Determine effective page surface to derive readable text, even if no explicit surface provided
-    let surface = cachedThemeVars["--composer-surface"] || cachedThemeVars["--bg-primary"] || cachedThemeVars["--main-surface-primary"];    
-    if (!surface) {
-      // Try computed background color from document body or root
-      const bodyBg = getComputedStyle(document.body || document.documentElement).backgroundColor;
-      surface = bodyBg || "#101010";
-    }
-
-    // Ensure core background tokens exist for consistency across the app
-    const rgb = parseColorToRgb(surface);
-    const messageSurface = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.85)` : surface;
-    const ensureVar = (key, value) => {
-      if (!(key in cachedThemeVars)) {
-        root.style.setProperty(key, value);
-        appliedVars[key] = value;
-      }
-    };
-    ensureVar("--bg-primary", surface);
-    ensureVar("--bg-secondary", surface);
-    ensureVar("--bg-tertiary", surface);
-    ensureVar("--bg-elevated-primary", surface);
-    ensureVar("--bg-elevated-secondary", surface);
-    ensureVar("--main-surface-primary", surface);
-    ensureVar("--main-surface-background", surface);
-    ensureVar("--composer-surface", surface);
-    ensureVar("--message-surface", messageSurface);
   });
 }
 
-// Initial load on page start
-chrome.storage.sync.get(["themeVars"], ({ themeVars }) => {
-  cachedThemeVars = themeVars || {};
-  applyTheme(cachedThemeVars);
-  ensureComposerStyleElement();
+// === Automatic Theme Switching Logic ===
+
+function getSiteTheme() {
+  // ChatGPT uses a 'dark' class on the <html> element for dark mode
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
+
+function applyAppropriateTheme() {
+  if (typeof chrome.runtime.id === 'undefined') return;
+  chrome.storage.sync.get(["activeLightVars", "activeDarkVars", "themeVars"], (result) => {
+    if (chrome.runtime.lastError) return;
+    
+    const { activeLightVars, activeDarkVars, themeVars } = result;
+    const siteTheme = getSiteTheme();
+
+    if (siteTheme === 'dark' && activeDarkVars) applyTheme(activeDarkVars);
+    else if (siteTheme === 'light' && activeLightVars) applyTheme(activeLightVars);
+    else if (themeVars) applyTheme(themeVars);
+    else applyTheme({});
+  });
+}
+
+// Watch for the user toggling light/dark mode on chatgpt.com
+const observer = new MutationObserver((mutationsList) => {
+  for (const mutation of mutationsList) {
+    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+      applyAppropriateTheme();
+      break;
+    }
+  }
 });
 
-// Live update on changes from popup
+observer.observe(document.documentElement, { attributes: true });
+
+// Listen for theme changes from the popup
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "sync" || !("themeVars" in changes)) return;
-  cachedThemeVars = changes.themeVars.newValue || {};
-  applyTheme(cachedThemeVars);
+  if (area === "sync" && (changes.themeVars || changes.activeLightVars || changes.activeDarkVars)) {
+    applyAppropriateTheme();
+  }
 });
 
-// Re-apply on SPA navigations or tab focus
-const reapply = () => applyTheme(cachedThemeVars);
-window.addEventListener("visibilitychange", reapply);
-window.addEventListener("focus", reapply);
-window.addEventListener("pageshow", reapply); 
+// Re-apply theme when tab becomes visible, as styles can sometimes be cleared
+window.addEventListener("visibilitychange", applyAppropriateTheme);
+window.addEventListener("focus", applyAppropriateTheme);
+window.addEventListener("pageshow", applyAppropriateTheme);
+
+// Initial load
+applyAppropriateTheme();
+ensureComposerStyleElement();
