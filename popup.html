@@ -16,6 +16,8 @@
         --card-bg: color-mix(in oklab, #ffffff 8%, transparent);
         --card-border: color-mix(in oklab, CanvasText 18%, transparent);
         --ring: color-mix(in oklab, #4d8dff 85%, transparent);
+        --ring-light: color-mix(in oklab, #f59e0b 85%, transparent);
+        --ring-dark: color-mix(in oklab, #8b5cf6 85%, transparent);
         --shadow: 0 10px 30px rgba(0,0,0,.25);
         --radius: 14px;
         --ease: cubic-bezier(.2,.8,.2,1);
@@ -65,6 +67,30 @@
       .selected-ring { position: absolute; inset: -1px; border-radius: var(--radius); border: 2px solid var(--ring); pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.20), 0 0 0 6px color-mix(in oklab, var(--ring) 10%, transparent);
         opacity: 0; transform: scale(.98); transition: opacity .22s var(--ease), transform .22s var(--ease); }
       .theme-card.selected .selected-ring { opacity: 1; transform: scale(1); }
+      
+      /* Styles for auto-switching mode */
+      .theme-card.selected-light .selected-ring { border-color: var(--ring-light); opacity: 1; transform: scale(1); }
+      .theme-card.selected-dark .selected-ring { border-color: var(--ring-dark); opacity: 1; transform: scale(1); }
+      .theme-card.selected-light::after, .theme-card.selected-dark::after {
+        content: '';
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 16px;
+        height: 16px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0.85;
+      }
+      /* Sun icon for light theme */
+      .theme-card.selected-light::after {
+        background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"%3E%3Ccircle cx="12" cy="12" r="5"%3E%3C/circle%3E%3Cline x1="12" y1="1" x2="12" y2="3"%3E%3C/line%3E%3Cline x1="12" y1="21" x2="12" y2="23"%3E%3C/line%3E%3 Cline x1="4.22" y1="4.22" x2="5.64" y2="5.64"%3E%3C/line%3E%3 Cline x1="18.36" y1="18.36" x2="19.78" y2="19.78"%3E%3C/line%3E%3Cline x1="1" y1="12" x2="3" y2="12"%3E%3C/line%3E%3 Cline x1="21" y1="12" x2="23" y2="12"%3E%3C/line%3E%3Cline x1="4.22" y1="19.78" x2="5.64" y2="18.36"%3E%3C/line%3E%3 Cline x1="18.36" y1="5.64" x2="19.78" y2="4.22"%3E%3C/line%3E%3C/svg%3E');
+      }
+      /* Moon icon for dark theme */
+      .theme-card.selected-dark::after {
+        background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%238b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"%3E%3C/path%3E%3C/svg%3E');
+      }
 
       .theme-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
       .theme-title { font-weight: 800; font-size: 12.5px; letter-spacing: .2px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -78,6 +104,75 @@
       .swatches { display: flex; gap: 8px; margin-top: 10px; min-width: 0; flex-wrap: nowrap; }
       .pill { border-radius: 999px; height: 16px; width: 38px; border: 1px solid color-mix(in oklab, CanvasText 10%, transparent); opacity: .95; box-shadow: inset 0 1px 2px rgba(0,0,0,.1); }
 
+      /* Search Bar */
+      .search-container {
+        margin-bottom: 12px;
+      }
+      .search-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--card-border);
+        background: color-mix(in oklab, CanvasText 3%, transparent);
+        color: inherit;
+        font-size: 13px;
+        -webkit-appearance: none;
+      }
+      .search-input:focus {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+        border-color: transparent;
+      }
+      .search-input::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        height: 14px;
+        width: 14px;
+        background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"%3E%3Cline x1="18" y1="6" x2="6" y2="18"%3E%3C/line%3E%3Cline x1="6" y1="6" x2="18" y2="18"%3E%3C/line%3E%3C/svg%3E');
+        cursor: pointer;
+        opacity: .6;
+      }
+
+      /* Collapsible Menu Styles */
+      .collapsible-groups { display: grid; gap: 12px; }
+      .theme-group summary {
+        list-style: none; /* remove default arrow */
+        position: relative;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius);
+        padding: 14px;
+        cursor: pointer;
+        font-weight: 800;
+        font-size: 13px;
+        letter-spacing: .2px;
+        transition: background .2s var(--ease);
+      }
+      .theme-group summary:hover {
+        border-color: color-mix(in oklab, CanvasText 40%, transparent);
+      }
+      .theme-group summary::-webkit-details-marker { display: none; }
+      .theme-group .grid {
+        padding-top: 12px; /* Spacing between summary and grid */
+      }
+      /* Chevron icon */
+      .theme-group summary::after {
+        content: '';
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%) rotate(0);
+        width: 16px;
+        height: 16px;
+        background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpolyline points="6 9 12 15 18 9"%3E%3C/polyline%3E%3C/svg%3E');
+        background-size: contain;
+        transition: transform .2s var(--ease);
+        opacity: .7;
+      }
+      .theme-group[open] > summary::after {
+        transform: translateY(-50%) rotate(180deg);
+      }
+
       /* Advanced section layout */
       .settings-grid { display: grid; gap: 16px; }
       .setting-group { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 16px; }
@@ -89,7 +184,6 @@
       .toggle-row label { font-weight: 500; font-size: 13px; flex: 1; }
       input[type="color"] { width: 40px; height: 28px; padding: 0; border: 1px solid var(--card-border); border-radius: 6px; background: transparent; cursor: pointer; }
       .actions { display: flex; gap: 8px; justify-content: flex-end; }
-      /* Minimal ghost buttons with subtle borders */
       .btn { padding: 8px 16px; border-radius: 8px; border: 1.5px solid color-mix(in oklab, CanvasText 25%, transparent); background: transparent; color: inherit; cursor: pointer; font-weight: 500; letter-spacing: .1px; transition: all .2s var(--ease); }
       .btn:hover { border-color: color-mix(in oklab, CanvasText 40%, transparent); background: color-mix(in oklab, CanvasText 6%, transparent); }
       .btn.primary { background: CanvasText; color: Canvas; border-color: CanvasText; font-weight: 700; }
@@ -122,7 +216,19 @@
        .radio-seg input { display: none; }
        .radio-seg label { user-select: none; text-align: center; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--card-border); background: color-mix(in oklab, CanvasText 3%, transparent); font-weight: 600; cursor: pointer; }
        .radio-seg input:checked + label { outline: 2px solid var(--ring); outline-offset: 1px; background: color-mix(in oklab, CanvasText 8%, transparent); }
-    </style>
+
+    /* Add new styles for gradient controls */
+    .color-row-complex { display: grid; gap: 8px; }
+    .color-row-header { display: flex; align-items: center; justify-content: space-between; }
+    .radio-seg-small { display: flex; gap: 2px; border: 1px solid var(--card-border); border-radius: 8px; padding: 2px; }
+    .radio-seg-small input { display: none; }
+    .radio-seg-small label { user-select: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .radio-seg-small input:checked + label { background: color-mix(in oklab, CanvasText 8%, transparent); }
+    .gradient-controls .color-row { padding-left: 8px; }
+    .gradient-controls .angle-row { display: flex; align-items: center; justify-content: space-between; padding-left: 8px; margin-top: 4px; }
+    .gradient-controls .angle-row label { font-size: 12px; opacity: .8; }
+    .gradient-controls .angle-row input { width: 86px; height: 28px; border-radius: 6px; border: 1px solid var(--card-border); background: transparent; color: inherit; padding: 0 8px; }
+</style>
   </head>
   <body>
       <div class="header">
@@ -134,80 +240,103 @@
 
       <div id="stack" class="stack">
         <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
-          <div id="themeGrid" class="grid"></div>
+          <div>
+            <div class="search-container">
+              <input type="search" id="themeSearch" placeholder="Search themes..." class="search-input">
+            </div>
+            <div class="collapsible-groups">
+              <details class="theme-group" open>
+                <summary>Accent-Only Themes</summary>
+                <div id="accentOnlyGrid" class="grid"></div>
+              </details>
+              <details class="theme-group">
+                <summary>Dark Background Themes</summary>
+                <div id="darkBgGrid" class="grid"></div>
+              </details>
+              <details class="theme-group">
+                <summary>Light Background Themes</summary>
+                <div id="lightBgGrid" class="grid"></div>
+              </details>
+            </div>
+          </div>
         </div>
 
         <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced">
-          <div class="settings-grid">
-            <div class="preview-group">
-              <h3 style="margin:0 0 10px 0; font-size:13px; font-weight:700; opacity:.8; text-transform:uppercase; letter-spacing:.3px;">Live preview</h3>
-              <div id="preview" class="preview-card">
-                <div class="chat">
-                  <div class="msg assistant">Assistant: Here’s how your theme feels. Links and accents use your accent color. This block matches app surfaces.</div>
-                  <div class="msg user">You: This is the user bubble. Make sure the text is readable on your color.</div>
-                  <div class="composer">
-                    <button class="secondary" type="button">Secondary</button>
-                    <button class="primary" type="button">Send</button>
+          <div>
+            <div class="settings-grid">
+              <div class="preview-group">
+                <h3 style="margin:0 0 10px 0; font-size:13px; font-weight:700; opacity:.8; text-transform:uppercase; letter-spacing:.3px;">Live preview</h3>
+                <div id="preview" class="preview-card">
+                  <div class="chat">
+                    <div class="msg assistant">Assistant: Here’s how your theme feels. Links and accents use your accent color. This block matches app surfaces.</div>
+                    <div class="msg user">You: This is the user bubble. Make sure the text is readable on your color.</div>
+                    <div class="composer">
+                      <button class="secondary" type="button">Secondary</button>
+                      <button class="primary" type="button">Send</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="setting-group gridish">
-              <h3>Core palette</h3>
-              <div class="color-row"><label for="accent">Accent</label><div class="pair"><input id="accent" type="color" value="#66b5ff" /><input id="accentHex" class="hex" value="#66b5ff" /></div></div>
-              <div class="color-row"><label for="userBg">User bubble</label><div class="pair"><input id="userBg" type="color" value="#003f7a" /><input id="userBgHex" class="hex" value="#003f7a" /></div></div>
-              <div class="color-row"><label for="userText">User text</label><div class="pair"><input id="userText" type="color" value="#f5faff" /><input id="userTextHex" class="hex" value="#f5faff" /></div></div>
-              <div class="color-row"><label for="submitBg">Submit button</label><div class="pair"><input id="submitBg" type="color" value="#0169cc" /><input id="submitBgHex" class="hex" value="#0169cc" /></div></div>
-              <div class="color-row"><label for="submitText">Submit text</label><div class="pair"><input id="submitText" type="color" value="#ffffff" /><input id="submitTextHex" class="hex" value="#ffffff" /></div></div>
-            </div>
+              <div class="setting-group gridish">
+                <h3>Core palette</h3>
+                <div class="color-row"><label for="accent">Accent</label><div class="pair"><input id="accent" type="color" value="#66b5ff" /><input id="accentHex" class="hex" value="#66b5ff" /></div></div>
+                
+                <!-- Replace the "User bubble" color-row in the "Core Palette" group -->
+                <div class="color-row"><label for="userBg">User bubble</label><div class="pair"><input id="userBg" type="color" value="#003f7a" /><input id="userBgHex" class="hex" value="#003f7a" /></div></div>
+                <div class="color-row"><label for="userText">User text</label><div class="pair"><input id="userText" type="color" value="#f5faff" /><input id="userTextHex" class="hex" value="#f5faff" /></div></div>
+                <div class="color-row"><label for="submitBg">Submit button</label><div class="pair"><input id="submitBg" type="color" value="#0169cc" /><input id="submitBgHex" class="hex" value="#0169cc" /></div></div>
+                <div class="color-row"><label for="submitText">Submit text</label><div class="pair"><input id="submitText" type="color" value="#ffffff" /><input id="submitTextHex" class="hex" value="#ffffff" /></div></div>
+              </div>
 
-            <div class="setting-group">
-              <h3>Surfaces</h3>
-              <div class="radio-seg" role="radiogroup" aria-label="Surface mode">
-                <div>
-                  <input type="radio" id="surface-default" name="surfaceMode" value="default" checked>
-                  <label for="surface-default">Default</label>
+              <div class="setting-group">
+                <h3>Surfaces</h3>
+                <div class="radio-seg" role="radiogroup" aria-label="Surface mode">
+                  <div>
+                    <input type="radio" id="surface-default" name="surfaceMode" value="default" checked>
+                    <label for="surface-default">Default</label>
+                  </div>
+                  <div>
+                    <input type="radio" id="surface-dark" name="surfaceMode" value="dark">
+                    <label for="surface-dark">Dark</label>
+                  </div>
+                  <div>
+                    <input type="radio" id="surface-light" name="surfaceMode" value="light">
+                    <label for="surface-light">Light</label>
+                  </div>
+                  <div>
+                    <input type="radio" id="surface-custom" name="surfaceMode" value="custom">
+                    <label for="surface-custom">Custom</label>
+                  </div>
                 </div>
-                <div>
-                  <input type="radio" id="surface-dark" name="surfaceMode" value="dark">
-                  <label for="surface-dark">Dark</label>
-                </div>
-                <div>
-                  <input type="radio" id="surface-light" name="surfaceMode" value="light">
-                  <label for="surface-light">Light</label>
-                </div>
-                <div>
-                  <input type="radio" id="surface-custom" name="surfaceMode" value="custom">
-                  <label for="surface-custom">Custom</label>
+                <!-- Replace the customSurfaceRow in the "Surfaces" group -->
+                <div id="customSurfaceRow" class="color-row hidden" style="margin-top:8px;">
+                    <label for="surfaceColor">Base surface</label>
+                    <div class="pair"><input id="surfaceColor" type="color" value="#0f0f10" /><input id="surfaceColorHex" class="hex" value="#0f0f10" /></div>
                 </div>
               </div>
-              <div id="customSurfaceRow" class="color-row hidden" style="margin-top:8px;">
-                <label for="surfaceColor">Base surface</label>
-                <div class="pair"><input id="surfaceColor" type="color" value="#0f0f10" /><input id="surfaceColorHex" class="hex" value="#0f0f10" /></div>
-              </div>
-            </div>
 
-            <div class="setting-group">
-              <h3>Actions</h3>
-              <div class="actions" style="flex-wrap: wrap; justify-content: flex-start;">
-                <button id="save" class="btn primary">Apply</button>
-                <button id="reset" class="btn">Reset</button>
-                <button id="random" class="btn">Surprise me</button>
-              </div>
-            </div>
-
-            <div class="setting-group">
-              <h3>Saved themes</h3>
-              <div class="color-row">
-                <label for="saveName">Name</label>
-                <div class="pair" style="gap:10px;">
-                  <input id="saveName" class="hex" placeholder="My theme" />
-                  <button id="saveThemeBtn" class="btn">Save current</button>
+              <div class="setting-group">
+                <h3>Actions</h3>
+                <div class="actions" style="flex-wrap: wrap; justify-content: flex-start;">
+                  <button id="save" class="btn primary">Apply</button>
+                  <button id="reset" class="btn">Reset</button>
+                  <button id="random" class="btn">Surprise me</button>
                 </div>
               </div>
-              
-              <div id="savedList" style="margin-top:10px; display:grid; gap:8px;"></div>
+
+              <div class="setting-group">
+                <h3>Saved themes</h3>
+                <div class="color-row">
+                  <label for="saveName">Name</label>
+                  <div class="pair" style="gap:10px;">
+                    <input id="saveName" class="hex" placeholder="My theme" />
+                    <button id="saveThemeBtn" class="btn">Save current</button>
+                  </div>
+                </div>
+                
+                <div id="savedList" style="margin-top:10px; display:grid; gap:8px;"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -215,5 +344,4 @@
 
     <script src="popup.js"></script>
   </body>
-</html> 
-
+</html>

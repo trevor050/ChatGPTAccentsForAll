@@ -24,7 +24,6 @@ function shade(hex, pct) {
   });
 }
 
-// Quick color parsers for contrast decisions
 function parseColorToRgb(color) {
   if (!color) return null;
   const hexMatch = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})([\da-f]{2})?$/i.exec(color.trim());
@@ -56,8 +55,6 @@ function buildVarsFromCore(core) {
   const mutedHover = shade(accent, -40);
   const mutedPress = shade(accent, -34);
 
-  // We intentionally avoid overriding app text tokens to keep native light/dark.
-
   const base = {
     "--interactive-bg-accent-default": accent,
     "--interactive-bg-accent-hover": hover,
@@ -66,18 +63,13 @@ function buildVarsFromCore(core) {
     "--interactive-bg-accent-selected": accent,
     "--interactive-bg-accent-muted-hover": mutedHover,
     "--interactive-bg-accent-muted-press": mutedPress,
-
     "--composer-blue-bg": accent,
     "--composer-blue-hover": hover,
-
     "--theme-user-msg-bg": userBg,
     "--theme-user-msg-text": userText,
-
     "--theme-submit-btn-bg": submitBg,
-    // Intentionally omit submit button text override to avoid global text changes
-
+    "--theme-submit-btn-text": submitText,
     "--theme-secondary-btn-bg": mutedHover,
-    // Omit secondary btn text override
   };
   return core.extras ? { ...base, ...core.extras } : base;
 }
@@ -93,8 +85,6 @@ function buildVarsFromInputs() {
 }
 
 // ===== Preset themes =====
-// Includes built-in: Default, Blue, Green, Yellow, Pink, Orange, Purple (Plus), Black (Pro)
-// And extra curated themes.
 const PRESETS = [
   // 1) Non-background (accent-only) — keep original list first
   // Required order (matches ChatGPT accent menu)
@@ -142,7 +132,7 @@ const PRESETS = [
   { id: "void", name: "Void", accent: "#9333ea", userBg: "#1e1b4b", userText: "#e0e7ff", submitBg: "#7c3aed", submitText: "#ffffff",
     extras: { "--bg-primary": "#0f0f23", "--bg-secondary": "#1a1a3a", "--message-surface": "rgba(30,30,66,0.85)", "--bg-elevated-secondary": "#151534", "--main-surface-primary": "#0f0f23" }, bgTone: "dark" },
   { id: "arctic", name: "Arctic", accent: "#0284c7", userBg: "#0c4a6e", userText: "#e0f2fe", submitBg: "#0369a1", submitText: "#ffffff",
-    extras: { "--bg-primary": "#0a1929", "--bg-secondary": "#0f1e33", "--message-surface": "rgba(20,35,59,0.8)", "--bg-elevated-secondary": "#10243d", "--main-surface-primary": "#0a1929" }, bgTone: "dark" },
+    extras: { "--bg-primary": "#0a1929", "--bg-secondary": "#0e1624", "--message-surface": "rgba(20,35,59,0.8)", "--bg-elevated-secondary": "#10243d", "--main-surface-primary": "#0a1929" }, bgTone: "dark" },
   { id: "ember", name: "Ember", accent: "#dc2626", userBg: "#7f1d1d", userText: "#fecaca", submitBg: "#b91c1c", submitText: "#ffffff",
     extras: { "--bg-primary": "#1a0606", "--bg-secondary": "#2a0a0a", "--message-surface": "rgba(59,15,15,0.8)", "--bg-elevated-secondary": "#2a0a0a", "--main-surface-primary": "#1a0606" }, bgTone: "dark" },
   { id: "neon", name: "Neon", accent: "#06ffa5", userBg: "#064e3b", userText: "#ccfbf1", submitBg: "#00d084", submitText: "#000000",
@@ -203,9 +193,9 @@ const PRESETS = [
   { id: "pastel_peach", name: "Pastel Peach", accent: "#fb923c", userBg: "#ffe7d9", userText: "#4a2206", submitBg: "#fb6a22", submitText: "#ffffff",
     extras: { "--bg-primary": "#fffaf7", "--bg-secondary": "#fff4ed", "--bg-tertiary": "#ffece0", "--message-surface": "rgba(255,245,236,.80)", "--main-surface-primary": "#fffaf7" }, bgTone: "light" },
   { id: "pastel_lavender", name: "Lavender Milk", accent: "#a78bfa", userBg: "#efe5fe", userText: "#2c184a", submitBg: "#924ff7", submitText: "#ffffff",
-    extras: { "--bg-primary": "#fefbff", "--bg-secondary": "#f9f5ff", "--bg-tertiary": "#f3edff", "--message-surface": "rgba(245,240,255,.75)", "--main-surface-primary": "#fefbff" }, bgTone: "light" },
+    extras: { "--bg-primary": "#fefbff", "--bg-secondary": "#f9f5ff", "--bg-tertiary": "#f3e8ff", "--message-surface": "rgba(245,240,255,.75)", "--main-surface-primary": "#fefbff" }, bgTone: "light" },
   { id: "pastel_rose", name: "Soft Rose", accent: "#f472b6", userBg: "#ffe8f3", userText: "#4d1f34", submitBg: "#ff66ad", submitText: "#ffffff",
-    extras: { "--bg-primary": "#fffafc", "--bg-secondary": "#fff2f7", "--bg-tertiary": "#ffe9f1", "--message-surface": "rgba(255,236,246,.80)", "--main-surface-primary": "#fffafc" }, bgTone: "light" },
+    extras: { "--bg-primary": "#fffafc", "--bg-secondary": "#ffeff7", "--bg-tertiary": "#ffe9f1", "--message-surface": "rgba(255,236,246,.80)", "--main-surface-primary": "#fffafc" }, bgTone: "light" },
   { id: "pastel_sand", name: "Warm Sand", accent: "#d6b28d", userBg: "#fff6e0", userText: "#4a3200", submitBg: "#d3995c", submitText: "#ffffff",
     extras: { "--bg-primary": "#fffcf7", "--bg-secondary": "#fff8f0", "--bg-tertiary": "#fff2e6", "--message-surface": "rgba(246,241,231,.75)", "--main-surface-primary": "#fffcf7" }, bgTone: "light" },
   { id: "porcelain", name: "Porcelain", accent: "#64748b", userBg: "#eef2f7", userText: "#1f2937", submitBg: "#475569", submitText: "#ffffff",
@@ -214,7 +204,7 @@ const PRESETS = [
     extras: { "--bg-primary": "#f8fcff", "--bg-secondary": "#eef8ff", "--bg-tertiary": "#e6f3ff", "--message-surface": "rgba(228,242,255,.65)", "--main-surface-primary": "#f8fcff" }, bgTone: "light" },
   { id: "lemonade", name: "Lemonade", accent: "#facc15", userBg: "#fef9c3", userText: "#3b3000", submitBg: "#eab308", submitText: "#0d0d0d",
     extras: { "--bg-primary": "#fffef5", "--bg-secondary": "#fffbe6", "--bg-tertiary": "#fff7cc", "--message-surface": "rgba(255,247,204,.55)", "--main-surface-primary": "#fffef5" }, bgTone: "light" },
-  { id: "cotton_candy", name: "Cotton Candy", accent: "#fb61d1", userBg: "#ffe4f0", userText: "#4a1d3d", submitBg: "#ec4899", submitText: "#ffffff",
+  { id: "cotton_candy", name: "Cotton Candy", accent: "#fb61d1", userBg: "#ffe8f0", userText: "#4a1d3d", submitBg: "#ec4899", submitText: "#ffffff",
     extras: { "--bg-primary": "#fff7fb", "--bg-secondary": "#ffeff7", "--bg-tertiary": "#ffe4f4", "--message-surface": "rgba(255,231,246,.70)", "--main-surface-primary": "#fff7fb" }, bgTone: "light" },
   { id: "lagoon", name: "Lagoon", accent: "#14b8a6", userBg: "#d1faf5", userText: "#003b35", submitBg: "#0d9488", submitText: "#ffffff",
     extras: { "--bg-primary": "#f5fffd", "--bg-secondary": "#e9fffb", "--bg-tertiary": "#ddfff8", "--message-surface": "rgba(221,255,248,.60)", "--main-surface-primary": "#f5fffd" }, bgTone: "light" },
@@ -232,14 +222,75 @@ const PRESETS = [
     extras: { "--bg-primary": "#fffef0", "--bg-secondary": "#fef3c7", "--bg-tertiary": "#fde68a", "--message-surface": "rgba(254,243,199,.65)", "--main-surface-primary": "#fffef0" }, bgTone: "light" }
 ];
 
+// ===== Core UI Logic =====
+
+function syncSelectedFromStorage() {
+  chrome.storage.sync.get(["themeVars", "activeLightVars", "activeDarkVars"], ({ themeVars, activeLightVars, activeDarkVars }) => {
+    const cards = Array.from(document.querySelectorAll(".theme-card"));
+    for (const card of cards) {
+      card.classList.remove("selected", "selected-light", "selected-dark");
+    }
+
+    const findPresetByVars = (varsToMatch) => {
+      if (!varsToMatch || !varsToMatch["--interactive-bg-accent-default"]) return null;
+      const accent = varsToMatch["--interactive-bg-accent-default"];
+      const userBg = varsToMatch["--theme-user-msg-bg"];
+      const submitBg = varsToMatch["--theme-submit-btn-bg"];
+      const candidates = PRESETS.filter(p => !p.reset && p.accent === accent && p.userBg === userBg && p.submitBg === submitBg);
+      let best = null; let bestScore = -1;
+      for (const p of candidates) {
+        let score = 0; let mismatch = false;
+        if (p.extras) {
+          for (const [k, v] of Object.entries(p.extras)) {
+            if (varsToMatch[k] === v) score++; else { mismatch = true; break; }
+          }
+        } else if (varsToMatch['--bg-primary']) {
+          mismatch = true;
+        }
+        if (!mismatch && score >= bestScore) { best = p; bestScore = score; }
+      }
+      return best || candidates[0];
+    };
+
+    if (activeLightVars || activeDarkVars) {
+      const lightPreset = findPresetByVars(activeLightVars);
+      if (lightPreset) {
+        const card = document.querySelector(`.theme-card[data-id="${lightPreset.id}"]`);
+        if (card) card.classList.add("selected-light");
+      }
+      const darkPreset = findPresetByVars(activeDarkVars);
+      if (darkPreset) {
+        const card = document.querySelector(`.theme-card[data-id="${darkPreset.id}"]`);
+        if (card) card.classList.add("selected-dark");
+      }
+    } else if (themeVars) {
+      const preset = findPresetByVars(themeVars);
+      if (preset) {
+        const card = document.querySelector(`.theme-card[data-id="${preset.id}"]`);
+        if (card) card.classList.add("selected");
+      }
+    } else {
+      const card = document.querySelector('.theme-card[data-id="reset"]');
+      if (card) card.classList.add("selected");
+    }
+  });
+}
+
 function renderPresets() {
-  const grid = document.getElementById("themeGrid");
-  grid.innerHTML = "";
+  const accentGrid = document.getElementById("accentOnlyGrid");
+  const darkGrid = document.getElementById("darkBgGrid");
+  const lightGrid = document.getElementById("lightBgGrid");
+
+  accentGrid.innerHTML = "";
+  darkGrid.innerHTML = "";
+  lightGrid.innerHTML = "";
+
   for (const preset of PRESETS) {
     const card = document.createElement("button");
     card.className = "theme-card";
     card.setAttribute("type", "button");
     card.dataset.id = preset.id;
+    card.dataset.name = preset.name.toLowerCase();
 
     const row = document.createElement("div");
     row.className = "theme-row";
@@ -264,91 +315,87 @@ function renderPresets() {
       title.appendChild(badge);
     }
 
-    // Background-changing indicator with human text + visual tone
-    if (preset.extras && (preset.extras["--bg-primary"] || preset.extras["--main-surface-primary"] || preset.extras["--main-surface-background"] || preset.extras["--sidebar-surface"])) {
-      const base = preset.extras["--bg-primary"] || preset.extras["--main-surface-primary"] || "#111213";
-      const rgb = parseColorToRgb(base);
-      const luma = rgb ? (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) : 0;
-      const isLight = luma > 180;
+    if (preset.bgTone) {
       const bgBadge = document.createElement("span");
-      bgBadge.className = isLight ? "badge bg-light" : "badge bg-dark";
-      bgBadge.textContent = isLight ? "Background: Light" : "Background: Dark";
+      bgBadge.className = preset.bgTone === "light" ? "badge bg-light" : "badge bg-dark";
+      bgBadge.textContent = preset.bgTone === "light" ? "Light" : "Dark";
       title.appendChild(bgBadge);
     }
 
     const swatches = document.createElement("div");
     swatches.className = "swatches";
-
-    // For BG themes, show the bg color as the middle swatch; otherwise show user bubble
-    const hasBg = preset.extras && (preset.extras["--bg-primary"] || preset.extras["--main-surface-primary"]);
     const s1 = document.createElement("div"); s1.className = "pill"; s1.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : preset.accent; swatches.appendChild(s1);
-    const s2 = document.createElement("div"); s2.className = "pill"; s2.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : (hasBg ? (preset.extras["--bg-primary"] || preset.extras["--main-surface-primary"]) : preset.userBg); swatches.appendChild(s2);
+    const s2 = document.createElement("div"); s2.className = "pill"; s2.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : (preset.extras ? (preset.extras["--bg-primary"] || preset.extras["--main-surface-primary"]) : preset.userBg); swatches.appendChild(s2);
     const s3 = document.createElement("div"); s3.className = "pill"; s3.style.background = preset.reset ? "linear-gradient(90deg,#c8c8c8,#e0e0e0)" : preset.submitBg; swatches.appendChild(s3);
 
     const ring = document.createElement("div");
     ring.className = "selected-ring";
 
     row.appendChild(title);
-
     card.appendChild(ring);
     card.appendChild(row);
     card.appendChild(swatches);
 
     card.addEventListener("click", () => {
       if (preset.reset) {
+        chrome.storage.sync.remove(["themeVars", "activeLightVars", "activeDarkVars"]);
+      } else if (preset.bgTone === 'light') {
+        const themeVars = buildVarsFromCore(preset);
+        chrome.storage.sync.set({ activeLightVars: themeVars });
+        chrome.storage.sync.remove("themeVars");
+      } else if (preset.bgTone === 'dark') {
+        const themeVars = buildVarsFromCore(preset);
+        chrome.storage.sync.set({ activeDarkVars: themeVars });
         chrome.storage.sync.remove("themeVars");
       } else {
         const themeVars = buildVarsFromCore(preset);
         chrome.storage.sync.set({ themeVars });
+        chrome.storage.sync.remove(["activeLightVars", "activeDarkVars"]);
       }
     });
 
-    grid.appendChild(card);
+    if (preset.bgTone === 'dark') {
+      darkGrid.appendChild(card);
+    } else if (preset.bgTone === 'light') {
+      lightGrid.appendChild(card);
+    } else {
+      accentGrid.appendChild(card);
+    }
   }
+  
+  document.querySelectorAll('.theme-group').forEach(details => {
+    details.addEventListener('toggle', () => {
+      requestAnimationFrame(updateStackHeight);
+    });
+  });
 
-  // initial selection state
   syncSelectedFromStorage();
 }
 
-function syncSelectedFromStorage() {
-  chrome.storage.sync.get(["themeVars"], ({ themeVars }) => {
-    const grid = document.getElementById("themeGrid");
-    const cards = Array.from(grid.querySelectorAll(".theme-card"));
+// ===== Search Functionality =====
+function setupThemeSearch() {
+    const searchInput = document.getElementById('themeSearch');
+    const allCards = Array.from(document.querySelectorAll('.theme-card'));
 
-    // Determine which preset matches storage; prefer extras matches to avoid Obsidian->Black confusion
-    let selectedId = "reset";
-    if (themeVars && themeVars["--interactive-bg-accent-default"]) {
-      const accent = themeVars["--interactive-bg-accent-default"]; 
-      const userBg = themeVars["--theme-user-msg-bg"]; 
-      const submitBg = themeVars["--theme-submit-btn-bg"]; 
-      const candidates = PRESETS.filter(p => !p.reset && p.accent === accent && p.userBg === userBg && p.submitBg === submitBg);
-      let best = null; let bestScore = -1;
-      for (const p of candidates) {
-        let score = 0; let mismatch = false;
-        if (p.extras) {
-          for (const [k,v] of Object.entries(p.extras)) {
-            if (themeVars[k] === v) score++; else { mismatch = true; break; }
-          }
-        }
-        if (!mismatch && score >= bestScore) { best = p; bestScore = score; }
-      }
-      const match = best || candidates[0];
-      if (match) selectedId = match.id; else selectedId = "custom";
-    }
+    if (!searchInput || !allCards.length) return;
 
-    for (const card of cards) {
-      if (card.dataset.id === selectedId) card.classList.add("selected");
-      else card.classList.remove("selected");
-    }
-  });
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase().trim();
+
+        allCards.forEach(card => {
+            if (card.dataset.id === 'reset') {
+                card.style.display = '';
+                return;
+            }
+            
+            const name = card.dataset.name || '';
+            const isVisible = name.includes(query);
+            card.style.display = isVisible ? '' : 'none';
+        });
+        
+        requestAnimationFrame(updateStackHeight);
+    });
 }
-
-// react to changes from other popup actions
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "sync" && changes.themeVars) {
-    syncSelectedFromStorage();
-  }
-});
 
 // ===== Advanced controls =====
 function loadAdvanced() {
@@ -366,7 +413,6 @@ function loadAdvanced() {
     document.getElementById("submitBg").value = submitBg;
     document.getElementById("submitText").value = submitText;
 
-    // hex mirrors if present
     const setHex = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
     setHex("accentHex", accent);
     setHex("userBgHex", userBg);
@@ -374,7 +420,6 @@ function loadAdvanced() {
     setHex("submitBgHex", submitBg);
     setHex("submitTextHex", submitText);
 
-    // surface mode detection
     const base = themeVars["--bg-primary"] || themeVars["--main-surface-primary"] || null;
     if (base) {
       const r = document.getElementById("surface-custom"); if (r) r.checked = true;
@@ -383,17 +428,20 @@ function loadAdvanced() {
     } else {
       const r = document.getElementById("surface-default"); if (r) r.checked = true;
     }
-    if (typeof ensureCustomSurfaceVisibility === "function") ensureCustomSurfaceVisibility();
-    if (typeof updatePreview === "function") updatePreview();
+    ensureCustomSurfaceVisibility();
+    updatePreview();
   });
 }
 
 function saveAdvanced() {
   const themeVars = buildVarsFromInputs();
   chrome.storage.sync.set({ themeVars });
+  chrome.storage.sync.remove(["activeLightVars", "activeDarkVars"]);
 }
 
-function resetSite() { chrome.storage.sync.remove("themeVars"); }
+function resetSite() { 
+  chrome.storage.sync.remove(["themeVars", "activeLightVars", "activeDarkVars"]); 
+}
 
 // ===== Segmented control =====
 function setSection(which) {
@@ -402,7 +450,6 @@ function setSection(which) {
   const segBasic = document.getElementById("seg-basic");
   const segAdvanced = document.getElementById("seg-advanced");
   const segment = document.getElementById("segment");
-  const stack = document.getElementById("stack");
 
   if (which === "basic") {
     basic.classList.add("active");
@@ -418,23 +465,8 @@ function setSection(which) {
     segment.dataset.active = "advanced";
   }
 
-  // Smoothly resize container to fit active section
   requestAnimationFrame(updateStackHeight);
 }
-
-document.getElementById("seg-basic").addEventListener("click", () => setSection("basic"));
-document.getElementById("seg-advanced").addEventListener("click", () => setSection("advanced"));
-
-document.getElementById("save").addEventListener("click", saveAdvanced);
-document.getElementById("reset").addEventListener("click", resetSite);
-
-renderPresets();
-loadAdvanced(); 
-// After initial content render, compute container height
-requestAnimationFrame(updateStackHeight);
-
-// ===== Advanced toggles for sidebar/top bar =====
-// Background overrides removed for now (simplified UI)
 
 // ===== Layout helpers =====
 function updateStackHeight() {
@@ -442,16 +474,13 @@ function updateStackHeight() {
   if (!stack) return;
   const active = stack.querySelector(".section.active");
   if (!active) return;
-  // Prefer measuring inner content to avoid absolute layout quirks
-  const content = active.firstElementChild || active;
-  // Use scrollHeight for robust height when dynamic lists expand
-  const height = content.scrollHeight || active.scrollHeight || content.getBoundingClientRect().height || 0;
+  const content = active.firstElementChild;
+  if (!content) return;
+  const height = content.scrollHeight;
   if (height) stack.style.height = `${Math.ceil(height)}px`;
 }
 
-window.addEventListener("resize", () => requestAnimationFrame(updateStackHeight));
-
-// ===== Advanced UX: live preview, hex sync, surfaces, import/export/random =====
+// ===== Advanced UX: live preview, hex sync, surfaces, etc. =====
 const VALID_HEX_RE = /^#([0-9a-fA-F]{6})$/;
 
 function getSelectedSurfaceMode() {
@@ -472,7 +501,7 @@ function getSurfaceExtrasByMode(mode) {
     const message = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.85)`;
     return { "--bg-primary": base, "--bg-secondary": base, "--bg-tertiary": base, "--message-surface": message, "--main-surface-primary": base, "--bg-elevated-secondary": base };
   }
-  return null; // default
+  return null;
 }
 
 function getSurfaceExtrasFromUI() {
@@ -492,15 +521,25 @@ function updatePreview() {
   const preview = document.getElementById("preview");
   if (!preview) return;
   const vars = buildVarsFromInputs();
-  // apply a subset to the preview container
   applyVarsToElement(vars, preview);
-  // ensure preview text tokens are present for readability
-  const surface = vars["--bg-primary"] || vars["--main-surface-primary"] || "#101010";
-  const txt = pickReadableText(surface) || "#ffffff";
+  
+  // FIX: Handle gradients to ensure readable text
+  let surface = vars["--bg-primary"] || vars["--main-surface-primary"] || "#101010";
+  let colorForTextCheck = surface;
+  
+  if (surface.startsWith('linear-gradient')) {
+    // If it's a gradient, extract the first color to check for contrast
+    const match = /linear-gradient\((.+?), (.+?),/.exec(surface);
+    if (match) {
+      colorForTextCheck = match[2].trim();
+    }
+  }
+
+  const txt = pickReadableText(colorForTextCheck) || "#ffffff";
   preview.style.setProperty("--text-primary", txt);
   const secondary = txt === "#ffffff" ? "rgba(255,255,255,0.85)" : "rgba(13,13,13,0.80)";
   preview.style.setProperty("--text-secondary", secondary);
-  // keep container height smooth
+  
   requestAnimationFrame(updateStackHeight);
 }
 
@@ -521,7 +560,6 @@ function syncColorPair(colorId, hexId) {
     let v = val.trim();
     if (!v.startsWith("#")) v = "#" + v;
     if (/^#([0-9a-fA-F]{3})$/.test(v)) {
-      // expand shorthand #abc -> #aabbcc
       v = "#" + v.slice(1).split("").map(c => c + c).join("");
     }
     return VALID_HEX_RE.test(v) ? v.toLowerCase() : null;
@@ -534,7 +572,6 @@ function syncColorPair(colorId, hexId) {
 }
 
 function wireAdvancedUI() {
-  // Hex sync pairs
   syncColorPair("accent", "accentHex");
   syncColorPair("userBg", "userBgHex");
   syncColorPair("userText", "userTextHex");
@@ -542,58 +579,29 @@ function wireAdvancedUI() {
   syncColorPair("submitText", "submitTextHex");
   syncColorPair("surfaceColor", "surfaceColorHex");
 
-  // Surface radios
   const radios = Array.from(document.querySelectorAll('input[name="surfaceMode"]'));
   for (const r of radios) r.addEventListener("change", () => { ensureCustomSurfaceVisibility(); updatePreview(); });
 
-  // Actions
   const randBtn = document.getElementById("random");
   if (randBtn) randBtn.addEventListener("click", surpriseMe);
 
-  // Preview on input changes
   ["accent", "userBg", "userText", "submitBg", "submitText", "surfaceColor"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener("input", updatePreview);
   });
 
-  // Tiny label below preview to hint about background type when custom is active
-  const preview = document.getElementById("preview");
-  if (preview) {
-    const note = document.createElement("div");
-    note.style.cssText = "margin-top:6px;font-size:11px;opacity:.7";
-    const refresh = () => {
-      const mode = getSelectedSurfaceMode();
-      if (mode === "default") { note.textContent = "Using site default background"; }
-      else if (mode === "dark") { note.textContent = "Using built-in dark background"; }
-      else if (mode === "light") { note.textContent = "Using built-in light background"; }
-      else {
-        const base = document.getElementById("surfaceColor")?.value || "#000";
-        const rgb = parseColorToRgb(base);
-        const luma = rgb ? (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) : 0;
-        note.textContent = luma > 180 ? "Custom background: Light" : "Custom background: Dark";
-      }
-    };
-    preview.parentElement.appendChild(note);
-    ["change","input"].forEach(evt => document.getElementById("surfaceColor")?.addEventListener(evt, () => { refresh(); }));
-    Array.from(document.querySelectorAll('input[name="surfaceMode"]')).forEach(r => r.addEventListener("change", refresh));
-    refresh();
-  }
-
-  ensureCustomSurfaceVisibility();
-  updatePreview();
-
-  // Saved themes wiring
   const saveThemeBtn = document.getElementById("saveThemeBtn");
   const saveName = document.getElementById("saveName");
   if (saveThemeBtn && saveName) {
     saveThemeBtn.addEventListener("click", () => saveCurrentThemeByName(saveName.value));
   }
-  // Import/Export removed for shipping v1
+  
+  ensureCustomSurfaceVisibility();
+  updatePreview();
   renderSavedThemes();
 }
 
 function surpriseMe() {
-  // choose a random preset (excluding reset)
   const candidates = PRESETS.filter(p => !p.reset);
   const pick = candidates[Math.floor(Math.random() * candidates.length)];
   if (!pick) return;
@@ -603,7 +611,7 @@ function surpriseMe() {
   if (pick.userText) set("userText", pick.userText);
   if (pick.submitBg) set("submitBg", pick.submitBg);
   if (pick.submitText) set("submitText", pick.submitText);
-  // surfaces
+  
   const hasExtras = pick.extras && (pick.extras["--bg-primary"] || pick.extras["--main-surface-primary"]);
   const mode = hasExtras ? "custom" : "default";
   const radio = document.getElementById(`surface-${mode}`);
@@ -614,14 +622,8 @@ function surpriseMe() {
   updatePreview();
 }
 
-// Import/Export removed
-
 // ===== Saved themes (library) =====
 const SAVED_KEY = "savedThemes";
-
-function sanitizeFileBase(name) {
-  return String(name || "theme").replace(/[^a-z0-9-_\.]+/gi, "_").slice(0, 60);
-}
 
 function loadSavedThemes(callback) {
   chrome.storage.sync.get([SAVED_KEY], (data) => {
@@ -643,7 +645,6 @@ function saveCurrentThemeByName(name) {
   if (!trimmed) return;
   const vars = buildVarsFromInputs();
   loadSavedThemes((list) => {
-    // If same name exists, append (2), (3), ...
     let finalName = trimmed;
     const existingNames = new Set(list.map(t => t.name));
     if (existingNames.has(finalName)) {
@@ -657,19 +658,6 @@ function saveCurrentThemeByName(name) {
   });
 }
 
-function saveThemeVarsToLibrary(vars, desiredName) {
-  const baseName = String(desiredName || "Imported Theme").trim() || "Imported Theme";
-  loadSavedThemes((list) => {
-    const names = new Set(list.map(t => t.name));
-    let final = baseName;
-    if (names.has(final)) {
-      let i = 2; while (names.has(`${baseName} (${i})`)) i++; final = `${baseName} (${i})`;
-    }
-    const next = [...list, { id: generateId(), name: final, vars }];
-    saveSavedThemes(next, () => { renderSavedThemes(); requestAnimationFrame(updateStackHeight); });
-  });
-}
-
 function renderSavedThemes() {
   const container = document.getElementById("savedList");
   if (!container) return;
@@ -677,26 +665,18 @@ function renderSavedThemes() {
   loadSavedThemes((list) => {
     if (!list.length) {
       const empty = document.createElement("div");
-      empty.style.opacity = ".7";
-      empty.style.fontSize = "12px";
+      empty.style.cssText = "opacity:.7; font-size:12px;";
       empty.textContent = "No saved themes yet";
       container.appendChild(empty);
       return;
     }
     for (const item of list) {
       const row = document.createElement("div");
-      row.style.display = "grid";
-      row.style.gridTemplateColumns = "1fr auto auto auto";
-      row.style.gap = "8px";
-      row.style.alignItems = "center";
+      row.style.cssText = "display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center;";
 
       const name = document.createElement("div");
       name.textContent = item.name;
-      name.style.fontWeight = "600";
-      name.style.fontSize = "12.5px";
-      name.style.overflow = "hidden";
-      name.style.textOverflow = "ellipsis";
-      name.style.whiteSpace = "nowrap";
+      name.style.cssText = "font-weight:600; font-size:12.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;";
 
       const applyBtn = document.createElement("button");
       applyBtn.className = "btn";
@@ -716,6 +696,7 @@ function renderSavedThemes() {
           })()
         });
         chrome.storage.sync.set({ themeVars });
+        chrome.storage.sync.remove(["activeLightVars", "activeDarkVars"]);
       });
 
       const delBtn = document.createElement("button");
@@ -732,8 +713,6 @@ function renderSavedThemes() {
   });
 }
 
-// Export helpers removed
-
 function deleteSavedTheme(id) {
   loadSavedThemes((list) => {
     const next = list.filter(t => t.id !== id);
@@ -741,7 +720,28 @@ function deleteSavedTheme(id) {
   });
 }
 
-// Library import/export removed
+// ===== Initial Load & Event Wiring =====
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("seg-basic").addEventListener("click", () => setSection("basic"));
+  document.getElementById("seg-advanced").addEventListener("click", () => setSection("advanced"));
+  document.getElementById("save").addEventListener("click", saveAdvanced);
+  document.getElementById("reset").addEventListener("click", resetSite);
 
-// Wire once DOM is ready
-document.addEventListener("DOMContentLoaded", wireAdvancedUI);
+  renderPresets();
+  wireAdvancedUI();
+  loadAdvanced();
+  setupThemeSearch();
+
+  // FIX: Call updateStackHeight after a short delay to ensure layout is stable
+  setTimeout(() => {
+        requestAnimationFrame(updateStackHeight);
+    }, 50);
+
+  window.addEventListener("resize", () => requestAnimationFrame(updateStackHeight));
+});
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "sync" && (changes.themeVars || changes.activeLightVars || changes.activeDarkVars)) {
+    syncSelectedFromStorage();
+  }
+});
