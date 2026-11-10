@@ -1,0 +1,28 @@
+{
+  "name": "chatgpt-accents-for-all",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "playwright": "^1.65.0",
+    "vitest": "^5.1.0",
+    "web-ext": "^10.8.0"
+  },
+  "version": "2.0.0",
+  "description": "Browser extension that lets you pick any accent color for ChatGPT.",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "test": "vitest run",
+    "lint": "eslint . && web-ext lint --source-dir dist/firefox --self-hosted",
+    "zip": "npm run build && web-ext build -s dist/chrome -a dist -n chatgpt-accents-chrome-{version}.zip -o && web-ext build -s dist/firefox -a dist -n chatgpt-accents-firefox-{version}.zip -o",
+    "check": "npm run build && npm test && npm run lint"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}

@@ -1,0 +1,3275 @@
+{
+ "capturedAt": "2026-11-10",
+ "url": "https://chatgpt.com/ (logged out)",
+ "build": "prod-26cab1d79412cec54abf889c6e0d04cad0181e72",
+ "htmlClasses": [
+  "x108lcm5",
+  "xzx5cyk",
+  "xojncy5",
+  "xy3g5xu",
+  "x1nktip0",
+  "xwbwmuu",
+  "x1it3fuk",
+  "xh8yej3",
+  "xuu8av0",
+  "xeuugli",
+  "xgs08xk",
+  "x1javzw2",
+  "xfqjyog",
+  "x1rob05q",
+  "xvmahel",
+  "xlh3980",
+  "x1f5fsc4",
+  "x15hbqbs",
+  "x129ryfp",
+  "x1j4k7t",
+  "xdil6ep",
+  "x1ew90b4",
+  "xf2lf2q",
+  "x1q4hrvh",
+  "xhzthhq",
+  "xtmahst",
+  "x19wwumo",
+  "xf5o8ab",
+  "xrs2rvu",
+  "xsqb0jk",
+  "x1h2x970",
+  "x18gmqe7",
+  "x1dj5c46",
+  "xuqn0r1",
+  "x1ckkleb",
+  "x14mtdvj",
+  "xjlr1r4",
+  "xb4n8m5",
+  "x1qulsx2",
+  "x80uccm",
+  "x113cnm9",
+  "xbs2zpe",
+  "xw2csxc",
+  "x1cz32y9",
+  "x1tgz2t7",
+  "xtdr75i",
+  "x1odjw0f",
+  "x17ld35r",
+  "x3mgoj2",
+  "x1jdgkl4",
+  "xkcv6ua",
+  "x1mofb07",
+  "xg83hb1",
+  "x1ira4s",
+  "xexsw6k",
+  "x1xuro6a",
+  "xqo8n92",
+  "x1jkmww0",
+  "x9fadvk",
+  "x7s33jz",
+  "x1njv9kd",
+  "x1rzbudj",
+  "x185mbhu",
+  "xosa0jh",
+  "x1l1chig",
+  "xikzxjy",
+  "x1yqm8si",
+  "x1b17es6",
+  "x725i56",
+  "x1kto299",
+  "x1d9l14f",
+  "x1ftd4sf",
+  "x1y1fc37",
+  "x9zpkr8",
+  "x1uz9dzm",
+  "x1kvar18",
+  "x13qp82k",
+  "xsajpkq",
+  "xbq413r",
+  "xv247kb"
+ ],
+ "total": 11319,
+ "rules": [
+  {
+   "selector": ".x1mhqu5n.x1mhqu5n",
+   "condition": "not all and (width >= 800.01px), (pointer: coarse)",
+   "decls": {
+    "--x1cwys7d": "1.5rem"
+   }
+  },
+  {
+   "selector": ".x9r7azj.x9r7azj",
+   "condition": "(width >= 800.01px) and (pointer: fine), (width >= 800.01px) and (pointer: none)",
+   "decls": {
+    "--xufcpe2": "calc(var(--x7hnjub) + var(--xssqk0y))"
+   }
+  },
+  {
+   "selector": ":root, .x1pfuz5j",
+   "decls": {
+    "--button-font-size": "initial",
+    "--button-font-weight": "initial",
+    "--button-line-height": "initial",
+    "--button-letter-spacing": "initial"
+   }
+  },
+  {
+   "selector": ":root, .x1h8l9m8",
+   "decls": {
+    "--mobile-footer-safe-area-bottom": "0px",
+    "--mobile-thread-viewport-height": "100dvb",
+    "--mobile-thread-composer-reserve": "initial",
+    "--mobile-thread-turn-min-block-size": "initial",
+    "--mobile-thread-turn-header-inset": "initial",
+    "--mobile-thread-disclosure-sticky-offset": "initial"
+   }
+  },
+  {
+   "selector": ":root, .xnpn0wm",
+   "decls": {
+    "--mobile-shell-visual-viewport-height": "initial"
+   }
+  },
+  {
+   "selector": ":root, .x18uicp2",
+   "decls": {
+    "--page-margin-bottom": "calc(var(--mobile-footer-safe-area-bottom) + .5rem)"
+   }
+  },
+  {
+   "selector": ":root, .x17v54i1",
+   "decls": {
+    "--mobile-thread-scroll-mask-top-size": "0px"
+   }
+  },
+  {
+   "selector": ":root, .x51yx8l",
+   "decls": {
+    "--swipable-layout-document-scroll-height": "initial",
+    "--swipable-layout-document-scroll-start": "initial"
+   }
+  },
+  {
+   "selector": ":root, .x1kfrmj0",
+   "decls": {
+    "--x12oulo": "clip",
+    "--x1jyeio7": "visible",
+    "--xbqr2dt": "auto"
+   }
+  },
+  {
+   "selector": ":root, .xgypclw",
+   "decls": {
+    "--x13mh34a": "260px"
+   }
+  },
+  {
+   "selector": ":root, .x1dbtzu6",
+   "decls": {
+    "--x1509t0k": ".125rem"
+   }
+  },
+  {
+   "selector": ":root, .x1eix9qt",
+   "decls": {
+    "--x17rrt9g": "contents",
+    "--x1kxh0k3": "contents",
+    "--xei4c7i": "contents",
+    "--xqg7ji7": "none",
+    "--xfnbhjv": "36px",
+    "--xuo8j5p": "0px",
+    "--xm9m38b": "0px",
+    "--xf44odk": "0px"
+   }
+  },
+  {
+   "selector": ":root, .x1qbhmti",
+   "decls": {
+    "--x1e8dgs7": "var(--x1e4keym)",
+    "--xaob84m": "var(--x1e4keym)",
+    "--x2j7jgu": "var(--xjq2c5c)",
+    "--xztbhyc": "var(--x1e4keym)",
+    "--x1y9kkat": "color-mix(in oklab, var(--x1e4keym) 85%, var(--x69dsh5))",
+    "--xk9p6k2": "color-mix(in oklab, var(--x1e4keym) 75%, var(--x69dsh5))",
+    "--xygl4k4": "var(--xif7uko)",
+    "--x6m03vb": "var(--x1y9qfar)",
+    "--x11y6m9k": "var(--xn2d1jy)",
+    "--chat-selection-background": "initial",
+    "--chat-selection-foreground": "var(--x69dsh5)",
+    "--x130vrix": "var(--x1y9qfar)",
+    "--x1k0b6g3": "var(--x1scdecw)",
+    "--x1xbpn31": "var(--xn2d1jy)"
+   }
+  },
+  {
+   "selector": ":root, .x9z9jkm",
+   "decls": {
+    "--x1lprra2": "-apple-system-body, ui-sans-serif, -apple-system, system-ui, \"Segoe UI\", \"Helvetica\", \"Apple Color Emoji\", \"Arial\", sans-serif, \"Segoe UI Emoji\", \"Segoe UI Symbol\""
+   }
+  },
+  {
+   "selector": ":root, .x1m3o0of",
+   "decls": {
+    "--x1mbzizw": "var(--x69dsh5)",
+    "--x14e9ocd": "var(--xrh3fnw)",
+    "--xxzwvq0": "var(--x8cb1zg)",
+    "--x3od0vr": "var(--x1em6fjx)",
+    "--xqlrt43": "var(--x1w9ml1o)",
+    "--x1lim52": ".625rem",
+    "--x133sk6o": ".375rem",
+    "--xlr9b3o": ".625rem",
+    "--xvmy3bj": ".5rem",
+    "--x1cwys7d": "1.25rem"
+   }
+  },
+  {
+   "selector": ":root, .xsr3kt8",
+   "decls": {
+    "--x1d9lp7v": "-.0125rem",
+    "--xgw21f": "-.009375rem",
+    "--xaz5y1j": "-.0125rem",
+    "--x1l3hy5d": "-.0125rem"
+   }
+  },
+  {
+   "selector": ":root, .xt21tyy",
+   "decls": {
+    "--x1qg12x5": "var(--xxsqvjy)",
+    "--xgmhk9z": "var(--x1mzx15b)",
+    "--x38ouj3": "var(--x17e9krr)",
+    "--x1r1m7nu": "var(--x69dsh5)",
+    "--x12qqpe0": "var(--xrh3fnw)",
+    "--xnz65mj": "var(--x17gks54)",
+    "--xssqk0y": "310px",
+    "--x7hnjub": "0px",
+    "--x1j1pw91": "768px",
+    "--x1hd81vz": "0px",
+    "--x327334": "0px",
+    "--xxi9irj": "0px",
+    "--xp9lxud": "0px",
+    "--xufcpe2": "0px",
+    "--x1y19cje": "310px",
+    "--x179wmw9": "-100%",
+    "--x1mfs61z": ".3",
+    "--x1aubt7c": "calc(50% + 22px)",
+    "--x1pagytu": "6px",
+    "--x1vki3xy": "72px",
+    "--x1ymmlhw": "32px",
+    "--xvjx4zi": "calc(var(--x22rqh8) + env(safe-area-max-inset-bottom,env(safe-area-inset-bottom,0px)))",
+    "--xei82a6": "61px",
+    "--xfu8js1": "0px",
+    "--xhr5asd": "84px",
+    "--x5zb17r": "calc(var(--x22rqh8) + env(safe-area-max-inset-bottom,env(safe-area-inset-bottom,0px)))",
+    "--xrdu7t7": "env(keyboard-inset-height,0px)",
+    "--xotk40i": "100svh",
+    "--x2hcgb9": "calc(var(--x22rqh8) + env(safe-area-max-inset-bottom,env(safe-area-inset-bottom,0px)) + min(36px, env(keyboard-inset-height,0px)))",
+    "--x1ah6j94": "300px"
+   }
+  },
+  {
+   "selector": ":root, .x1nl6p8s",
+   "decls": {
+    "--x1ro9pjl": "2rem",
+    "--x1pv6oex": "3rem",
+    "--x7o5nk5": "var(--x1nx6hqp)"
+   }
+  },
+  {
+   "selector": ":root, .x1n7xl4g",
+   "decls": {
+    "--x1rvgfks": "1.25rem",
+    "--x16kbqsn": "1rem"
+   }
+  },
+  {
+   "selector": ":root, .x15fwobw",
+   "decls": {
+    "--x1upelne": "max(44px, var(--xs4iylw))",
+    "--xcq1n3d": "max(max(44px, var(--xs4iylw)), var(--x6jnhyg))",
+    "--x1nx6hqp": "var(--x16kbqsn)",
+    "--x1mvlsag": "var(--x1irrc4r)",
+    "--xtgn5wi": "var(--x1rvgfks)"
+   }
+  },
+  {
+   "selector": ":root, .x1orkcp4",
+   "decls": {
+    "--x1vzghsp": "1.0625rem",
+    "--xfo92v7": "1.0625rem",
+    "--x4gcp5x": ".875rem",
+    "--xdk0yaz": ".75rem",
+    "--x1qy5u5k": "1.0625rem",
+    "--x58p2yi": "1.0625rem",
+    "--x1yqhm9y": ".9375rem",
+    "--xw7p6m8": "1.75rem",
+    "--x5rvcac": "1.25rem"
+   }
+  },
+  {
+   "selector": ":root, .x1yoe53v",
+   "decls": {
+    "--x22rqh8": "1.5rem",
+    "--x1djh6ja": "0px"
+   }
+  },
+  {
+   "selector": ":root, .x1wb3ek",
+   "decls": {
+    "--x2cnrkn": "1.41177",
+    "--x1klp0xc": "1.41177",
+    "--x19q6g3q": "1.33333",
+    "--xpgi047": "1.41177",
+    "--xuc10ci": "1.33333"
+   }
+  },
+  {
+   "selector": ":root, .xgjwkd1",
+   "decls": {
+    "--x2kwmdy": "62.4375rem"
+   }
+  },
+  {
+   "selector": ":root, .xsww7rs",
+   "decls": {
+    "--x18wrjje": "initial"
+   }
+  },
+  {
+   "selector": ":root, .xs8qgq1",
+   "decls": {
+    "--x6jnhyg": "3.25rem",
+    "--xs4iylw": "2.75rem",
+    "--x1irrc4r": "2rem",
+    "--x1ypw8a2": "1.25rem"
+   }
+  },
+  {
+   "selector": ":root, .xhi29si",
+   "decls": {
+    "--x1vin53w": "48rem"
+   }
+  },
+  {
+   "selector": ":root, .x1d0i159",
+   "decls": {
+    "--xf9xuhy": "0rem",
+    "--xj6tzhv": "0px",
+    "--x1beu7w0": "0px",
+    "--x9iz0au": "transparent",
+    "--x1h28tal": "currentColor",
+    "--xvh72ks": "var(--xif7uko)"
+   }
+  },
+  {
+   "selector": ":root, .x1v5wo5g",
+   "decls": {
+    "--xjzbrc1": "0px",
+    "--x8w107e": "100%"
+   }
+  },
+  {
+   "selector": ":root, .xsajpkq",
+   "decls": {
+    "--xlyber6": "var(--lightningcss-light,#0d0d0d)var(--lightningcss-dark,#fff)",
+    "--x7fwydj": "var(--lightningcss-light,#f3f3f3)var(--lightningcss-dark,#303030)",
+    "--x1mzx15b": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#303030)",
+    "--xiq9l3n": "var(--lightningcss-light,#0003)var(--lightningcss-dark,#fff3)",
+    "--x69dsh5": "var(--lightningcss-light,#0d0d0d)var(--lightningcss-dark,#fff)",
+    "--xj7rxqu": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--x17e9krr": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#212121)",
+    "--x1w9ml1o": "var(--lightningcss-light,#e8e8e8)var(--lightningcss-dark,#414141)",
+    "--xxsqvjy": "var(--lightningcss-light,#fcfcfc)var(--lightningcss-dark,#000)",
+    "--x17gks54": "var(--lightningcss-light,#0000001a)var(--lightningcss-dark,#ffffff26)",
+    "--x1vdwxib": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)",
+    "--x17pqyd6": "var(--lightningcss-light,#8f8f8f)var(--lightningcss-dark,#afafaf)",
+    "--x1fwcpeh": "var(--lightningcss-light,#212121)var(--lightningcss-dark,#e8e8e8)",
+    "--x1hqqq8t": "var(--lightningcss-light,#303030)var(--lightningcss-dark,#cdcdcd)",
+    "--x4sldyk": "var(--xlyber6)",
+    "--x1k8gdzs": "var(--xj7rxqu)",
+    "--x8cb1zg": "var(--lightningcss-light,#e8e8e8)var(--lightningcss-dark,#414141a6)",
+    "--x1em6fjx": "var(--lightningcss-light,#cdcdcd)var(--lightningcss-dark,#414141cc)",
+    "--x1h28xhg": "var(--lightningcss-light,#f3f3f3)var(--lightningcss-dark,#41414180)",
+    "--x18nan05": "#0000",
+    "--xpais5o": "#0000",
+    "--x701wd9": "var(--lightningcss-light,#ba2623)var(--lightningcss-dark,#ff6764)",
+    "--xif7uko": "#3566f0",
+    "--xrh3fnw": "var(--lightningcss-light,#5d5d5d)var(--lightningcss-dark,#cdcdcd)",
+    "--x126qe68": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#fee096)",
+    "--x1scdecw": "var(--lightningcss-light,#0d0d0d)var(--lightningcss-dark,#fff)",
+    "--x1e4keym": "var(--xlyber6)",
+    "--x1y9qfar": "var(--lightningcss-light,var(--x7fwydj))var(--lightningcss-dark,var(--x1mzx15b))",
+    "--xbn88x4": "var(--x69dsh5)",
+    "--xn2d1jy": "var(--x69dsh5)",
+    "--xjq2c5c": "var(--xj7rxqu)"
+   }
+  },
+  {
+   "selector": ":root, .xe3z7i6",
+   "decls": {
+    "--xvm1qtt": "100%",
+    "--x17j9gy1": "100%",
+    "--x1dbx8z": "none"
+   }
+  },
+  {
+   "selector": ":root, .xmgp10o",
+   "decls": {
+    "--x1j7iieg": "500",
+    "--x6oh8hw": "500"
+   }
+  },
+  {
+   "selector": ":root, .xv24iqh",
+   "decls": {
+    "--xxvky15": ".125rem"
+   }
+  },
+  {
+   "selector": ":root, .xgypclw",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--x13mh34a": "52px"
+   }
+  },
+  {
+   "selector": ":root, .xsww7rs",
+   "condition": "(color:lab(0% 0 0))",
+   "decls": {
+    "--x18wrjje": "var(--lightningcss-light,oklch(62.6176% .205304 254.998))var(--lightningcss-dark,oklch(71.8574% .153638 247.945))"
+   }
+  },
+  {
+   "selector": ":root, .xmgp10o",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x1j7iieg": "600"
+   }
+  },
+  {
+   "selector": ":root, .x9z9jkm",
+   "condition": "screen and (max-width: 63.999rem) and (-webkit-touch-callout:none)",
+   "decls": {
+    "--x1lprra2": "-apple-system, \"BlinkMacSystemFont\", \"OpenAI Sans\", sans-serif"
+   }
+  },
+  {
+   "selector": ":root, .x9z9jkm",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x1lprra2": "\"Roboto\", \"OpenAI Sans\", sans-serif"
+   }
+  },
+  {
+   "selector": ":root, .xsr3kt8",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x1d9lp7v": ".00625rem",
+    "--xaz5y1j": ".00625rem",
+    "--x1l3hy5d": ".00625rem"
+   }
+  },
+  {
+   "selector": ":root, .x1orkcp4",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x1yqhm9y": ".75rem",
+    "--x5rvcac": "1.375rem"
+   }
+  },
+  {
+   "selector": ":root, .x1wb3ek",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x2cnrkn": "1.52941",
+    "--x1klp0xc": "1.52941",
+    "--xpgi047": "1.52941"
+   }
+  },
+  {
+   "selector": ":root, .xt21tyy",
+   "condition": "(width >= 800.01px) and (pointer: fine), (width >= 800.01px) and (pointer: none)",
+   "decls": {
+    "--x38ouj3": "var(--xxsqvjy)",
+    "--xssqk0y": "204px",
+    "--x7hnjub": "56px",
+    "--xufcpe2": "56px",
+    "--x1y19cje": "200px"
+   }
+  },
+  {
+   "selector": ":root, .xsajpkq",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--xiq9l3n": "#5d5d5d",
+    "--x17gks54": "var(--lightningcss-light,#afafaf)var(--lightningcss-dark,#303030)",
+    "--x1vdwxib": "var(--lightningcss-light,#cdcdcd)var(--lightningcss-dark,#212121)",
+    "--x17pqyd6": "var(--lightningcss-light,#5d5d5d)var(--lightningcss-dark,#afafaf)",
+    "--x8cb1zg": "var(--x7fwydj)",
+    "--x1em6fjx": "var(--x1w9ml1o)",
+    "--x1h28xhg": "var(--x17e9krr)",
+    "--xrh3fnw": "var(--lightningcss-light,#414141)var(--lightningcss-dark,#cdcdcd)"
+   }
+  },
+  {
+   "selector": ":root, .xsajpkq",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--xlyber6": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,#fff)",
+    "--x7fwydj": "var(--lightningcss-light,oklch(96.4154% 0 none))var(--lightningcss-dark,oklch(30.9186% 0 none))",
+    "--x1mzx15b": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(30.9186% 0 none))",
+    "--xiq9l3n": "var(--lightningcss-light,#0003)var(--lightningcss-dark,#fff3)",
+    "--x69dsh5": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,#fff)",
+    "--xj7rxqu": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x17e9krr": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(24.7759% 0 none))",
+    "--x1w9ml1o": "var(--lightningcss-light,oklch(93.0999% 0 none))var(--lightningcss-dark,oklch(37.5299% 0 none))",
+    "--xxsqvjy": "var(--lightningcss-light,oklch(99.1069% 0 none))var(--lightningcss-dark,#000)",
+    "--x17gks54": "var(--lightningcss-light,#0000001a)var(--lightningcss-dark,#ffffff26)",
+    "--x1vdwxib": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)",
+    "--x17pqyd6": "var(--lightningcss-light,oklch(65.0041% 0 none))var(--lightningcss-dark,oklch(75.4017% 0 none))",
+    "--x1fwcpeh": "var(--lightningcss-light,oklch(24.7759% 0 none))var(--lightningcss-dark,oklch(93.0999% 0 none))",
+    "--x1hqqq8t": "var(--lightningcss-light,oklch(30.9186% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))",
+    "--x8cb1zg": "var(--lightningcss-light,oklch(93.0999% 0 none))var(--lightningcss-dark,oklch(37.5299% 0 0/.65))",
+    "--x1em6fjx": "var(--lightningcss-light,oklch(84.8322% 0 none))var(--lightningcss-dark,oklch(37.5299% 0 0/.8))",
+    "--x1h28xhg": "var(--lightningcss-light,oklch(96.4154% 0 none))var(--lightningcss-dark,oklch(37.5299% 0 0/.5))",
+    "--x18nan05": "#0000",
+    "--xpais5o": "#0000",
+    "--x701wd9": "var(--lightningcss-light,oklch(51.4636% .201816 27.4561))var(--lightningcss-dark,oklch(70.5326% .2032 24.2257))",
+    "--xif7uko": "oklch(56.0902% .214451 265.129)",
+    "--xrh3fnw": "var(--lightningcss-light,oklch(47.8359% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))",
+    "--x126qe68": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(91.5186% .116318 87.9669))",
+    "--x1scdecw": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,#fff)"
+   }
+  },
+  {
+   "selector": ":root, .xt21tyy",
+   "condition": "(428px <= width <= 800px), (width >= 428px) and (pointer: coarse)",
+   "decls": {
+    "--xssqk0y": "330px",
+    "--x1y19cje": "330px"
+   }
+  },
+  {
+   "selector": ":root, .xv24iqh",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--xxvky15": ".1875rem"
+   }
+  },
+  {
+   "selector": ":root, .xsajpkq",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--xiq9l3n": "var(--lightningcss-light,oklch(47.8359% 0 none))var(--lightningcss-dark,oklch(47.8359% 0 none))",
+    "--x17gks54": "var(--lightningcss-light,oklch(75.4017% 0 none))var(--lightningcss-dark,oklch(30.9186% 0 none))",
+    "--x1vdwxib": "var(--lightningcss-light,oklch(84.8322% 0 none))var(--lightningcss-dark,oklch(24.7759% 0 none))",
+    "--x17pqyd6": "var(--lightningcss-light,oklch(47.8359% 0 none))var(--lightningcss-dark,oklch(75.4017% 0 none))",
+    "--x8cb1zg": "var(--x7fwydj)",
+    "--x1em6fjx": "var(--x1w9ml1o)",
+    "--x1h28xhg": "var(--x17e9krr)",
+    "--xrh3fnw": "var(--lightningcss-light,oklch(37.5299% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))"
+   }
+  },
+  {
+   "selector": ".xd56c2m.xd56c2m, .xd56c2m.xd56c2m:root",
+   "decls": {
+    "--x1lprra2": "\"OpenAI Sans Variable Scripts\", -apple-system-body, ui-sans-serif, -apple-system, \"system-ui\", \"Segoe UI\", \"Helvetica\", \"Apple Color Emoji\", \"Arial\", \"sans-serif\", \"Segoe UI Emoji\", \"Segoe UI Symbol\""
+   }
+  },
+  {
+   "selector": ".x1abyczh.x1abyczh, .x1abyczh.x1abyczh:root",
+   "decls": {
+    "--x1lprra2": "\"OpenAI Sans\", \"OpenAI Sans Variable Scripts\", \"OpenAI Sans Fallback\", ui-sans-serif, system-ui, sans-serif"
+   }
+  },
+  {
+   "selector": ".x14xecuh.x14xecuh, .x14xecuh.x14xecuh:root",
+   "decls": {
+    "--x1scdecw": "#00b1ff",
+    "--x1e4keym": "#00b1ff",
+    "--x1y9qfar": "var(--lightningcss-light,#ebf7fe)var(--lightningcss-dark,#032837)",
+    "--xbn88x4": "var(--lightningcss-light,#0b5c7c)var(--lightningcss-dark,#b3e3fc)",
+    "--xjq2c5c": "#fff",
+    "--xn2d1jy": "var(--lightningcss-light,#0d78a1)var(--lightningcss-dark,#b3e3fc)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".x1dt2z8e.x1dt2z8e, .x1dt2z8e.x1dt2z8e:root",
+   "decls": {
+    "--x1scdecw": "#04bb9f",
+    "--x1e4keym": "#04bb9f",
+    "--x1y9qfar": "var(--lightningcss-light,#d7fff5)var(--lightningcss-dark,#032a23)",
+    "--xbn88x4": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#42dec2)",
+    "--xjq2c5c": "#fff",
+    "--xn2d1jy": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#8deed8)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".x13qp82k.x13qp82k, .x13qp82k.x13qp82k:root",
+   "decls": {
+    "--x1scdecw": "#3566f0",
+    "--x1e4keym": "#3566f0",
+    "--x1y9qfar": "var(--lightningcss-light,#edf3fe)var(--lightningcss-dark,#020562)",
+    "--xbn88x4": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#b0c9fe)",
+    "--xjq2c5c": "#fff",
+    "--xn2d1jy": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#dae6fd)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".x2nivo4.x2nivo4, .x2nivo4.x2nivo4:root",
+   "decls": {
+    "--x1scdecw": "#7c9cc3",
+    "--x1e4keym": "var(--lightningcss-light,#7c9cc3)var(--lightningcss-dark,#6e8eb5)",
+    "--x1y9qfar": "var(--lightningcss-light,#eef6ff)var(--lightningcss-dark,#1a2430)",
+    "--xbn88x4": "var(--lightningcss-light,#4a6e98)var(--lightningcss-dark,#acc7e8)",
+    "--xjq2c5c": "#fff",
+    "--xn2d1jy": "var(--lightningcss-light,#4a6e98)var(--lightningcss-dark,#acc7e8)"
+   }
+  },
+  {
+   "selector": ".x42czut.x42czut, .x42czut.x42czut:root",
+   "decls": {
+    "--x1scdecw": "#a25bff",
+    "--x1e4keym": "#a25bff",
+    "--x1y9qfar": "var(--lightningcss-light,#f6f1fe)var(--lightningcss-dark,#2e0350)",
+    "--xbn88x4": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#c8a4fb)",
+    "--xjq2c5c": "#fff",
+    "--xn2d1jy": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#dcc7fe)"
+   }
+  },
+  {
+   "selector": ".xxpg8uy.xxpg8uy, .xxpg8uy.xxpg8uy:root",
+   "decls": {
+    "--x1scdecw": "#b6d80b",
+    "--x1e4keym": "#b6d80b",
+    "--x1y9qfar": "var(--lightningcss-light,#effed0)var(--lightningcss-dark,#232d02)",
+    "--xbn88x4": "var(--lightningcss-light,#586c11)var(--lightningcss-dark,#d8f590)",
+    "--xjq2c5c": "#0d0d0d",
+    "--xn2d1jy": "var(--lightningcss-light,#586c11)var(--lightningcss-dark,#d8f590)"
+   }
+  },
+  {
+   "selector": ".xdzwo6c.xdzwo6c, .xdzwo6c.xdzwo6c:root",
+   "decls": {
+    "--x1scdecw": "#dd6adc",
+    "--x1e4keym": "#dd6adc",
+    "--x1y9qfar": "var(--lightningcss-light,#fef0fc)var(--lightningcss-dark,#3f023c)",
+    "--xbn88x4": "var(--lightningcss-light,#af1fa7)var(--lightningcss-dark,#fec5f6)",
+    "--xjq2c5c": "#fff",
+    "--xn2d1jy": "var(--lightningcss-light,#af1fa7)var(--lightningcss-dark,#fec5f6)"
+   }
+  },
+  {
+   "selector": ".x1marltc.x1marltc, .x1marltc.x1marltc:root",
+   "decls": {
+    "--x1scdecw": "#fa70ab",
+    "--x1e4keym": "#fa70ab",
+    "--x1y9qfar": "var(--lightningcss-light,#fff1f5)var(--lightningcss-dark,#470126)",
+    "--xbn88x4": "var(--lightningcss-light,#c31b74)var(--lightningcss-dark,#fbadca)",
+    "--xjq2c5c": "#fff",
+    "--xn2d1jy": "var(--lightningcss-light,#c31b74)var(--lightningcss-dark,#feccdd)"
+   }
+  },
+  {
+   "selector": ".xlwh8ez.xlwh8ez, .xlwh8ez.xlwh8ez:root",
+   "decls": {
+    "--x1scdecw": "#ff8066",
+    "--x1e4keym": "#ff8066",
+    "--x1y9qfar": "var(--lightningcss-light,#fff2f0)var(--lightningcss-dark,#550208)",
+    "--xbn88x4": "var(--lightningcss-light,#ab1616)var(--lightningcss-dark,#fdb9ab)",
+    "--xjq2c5c": "#fff",
+    "--xn2d1jy": "var(--lightningcss-light,#d8241a)var(--lightningcss-dark,#ffd3ca)"
+   }
+  },
+  {
+   "selector": ".xrf8t27.xrf8t27, .xrf8t27.xrf8t27:root",
+   "decls": {
+    "--x1scdecw": "#ffcc38",
+    "--x1e4keym": "#ffcc38",
+    "--x1y9qfar": "var(--lightningcss-light,#fff7e2)var(--lightningcss-dark,#c27b13)",
+    "--xbn88x4": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#fee096)",
+    "--xjq2c5c": "#0d0d0d",
+    "--xn2d1jy": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#feebbb)"
+   }
+  },
+  {
+   "selector": ".x1dt2z8e.x1dt2z8e, .x1dt2z8e.x1dt2z8e:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#04bb9f)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".x14xecuh.x14xecuh, .x14xecuh.x14xecuh:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#0b5c7c)var(--lightningcss-dark,#00b1ff)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".x13qp82k.x13qp82k, .x13qp82k.x13qp82k:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#153bc2)var(--lightningcss-dark,#81a6f9)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".x2nivo4.x2nivo4, .x2nivo4.x2nivo4:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#395473)var(--lightningcss-dark,#acc7e8)",
+    "--xbn88x4": "var(--lightningcss-light,#395473)var(--lightningcss-dark,#d8e6f8)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--xn2d1jy": "var(--lightningcss-light,#395473)var(--lightningcss-dark,#d8e6f8)"
+   }
+  },
+  {
+   "selector": ".xxpg8uy.xxpg8uy, .xxpg8uy.xxpg8uy:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#3c4b06)var(--lightningcss-dark,#b6d80b)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".xrf8t27.xrf8t27, .xrf8t27.xrf8t27:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#ffcc38)",
+    "--x1y9qfar": "var(--lightningcss-light,#fff7e2)var(--lightningcss-dark,#5c2605)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".x42czut.x42czut, .x42czut.x42czut:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#c8a4fb)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".xdzwo6c.xdzwo6c, .xdzwo6c.xdzwo6c:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#8b0484)var(--lightningcss-dark,#fba0f1)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".x1marltc.x1marltc, .x1marltc.x1marltc:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#971459)var(--lightningcss-dark,#fa70ab)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".xlwh8ez.xlwh8ez, .xlwh8ez.xlwh8ez:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,#ab1616)var(--lightningcss-dark,#ff8066)",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".x13qp82k.x13qp82k, .x13qp82k.x13qp82k:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(56.0902% .214451 265.129)",
+    "--x1e4keym": "oklch(56.0902% .214451 265.129)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(96.27% .0178832 265.129))var(--lightningcss-dark,oklch(23.2185% .150014 265.129))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(83.5528% .0864247 265.129))",
+    "--xjq2c5c": "#fff",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(92.2715% .0401458 265.129))"
+   }
+  },
+  {
+   "selector": ".x42czut.x42czut, .x42czut.x42czut:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "oklch(63.3487% .232433 299.596)",
+    "--xjq2c5c": "#fff"
+   }
+  },
+  {
+   "selector": ".x2nivo4.x2nivo4, .x2nivo4.x2nivo4:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(68.3185% .0680793 253.681))var(--lightningcss-dark,oklch(63.7474% .0691967 253.728))",
+    "--xjq2c5c": "#fff"
+   }
+  },
+  {
+   "selector": ".xdzwo6c.xdzwo6c, .xdzwo6c.xdzwo6c:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "oklch(70.0694% .197716 327.758)",
+    "--xjq2c5c": "#fff"
+   }
+  },
+  {
+   "selector": ".x1dt2z8e.x1dt2z8e, .x1dt2z8e.x1dt2z8e:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "oklch(70.8262% .131124 176.759)",
+    "--xjq2c5c": "#fff"
+   }
+  },
+  {
+   "selector": ".x14xecuh.x14xecuh, .x14xecuh.x14xecuh:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "oklch(72.313% .16242 238.815)",
+    "--xjq2c5c": "#fff"
+   }
+  },
+  {
+   "selector": ".x1marltc.x1marltc, .x1marltc.x1marltc:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "oklch(72.6265% .24906 355.639)",
+    "--xjq2c5c": "#fff"
+   }
+  },
+  {
+   "selector": ".xlwh8ez.xlwh8ez, .xlwh8ez.xlwh8ez:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "oklch(73.9659% .160143 32.9348)",
+    "--xjq2c5c": "#fff"
+   }
+  },
+  {
+   "selector": ".xxpg8uy.xxpg8uy, .xxpg8uy.xxpg8uy:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "oklch(82.7907% .196026 120.522)",
+    "--xjq2c5c": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".xrf8t27.xrf8t27, .xrf8t27.xrf8t27:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "oklch(86.684% .162382 88.3396)",
+    "--xjq2c5c": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".xxpg8uy.xxpg8uy, .xxpg8uy.xxpg8uy:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(38.7125% .106463 122.019))var(--lightningcss-dark,oklch(82.7907% .196026 120.522))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".x13qp82k.x13qp82k, .x13qp82k.x13qp82k:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(43.1803% .212287 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".x3i5f5w.x3i5f5w",
+   "condition": "(-webkit-touch-callout:none)",
+   "decls": {
+    "--x2hcgb9": ".75rem"
+   }
+  },
+  {
+   "selector": ".x1y8u957.x1y8u957:where(.xviljdw:where(*) *)",
+   "decls": {
+    "--x2hcgb9": "max(2rem,env(safe-area-inset-bottom,0px))"
+   }
+  },
+  {
+   "selector": ".x10ovasj.x10ovasj:where(.xviljdw:where(*) *)",
+   "decls": {
+    "--x2hcgb9": "var(--x5zb17r)"
+   }
+  },
+  {
+   "selector": ".x16vwvgv.x16vwvgv:where(.xviljdw:where(*) *)",
+   "decls": {
+    "--x5zb17r": "max(2rem,env(safe-area-max-inset-bottom,env(safe-area-inset-bottom,0px)))"
+   }
+  },
+  {
+   "selector": ".x1kqo7ol.x1kqo7ol",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--x17rrt9g": "var(--x-weymn0)"
+   }
+  },
+  {
+   "selector": ".x1auc53j.x1auc53j",
+   "condition": "(width >= 48rem)",
+   "decls": {
+    "--x1b4g69p": "calc(100dvh - .75rem)"
+   }
+  },
+  {
+   "selector": ".x9d0c0i.x9d0c0i",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--x1kxh0k3": "var(--x-1luegm2)"
+   }
+  },
+  {
+   "selector": ".xc0nt9r.xc0nt9r",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xei4c7i": "var(--x-12wxhem)"
+   }
+  },
+  {
+   "selector": ".x9qfd00.x9qfd00",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xfnbhjv": "var(--x-1wti7pk)"
+   }
+  },
+  {
+   "selector": ".x1cdrocz.x1cdrocz",
+   "condition": "(display-mode: standalone)",
+   "decls": {
+    "--xp9lxud": "env(safe-area-inset-right,0px)"
+   }
+  },
+  {
+   "selector": ".xyvmtqo.xyvmtqo",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xqg7ji7": "var(--x-35sfa2)"
+   }
+  },
+  {
+   "selector": ".x27xb3d.x27xb3d",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xuo8j5p": "var(--x-1j41kd4)"
+   }
+  },
+  {
+   "selector": ".x8suto7.x8suto7",
+   "condition": "(display-mode: standalone)",
+   "decls": {
+    "--xxi9irj": "env(safe-area-inset-left,0px)"
+   }
+  },
+  {
+   "selector": ".x1fq6z2a.x1fq6z2a.x1fq6z2a",
+   "condition": "(-webkit-touch-callout:none) and (display-mode: standalone)",
+   "decls": {
+    "--x2hcgb9": "max(.75rem,env(safe-area-inset-bottom,0px))"
+   }
+  },
+  {
+   "selector": ".x11aoy5q.x11aoy5q:is(:lang(ae), :lang(ar), :lang(arc), :lang(bcc), :lang(bqi), :lang(ckb), :lang(dv), :lang(fa), :lang(glk), :lang(he), :lang(ku), :lang(mzn), :lang(nqo), :lang(pnb), :lang(ps), :lang(sd), :lang(ug), :lang(ur), :lang(yi))",
+   "condition": "(display-mode: standalone)",
+   "decls": {
+    "--xp9lxud": "env(safe-area-inset-left,0px)"
+   }
+  },
+  {
+   "selector": ".x1hhcqiw.x1hhcqiw:is(:lang(ae), :lang(ar), :lang(arc), :lang(bcc), :lang(bqi), :lang(ckb), :lang(dv), :lang(fa), :lang(glk), :lang(he), :lang(ku), :lang(mzn), :lang(nqo), :lang(pnb), :lang(ps), :lang(sd), :lang(ug), :lang(ur), :lang(yi))",
+   "condition": "(display-mode: standalone)",
+   "decls": {
+    "--xxi9irj": "env(safe-area-inset-right,0px)"
+   }
+  },
+  {
+   "selector": ":root, .xbdsd27",
+   "decls": {
+    "--bottom-sheet-backdrop-opacity": "0",
+    "--bottom-sheet-content-chrome-height": "0px",
+    "--bottom-sheet-natural-height": "initial",
+    "--bottom-sheet-input-viewport-bottom": "0px",
+    "--bottom-sheet-input-viewport-height": "100dvb",
+    "--bottom-sheet-input-viewport-top": "0px",
+    "--bottom-sheet-compact-height": "initial",
+    "--bottom-sheet-open-height": "initial"
+   }
+  },
+  {
+   "selector": ":root, .xc0py1",
+   "decls": {
+    "--canonical-dil-chart-inline-size": "0px"
+   }
+  },
+  {
+   "selector": ":root, .x1a93pl5",
+   "decls": {
+    "--dil-clock-angle": "0deg",
+    "--dil-progress": "0%"
+   }
+  },
+  {
+   "selector": ":root, .xw7qk2a",
+   "decls": {
+    "--fallback-shell-sidebar-width": "initial",
+    "--fallback-shell-detail-open-shift": "initial",
+    "--fallback-shell-base-composer-reserve": "initial",
+    "--fallback-shell-base-disclosure-offset": "initial",
+    "--fallback-shell-base-disclosure-clearance": "initial",
+    "--fallback-shell-base-mask-size": "initial"
+   }
+  },
+  {
+   "selector": ":root, .x1h8l9m8",
+   "decls": {
+    "--mobile-scroll-mask-bottom-size": "initial",
+    "--mobile-thread-disclosure-fade-clearance": "initial"
+   }
+  },
+  {
+   "selector": ":root, .xnpn0wm",
+   "decls": {
+    "--mobile-thread-content-margin-inline": "1rem",
+    "--page-margin-inline": "1rem",
+    "--page-margin-top": "max(1rem, env(safe-area-inset-top))"
+   }
+  },
+  {
+   "selector": ":root, .x18uicp2",
+   "decls": {
+    "--mobile-thread-overlay-reserve": "calc(var(--mobile-footer-safe-area-bottom) + 9rem)"
+   }
+  },
+  {
+   "selector": ":root, .x17s3gvl",
+   "decls": {
+    "--stream-accent-color": "initial",
+    "--stream-block-delay": "initial",
+    "--stream-border-accent-color": "initial",
+    "--stream-content-reference-delay": "initial",
+    "--stream-entry-opacity": "0",
+    "--stream-list-marker-delay": "initial",
+    "--stream-rule-delay": "initial",
+    "--stream-word-accent-percent": "initial",
+    "--stream-word-delay": "initial"
+   }
+  },
+  {
+   "selector": ":root, .x51yx8l",
+   "decls": {
+    "--swipable-layout-inline-progress": "initial",
+    "--swipable-layout-sidebar-width": "initial",
+    "--swipable-layout-gesture-width": "initial",
+    "--swipable-layout-browser-chrome-runway": "initial",
+    "--swipable-layout-vertical-gesture-track-size": "initial"
+   }
+  },
+  {
+   "selector": ":root, .x1kfrmj0",
+   "decls": {
+    "--xh92iyd": "100dvb",
+    "--xdvqfuf": "100dvb"
+   }
+  },
+  {
+   "selector": ":root, .x3ljs63",
+   "decls": {
+    "--x1byzx6x": ".5rem"
+   }
+  },
+  {
+   "selector": ":root, .x18zno8v",
+   "decls": {
+    "--x1c4gh12": "#3566f0",
+    "--x1c4s838": "var(--lightningcss-light,#edf3fe)var(--lightningcss-dark,#020562)",
+    "--xd41oxi": "var(--lightningcss-light,#3566f0)var(--lightningcss-dark,#81a6f9)",
+    "--x1q8jmc3": "#3566f0",
+    "--x17fb1mn": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#b0c9fe)",
+    "--x17g5981": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#81a6f9)",
+    "--x1c48jv7": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#b0c9fe)",
+    "--x15q1f8z": "#fff",
+    "--x1hef3ye": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#dae6fd)",
+    "--x1algu8q": "#26b2eb",
+    "--x152uuxh": "var(--lightningcss-light,#ebf7fe)var(--lightningcss-dark,#032837)",
+    "--xicvfor": "var(--lightningcss-light,#0d78a1)var(--lightningcss-dark,#26b2eb)",
+    "--x6jrz9r": "#26b2eb",
+    "--x5ysh6b": "var(--lightningcss-light,#0b5c7c)var(--lightningcss-dark,#b3e3fc)",
+    "--xsq3su": "var(--lightningcss-light,#0d78a1)var(--lightningcss-dark,#b3e3fc)",
+    "--xq0snol": "var(--lightningcss-light,#0b5c7c)var(--lightningcss-dark,#b3e3fc)",
+    "--x9vq2bi": "#fff",
+    "--xjnd638": "var(--lightningcss-light,#0d78a1)var(--lightningcss-dark,#b3e3fc)",
+    "--x19di6af": "#19b79e",
+    "--xl7gw2v": "var(--lightningcss-light,#d7fff5)var(--lightningcss-dark,#032a23)",
+    "--x1guwsjx": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#19b79e)",
+    "--x1p6bxnr": "#19b79e",
+    "--x8oks6c": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#42dec2)",
+    "--x19crzcb": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#8deed8)",
+    "--xxuj0li": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#42dec2)",
+    "--xupoe60": "#fff",
+    "--x1pokv4u": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#8deed8)",
+    "--x1k0u8eg": "#b0d718",
+    "--x1xnwljl": "var(--lightningcss-light,#effed0)var(--lightningcss-dark,#232d02)",
+    "--x16xl66x": "var(--lightningcss-light,#758e1a)var(--lightningcss-dark,#b0d718)",
+    "--x1512723": "#b0d718",
+    "--x3zssw3": "var(--lightningcss-light,#586c11)var(--lightningcss-dark,#d8f590)",
+    "--xq7lchg": "var(--lightningcss-light,#586c11)var(--lightningcss-dark,#d8f590)",
+    "--x1uw8337": "var(--lightningcss-light,#586c11)var(--lightningcss-dark,#d8f590)",
+    "--xs9ject": "#0d0d0d",
+    "--x1lrbgcu": "var(--lightningcss-light,#586c11)var(--lightningcss-dark,#d8f590)",
+    "--x1kamjed": "#ee61e2",
+    "--x1htlena": "var(--lightningcss-light,#fef0fc)var(--lightningcss-dark,#3f023c)",
+    "--x17vjzrr": "var(--lightningcss-light,#cf42c5)var(--lightningcss-dark,#ee61e2)",
+    "--xlzars": "#ee61e2",
+    "--x1fgrj7r": "var(--lightningcss-light,#af1fa7)var(--lightningcss-dark,#fec5f6)",
+    "--x1uhzc79": "var(--lightningcss-light,#af1fa7)var(--lightningcss-dark,#fec5f6)",
+    "--xyff653": "var(--lightningcss-light,#af1fa7)var(--lightningcss-dark,#fec5f6)",
+    "--xjf13kb": "#fff",
+    "--x10n98sh": "var(--lightningcss-light,#af1fa7)var(--lightningcss-dark,#fec5f6)",
+    "--x1uvdo5l": "var(--lightningcss-light,#0d0d0d)var(--lightningcss-dark,#fff)",
+    "--xr3sjk8": "var(--lightningcss-light,#f3f3f3)var(--lightningcss-dark,#303030)",
+    "--x1e4xz8w": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#303030)",
+    "--x1c7m1sd": "var(--lightningcss-light,var(--xr3sjk8))var(--lightningcss-dark,var(--x1e4xz8w))",
+    "--x1redn23": "var(--lightningcss-light,#0003)var(--lightningcss-dark,#fff3)",
+    "--xipjjho": "var(--lightningcss-light,#0d0d0d)var(--lightningcss-dark,#fff)",
+    "--x1i00kr6": "var(--lightningcss-light,#0d0d0d)var(--lightningcss-dark,#fff)",
+    "--xt664t1": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--xhxblun": "#ff8771",
+    "--x19y7bee": "var(--lightningcss-light,#fff2f0)var(--lightningcss-dark,#550208)",
+    "--xq131nz": "var(--lightningcss-light,#d8241a)var(--lightningcss-dark,#ff8771)",
+    "--x49uv1z": "#ff8771",
+    "--x52qnn9": "var(--lightningcss-light,#ab1616)var(--lightningcss-dark,#fdb9ab)",
+    "--xars9hp": "var(--lightningcss-light,#d8241a)var(--lightningcss-dark,#ffd3ca)",
+    "--x1tvc75v": "var(--lightningcss-light,#ab1616)var(--lightningcss-dark,#fdb9ab)",
+    "--x1xh1iyw": "#fff",
+    "--xrj1zle": "var(--lightningcss-light,#d8241a)var(--lightningcss-dark,#ffd3ca)",
+    "--x1wgcegi": "#fa70ab",
+    "--xxtdii5": "var(--lightningcss-light,#fff1f5)var(--lightningcss-dark,#470126)",
+    "--x1cx54ju": "var(--lightningcss-light,#f31c91)var(--lightningcss-dark,#fa70ab)",
+    "--xsmskin": "#fa70ab",
+    "--xfb4gj0": "var(--lightningcss-light,#c31b74)var(--lightningcss-dark,#fbadca)",
+    "--x13zne8e": "var(--lightningcss-light,#c31b74)var(--lightningcss-dark,#feccdd)",
+    "--xghc5ds": "var(--lightningcss-light,#c31b74)var(--lightningcss-dark,#fbadca)",
+    "--xp8qjqd": "#fff",
+    "--x1w9dnm": "var(--lightningcss-light,#c31b74)var(--lightningcss-dark,#feccdd)",
+    "--xw2eubu": "#ab5eff",
+    "--x11rsxqz": "var(--lightningcss-light,#f6f1fe)var(--lightningcss-dark,#2e0350)",
+    "--xvd0jmq": "var(--lightningcss-light,#9639ed)var(--lightningcss-dark,#c8a4fb)",
+    "--xzou9h7": "#ab5eff",
+    "--xbw0yp6": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#c8a4fb)",
+    "--xerr3a2": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#dcc7fe)",
+    "--x1lw8r3d": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#c8a4fb)",
+    "--x1drbscd": "#fff",
+    "--x5qqm51": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#dcc7fe)",
+    "--xvez8qp": "#fdcd54",
+    "--xfe2xz4": "var(--lightningcss-light,#fff7e2)var(--lightningcss-dark,#5c2605)",
+    "--x14d1w3w": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#fdcd54)",
+    "--x1el5b2i": "#fdcd54",
+    "--x1vmbnit": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#fee096)",
+    "--xr24gva": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#feebbb)",
+    "--x1hj7q25": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#fee096)",
+    "--x13zopcy": "#0d0d0d",
+    "--xv0cl2u": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#feebbb)",
+    "--x1lz9yvi": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#212121)",
+    "--x1f5x1xa": "var(--lightningcss-light,#e8e8e8)var(--lightningcss-dark,#414141)",
+    "--x9vd42p": "var(--lightningcss-light,#fcfcfc)var(--lightningcss-dark,#000)",
+    "--x1sbgvk7": "var(--lightningcss-light,#0000001a)var(--lightningcss-dark,#ffffff26)",
+    "--xji8h49": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)",
+    "--x1de06y5": "#911e1b",
+    "--x13wz67v": "#6e1615",
+    "--x411rn1": "#ba2623",
+    "--x1h2zm8q": "#0000",
+    "--x17rt7ar": "#0000",
+    "--x1hpogdp": "#fff",
+    "--xxqqunj": "var(--lightningcss-light,#8f8f8f)var(--lightningcss-dark,#afafaf)",
+    "--xnesh6n": "var(--lightningcss-light,#212121)var(--lightningcss-dark,#e8e8e8)",
+    "--x1helnwt": "var(--lightningcss-light,#303030)var(--lightningcss-dark,#cdcdcd)",
+    "--x2b1p3o": "#0000",
+    "--x1lfzqcd": "#0000",
+    "--x1jnctk8": "var(--lightningcss-light,#e8e8e8)var(--lightningcss-dark,#414141a6)",
+    "--x1jc4d6b": "var(--lightningcss-light,#cdcdcd)var(--lightningcss-dark,#414141cc)",
+    "--x184azjj": "var(--lightningcss-light,#f3f3f3)var(--lightningcss-dark,#41414180)",
+    "--xudgrot": "#0000",
+    "--x1yl8m1y": "#0000",
+    "--xi2dec2": "#0000",
+    "--xu9toup": "#0000",
+    "--xom64qg": "#0000",
+    "--x1dt13q2": "var(--lightningcss-light,#ba2623)var(--lightningcss-dark,#fa423e)",
+    "--x16hqbul": "var(--lightningcss-light,#5d5d5d)var(--lightningcss-dark,#cdcdcd)",
+    "--x18sw7ie": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)",
+    "--x17y296b": "var(--lightningcss-light,#3566f0)var(--lightningcss-dark,#81a6f9)",
+    "--x14kdum4": "var(--lightningcss-light,#9639ed)var(--lightningcss-dark,#c8a4fb)",
+    "--xjm22oe": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#19b79e)",
+    "--x1vqlmid": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#fdcd54)",
+    "--xjv9b4": "var(--lightningcss-light,#d8241a)var(--lightningcss-dark,#ff8771)",
+    "--x1dh5cex": "var(--lightningcss-light,#ba2623)var(--lightningcss-dark,#ff6764)",
+    "--x11cauki": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#42dec2)",
+    "--xvd3nt1": "#3566f0",
+    "--x1sitdkx": "var(--lightningcss-light,#5d5d5d)var(--lightningcss-dark,#cdcdcd)",
+    "--xtchrd9": "#00000080",
+    "--x1jdic7c": "var(--lightningcss-light,#ffe1e0)var(--lightningcss-dark,#4d100e)",
+    "--x1pkpaj2": "var(--lightningcss-light,#ba2623)var(--lightningcss-dark,#ff6764)",
+    "--x13inqrz": "#2451da",
+    "--xagto6j": "var(--lightningcss-light,#e4ecfe)var(--lightningcss-dark,#020562)",
+    "--xt7zeb3": "var(--lightningcss-light,#3566f0)var(--lightningcss-dark,#81a6f9)",
+    "--xbfhylg": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#b0c9fe)",
+    "--x46qu4l": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#b0c9fe)",
+    "--x16u6471": "#027c6a",
+    "--xaxybr8": "var(--lightningcss-light,#cafdf0)var(--lightningcss-dark,#032a23)",
+    "--x1pzzbjw": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#19b79e)",
+    "--x1nwm3d8": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#42dec2)",
+    "--x1cg81t7": "#9f5c14",
+    "--x6nmf2d": "var(--lightningcss-light,#fff5db)var(--lightningcss-dark,#5c2605)",
+    "--x1medoxg": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#fdcd54)",
+    "--xg11ayp": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#fee096)",
+    "--xuuezdx": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#fee096)"
+   }
+  },
+  {
+   "selector": ":root, .x1qbhmti",
+   "decls": {
+    "--x1d84luo": "var(--xjq2c5c)",
+    "--x17df2cq": "color-mix(in oklab, var(--x1e4keym) 85%, var(--x69dsh5))",
+    "--x5vv2en": "color-mix(in oklab, var(--x1e4keym) 75%, var(--x69dsh5))",
+    "--x5kmhtn": "var(--xbn88x4)",
+    "--xno7iep": "var(--x15esjau)"
+   }
+  },
+  {
+   "selector": ":root, .x7rorad",
+   "decls": {
+    "--x1hpw1x7": "running",
+    "--xl71gi7": "0px",
+    "--xz7u4k3": "0deg",
+    "--xgnzci": "min(184px, 46.875vw)"
+   }
+  },
+  {
+   "selector": ":root, .xvji3hk",
+   "decls": {
+    "--x1iagkcv": "var(--lightningcss-light,#000c)var(--lightningcss-dark,#fffc)",
+    "--x1plzxtf": "var(--lightningcss-light,#000000e6)var(--lightningcss-dark,#ffffffe6)",
+    "--xloiy2a": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)",
+    "--x1kfmq3j": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff0d)",
+    "--x1ovfp4u": "var(--lightningcss-light,#0000001a)var(--lightningcss-dark,#ffffff26)",
+    "--x1w3e1qa": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff26)",
+    "--x1lris7r": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#fff3)",
+    "--x207jlc": "var(--lightningcss-light,#0000001a)var(--lightningcss-dark,#ffffff1a)",
+    "--x1ipec0p": "var(--lightningcss-light,#000000e6)var(--lightningcss-dark,#ffffffe6)",
+    "--x11nt2qk": "var(--lightningcss-light,#000c)var(--lightningcss-dark,#fffc)",
+    "--xqar591": "var(--lightningcss-light,#0d0d0d)var(--lightningcss-dark,#f3f3f3)",
+    "--x1m9f848": "var(--lightningcss-light,#0d0d0db3)var(--lightningcss-dark,#f3f3f3b3)"
+   }
+  },
+  {
+   "selector": ":root, .xjnfysp",
+   "decls": {
+    "--x1ikjvyf": "#05a6f0",
+    "--x8hu6tu": "#81bc06",
+    "--x1u3g0g5": "#f35325",
+    "--xnl06f5": "#ffba08"
+   }
+  },
+  {
+   "selector": ":root, .xlr5y29",
+   "decls": {
+    "--x1jxi29g": "4",
+    "--x1hctqxf": ".5rem",
+    "--xnsfh9x": "1rem",
+    "--xwck8lh": "none",
+    "--x1lp062e": "1rem",
+    "--x19wzik9": "1rem"
+   }
+  },
+  {
+   "selector": ":root, .x9z9jkm",
+   "decls": {
+    "--x1j4jim9": "ui-monospace, \"SFMono-Regular\", monospace",
+    "--x185kthm": "ui-monospace, \"SFMono-Regular\", monospace"
+   }
+  },
+  {
+   "selector": ":root, .x1m3o0of",
+   "decls": {
+    "--x1emidtf": "var(--x17pqyd6)"
+   }
+  },
+  {
+   "selector": ":root, .x15g2lx2",
+   "decls": {
+    "--x1nkprnx": "-apple-system-body, ui-sans-serif, -apple-system, system-ui, \"Segoe UI\", \"Helvetica\", \"Apple Color Emoji\", \"Arial\", sans-serif, \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+    "--x1r68lo": "ui-monospace, \"SFMono-Regular\", monospace",
+    "--x1puj1mm": "ui-monospace, \"SFMono-Regular\", monospace"
+   }
+  },
+  {
+   "selector": ":root, .x1wouor2",
+   "decls": {
+    "--x1noapx3": "3.25rem",
+    "--x1l2y8qv": "2.75rem",
+    "--x1we1hrj": "2rem",
+    "--x17hw01h": "1.25rem",
+    "--x2lb06e": "1.5rem",
+    "--xml8vo7": "1rem",
+    "--xll5w3u": ".75rem",
+    "--x18qolhr": "3rem"
+   }
+  },
+  {
+   "selector": ":root, .xsr3kt8",
+   "decls": {
+    "--x1q37ms0": "-.0125rem",
+    "--x1ty5ci0": "-.009375rem",
+    "--x1axmopj": "-.0125rem",
+    "--x13wrs7": "-.0125rem",
+    "--x1e3wdvt": "normal",
+    "--xq6ryq5": "normal",
+    "--x5jdtdq": "normal",
+    "--x1wm7iyn": "normal",
+    "--x1a6ce2i": "-.025rem",
+    "--x1svjsip": "-.025rem",
+    "--x1w0spnj": "normal",
+    "--x1nzmlqe": "normal",
+    "--x1o24er0": "-.0125rem",
+    "--x1nwa549": "-.0125rem",
+    "--xkjttp5": "-.025rem",
+    "--x1vli9i2": "-.025rem",
+    "--x17ogli7": "-.0125rem",
+    "--xjujxfb": "-.0125rem",
+    "--xkrk4gk": "-.0125rem",
+    "--x2doyzw": "-.0125rem"
+   }
+  },
+  {
+   "selector": ":root, .xt21tyy",
+   "decls": {
+    "--xl8mlb": "var(--lightningcss-light,#edf3ff)var(--lightningcss-dark,#213657)",
+    "--xjdl2xa": "var(--lightningcss-light,#155eef)var(--lightningcss-dark,#b2ccff)",
+    "--x1g531z6": "64px",
+    "--x1kd7hoq": "none",
+    "--xvbwogc": "0px",
+    "--x8wvql9": "0px",
+    "--xwpcfx0": "0px",
+    "--x7r3unw": "0px",
+    "--x11vrja8": "84px",
+    "--x1dgvd7m": "0px",
+    "--ds-latest-display": "none"
+   }
+  },
+  {
+   "selector": ":root, .xrdlfjs",
+   "decls": {
+    "--x1qja2r7": "#000000d1",
+    "--xcl6qi8": "#2e2e2e",
+    "--xxha3fk": "white",
+    "--x1u7qtw8": "#ffffffb8",
+    "--xndzms9": "0 4px 6px #0000001a",
+    "--xdnn1d8": "var(--xif7uko)",
+    "--x10tukpq": "1.5rem",
+    "--xi4gm7i": ".75rem",
+    "--x1ujd2iq": ".75rem",
+    "--x1r4oilk": ".125rem",
+    "--x18dg1by": "1rem",
+    "--x184pv2e": "var(--x1lprra2)",
+    "--x1pir7xf": "var(--x1dpd8kr)",
+    "--x1iwrfi2": "var(--x3dznoq)",
+    "--x8yt4je": "-.005rem",
+    "--xb1koo4": "600",
+    "--xcctqij": "400"
+   }
+  },
+  {
+   "selector": ":root, .x1ei8u7",
+   "decls": {
+    "--x1ray7m4": ".125rem"
+   }
+  },
+  {
+   "selector": ":root, .x1n7xl4g",
+   "decls": {
+    "--x1p7n4ts": "0rem",
+    "--xfq4kqk": ".75rem",
+    "--xm00zcn": ".75rem"
+   }
+  },
+  {
+   "selector": ":root, .x1oipjf1",
+   "decls": {
+    "--x1s6vvuw": "96px",
+    "--xgg4sn2": "80px"
+   }
+  },
+  {
+   "selector": ":root, .xc6vysr",
+   "decls": {
+    "--x1udk7dj": "0",
+    "--x2m8z09": "0"
+   }
+  },
+  {
+   "selector": ":root, .x14jkv06",
+   "decls": {
+    "--x1uerlqq": ".125rem"
+   }
+  },
+  {
+   "selector": ":root, .x15fwobw",
+   "decls": {
+    "--xsorp23": "var(--xfq4kqk)",
+    "--x1o7vj3n": ".25rem",
+    "--xfzjn8c": ".625rem",
+    "--x6mu4mg": ".875rem",
+    "--x85m6yu": "62.4375rem",
+    "--x9l0p9s": "var(--x1ypw8a2)"
+   }
+  },
+  {
+   "selector": ":root, .x9ahvrg",
+   "decls": {
+    "--x1uxmxzn": "1vw"
+   }
+  },
+  {
+   "selector": ":root, .x1orkcp4",
+   "decls": {
+    "--x6n9hyz": ".875rem",
+    "--x1vnmvs9": "1rem",
+    "--xv1t6gl": "1rem",
+    "--x1u2phb4": ".75rem",
+    "--x1xxw3nl": ".8125rem",
+    "--x10juc9v": ".8125rem",
+    "--xp5hqwe": "2.125rem",
+    "--xl7g8r0": "2.125rem",
+    "--x1dpd8kr": ".8125rem",
+    "--x153y00s": ".8125rem",
+    "--xpt5c4i": ".9375rem",
+    "--xo6xihq": "1.75rem",
+    "--x16443ih": "1.375rem",
+    "--x1c75ip5": "1.375rem",
+    "--xesidr7": "1.25rem"
+   }
+  },
+  {
+   "selector": ":root, .x1n3hvnb",
+   "decls": {
+    "--x1wf5ndj": "1.0625rem",
+    "--xsle290": "1.0625rem",
+    "--xmfkioo": ".875rem",
+    "--x121hwjw": ".875rem",
+    "--x15fc8f": "1rem",
+    "--xv1m4bd": "1rem",
+    "--x1w8uo2v": ".75rem",
+    "--x1p15kyq": ".75rem",
+    "--x1c3bs1s": ".8125rem",
+    "--xbzu6rc": ".8125rem",
+    "--xyachhe": "2.125rem",
+    "--x1d31c3d": "2.125rem",
+    "--x1mgxadn": ".8125rem",
+    "--xi2ugem": ".8125rem",
+    "--x1s4i5ds": "1.0625rem",
+    "--x2qaje": "1.0625rem",
+    "--x10v19gs": ".9375rem",
+    "--x1evkb66": ".9375rem",
+    "--x1nhd6ls": "1.75rem",
+    "--xmefsag": "1.75rem",
+    "--x7cs6ew": "1.375rem",
+    "--x8rmxsc": "1.375rem",
+    "--x1i5dzj9": "1.25rem",
+    "--xb162l2": "1.25rem"
+   }
+  },
+  {
+   "selector": ":root, .x1wb3ek",
+   "decls": {
+    "--x10x0qns": "1.28571",
+    "--xbs2dcd": "1.28571",
+    "--x6hewzw": "1.3125",
+    "--xdmwdyr": "1.3125",
+    "--x1m4uggh": "1.33333",
+    "--xjh078s": "1.38462",
+    "--x8r2065": "1.38462",
+    "--x1gpdu9g": "1.20588",
+    "--x19342hw": "1.20588",
+    "--x3dznoq": "1.38462",
+    "--x1wiqngp": "1.38462",
+    "--x1m0yrzn": "1.41177",
+    "--x156u82": "1.33333",
+    "--x1wr45eb": "1.21429",
+    "--xxhtj9p": "1.21429",
+    "--x18fmx3": "1.27273",
+    "--xf7ghz5": "1.27273",
+    "--x176db7t": "1.25",
+    "--xygxmyi": "1.25"
+   }
+  },
+  {
+   "selector": ":root, .xgjwkd1",
+   "decls": {
+    "--x14k4ia5": ".625rem",
+    "--xrxdqin": "1.25rem"
+   }
+  },
+  {
+   "selector": ":root, .xsww7rs",
+   "decls": {
+    "--x2vz5pf": "var(--lightningcss-light,#212121)var(--lightningcss-dark,#e8e8e8)",
+    "--x1weeliy": "var(--lightningcss-light,#303030)var(--lightningcss-dark,#cdcdcd)",
+    "--x1bitlb": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)"
+   }
+  },
+  {
+   "selector": ":root, .x1kue91f",
+   "decls": {
+    "--x3g0e8x": "var(--x69dsh5)",
+    "--xxpck5t": "var(--x69dsh5)",
+    "--x6xnm4c": "1.25rem",
+    "--x1d0zwez": "calc(1.25rem * 3 / 7)",
+    "--xw6vx0x": "calc(1.25rem * 6 / 7)",
+    "--x1d1gnha": "calc(1.25rem * 5 / 14)",
+    "--x1gzj3ym": "calc(1.25rem * 2 / 7)",
+    "--x1wmhpx8": "0 4px 16px #0000000d"
+   }
+  },
+  {
+   "selector": ":root, .xs8qgq1",
+   "decls": {
+    "--x1dbia5y": "1.5rem",
+    "--x13oc9yy": "1rem",
+    "--xyj21ei": ".75rem",
+    "--x1elix0q": "3rem"
+   }
+  },
+  {
+   "selector": ":root, .xnr7gm2",
+   "decls": {
+    "--x7acwdw": ".5rem"
+   }
+  },
+  {
+   "selector": ":root, .xo7if",
+   "decls": {
+    "--x9ivpb4": "100dvb",
+    "--x1rc6yno": "0px"
+   }
+  },
+  {
+   "selector": ":root, .xhi29si",
+   "decls": {
+    "--xas9amx": "calc(3rem + .25rem)",
+    "--x1fj60f": "1.5rem",
+    "--x4lhh1s": "1.75rem"
+   }
+  },
+  {
+   "selector": ":root, .x8x6xbv",
+   "decls": {
+    "--xcse8nj": "1.5rem"
+   }
+  },
+  {
+   "selector": ":root, .x976rto",
+   "decls": {
+    "--xdugsvd": "400",
+    "--x1iefjqg": "500",
+    "--x1ydg44a": "400",
+    "--xeoco8f": "600",
+    "--xbjvsuq": "400",
+    "--xula2oc": "600",
+    "--x1xrheoa": "400",
+    "--x1puw247": "600",
+    "--x1e40uzf": "400",
+    "--x1w1rb87": "500",
+    "--x7v8oqh": "400",
+    "--x1aqjstz": "600",
+    "--xujkaip": "400",
+    "--x1e7iajt": "600",
+    "--x1lcuiyd": "500",
+    "--x1rvb5x": "600",
+    "--xy1mupy": "400",
+    "--xviahoi": "500",
+    "--x11cqv93": "400",
+    "--xqmqqzc": "500",
+    "--x134lkil": "500",
+    "--xichyst": "600",
+    "--xquau2j": "500",
+    "--xcon2yd": "600"
+   }
+  },
+  {
+   "selector": ":root, .xecdyzz",
+   "decls": {
+    "--xfj0kxp": "-.0125rem",
+    "--x1l01qn2": "-.0125rem",
+    "--xau9zxg": "-.009375rem",
+    "--x50xfmi": "-.009375rem",
+    "--xz390j2": "-.0125rem",
+    "--x1c6adye": "-.0125rem",
+    "--x1lqft5l": "normal",
+    "--x1bag2ra": "normal",
+    "--x1apu0mf": "normal",
+    "--xwxykuu": "normal",
+    "--x1ikjux1": "-.025rem",
+    "--x1mqv21m": "-.025rem",
+    "--xbuk0hb": "normal",
+    "--x1y235p0": "normal",
+    "--x1n0o9yn": "-.0125rem",
+    "--x1b0yhyi": "-.0125rem",
+    "--x1ymvgx1": "-.0125rem",
+    "--xhhduqr": "-.0125rem",
+    "--x1fi18mk": "-.025rem",
+    "--x8ymj0": "-.025rem",
+    "--xhik7cb": "-.0125rem",
+    "--x1xbcj9t": "-.0125rem",
+    "--xmhzemy": "-.0125rem",
+    "--x1ybpsb3": "-.0125rem"
+   }
+  },
+  {
+   "selector": ":root, .x10zlzw6",
+   "decls": {
+    "--xh3zhy0": "var(--lightningcss-light,#f9f9f9)var(--lightningcss-dark,#131313)",
+    "--x1h16h2b": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#222)",
+    "--x2z0t5e": "#3a83f7",
+    "--x103zxkz": "#53b559",
+    "--x108e1ee": "var(--lightningcss-light,#f3f3f3)var(--lightningcss-dark,#222)",
+    "--xati1uh": "var(--lightningcss-light,#e3e3e380)var(--lightningcss-dark,#00000080)"
+   }
+  },
+  {
+   "selector": ":root, .x1wng186",
+   "decls": {
+    "--xlpno2e": "1.25rem",
+    "--xkhlobh": "1rem",
+    "--x35862b": "0rem",
+    "--x47nbe2": ".75rem",
+    "--xpwb3yp": ".75rem"
+   }
+  },
+  {
+   "selector": ":root, .xsajpkq",
+   "decls": {
+    "--x10rv1f2": "#911e1b",
+    "--x1c5c6i": "#6e1615",
+    "--x12gc1hm": "#ba2623",
+    "--xvs6sz5": "#0000",
+    "--x1ndzl5g": "#0000",
+    "--x1ov5pza": "#fff",
+    "--x1rkdcxl": "#0000",
+    "--x1bterz": "#0000",
+    "--x1hik4yf": "var(--xj7rxqu)",
+    "--x5bht2f": "#0000",
+    "--x15yb5o2": "#0000",
+    "--xu7d3jt": "#0000",
+    "--x1o4h194": "var(--lightningcss-light,#ba2623)var(--lightningcss-dark,#fa423e)",
+    "--x9rvtud": "var(--lightningcss-light,#5d5d5d)var(--lightningcss-dark,#cdcdcd)",
+    "--x1gatu3h": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)",
+    "--xivnm23": "var(--lightningcss-light,#3566f0)var(--lightningcss-dark,#81a6f9)",
+    "--x60nhlx": "var(--lightningcss-light,#9639ed)var(--lightningcss-dark,#c8a4fb)",
+    "--x1b9m67z": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#04bb9f)",
+    "--x131p452": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#ffcc38)",
+    "--x20r1qt": "var(--lightningcss-light,#d8241a)var(--lightningcss-dark,#ff8066)",
+    "--x8axsc6": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#42dec2)",
+    "--xomnu2l": "#00000080",
+    "--x1a4yvy8": "var(--lightningcss-light,#ffe1e0)var(--lightningcss-dark,#4d100e)",
+    "--x1ub3vle": "var(--lightningcss-light,#ba2623)var(--lightningcss-dark,#ff6764)",
+    "--x1labttc": "#2451da",
+    "--x1cjgdn4": "var(--lightningcss-light,#e4ecfe)var(--lightningcss-dark,#020562)",
+    "--x1rz22zo": "var(--lightningcss-light,#3566f0)var(--lightningcss-dark,#81a6f9)",
+    "--xnugslg": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#b0c9fe)",
+    "--xz5y3vh": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#b0c9fe)",
+    "--xtveoll": "#027c6a",
+    "--xakxzc7": "var(--lightningcss-light,#cafdf0)var(--lightningcss-dark,#032a23)",
+    "--x17aac8x": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#04bb9f)",
+    "--xam959g": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#42dec2)",
+    "--x1i3uyjs": "#9f5c14",
+    "--x1m3ntcj": "var(--lightningcss-light,#fff5db)var(--lightningcss-dark,#5c2605)",
+    "--x52cqm6": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#ffcc38)",
+    "--x1ofh8b3": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#fee096)",
+    "--x15esjau": "var(--xiq9l3n)",
+    "--x106dgun": "var(--x69dsh5)",
+    "--x1704doi": "var(--x69dsh5)",
+    "--xlmsz48": "var(--xj7rxqu)"
+   }
+  },
+  {
+   "selector": ":root, .x11k1yyg",
+   "decls": {
+    "--xm14a2r": "1.41177",
+    "--xk3c1t2": "1.41177",
+    "--x1v39132": "1.28571",
+    "--x35dm4c": "1.28571",
+    "--x1vlg2d1": "1.3125",
+    "--xthg2zz": "1.3125",
+    "--x1219sq": "1.33333",
+    "--x1i1jck6": "1.33333",
+    "--x1wdntiu": "1.38462",
+    "--x1aab3ed": "1.38462",
+    "--xo0fbbw": "1.20588",
+    "--x90jhkw": "1.20588",
+    "--xq2bq0h": "1.38462",
+    "--xdxj51w": "1.38462",
+    "--x30ivq4": "1.41177",
+    "--x1xc4z3q": "1.41177",
+    "--xhtd3ym": "1.33333",
+    "--x1qqtpd1": "1.33333",
+    "--x54j58w": "1.21429",
+    "--xgl7up3": "1.21429",
+    "--x1j6ktpk": "1.27273",
+    "--x8mh63w": "1.27273",
+    "--xxagxkg": "1.25",
+    "--x4umshn": "1.25"
+   }
+  },
+  {
+   "selector": ":root, .x69sz8j",
+   "decls": {
+    "--xpteocn": "var(--xgmhk9z)",
+    "--x5bo09z": "var(--x1r1m7nu)",
+    "--x1mlpfbs": "var(--x12qqpe0)",
+    "--x1g8f1vd": "var(--xnz65mj)",
+    "--xj2tjxg": "var(--xif7uko)",
+    "--xw6jb1e": "var(--x1w9ml1o)",
+    "--x1cvlbwa": "var(--x1r1m7nu)",
+    "--xz3bema": "var(--x1a4yvy8)",
+    "--x1673zcc": "var(--x1ub3vle)",
+    "--x1c3fs2y": ".875rem",
+    "--x1sorzmm": "62.4375rem",
+    "--x4nnszd": "var(--x1lprra2)",
+    "--xd9k9su": "var(--x1vzghsp)",
+    "--x1ol4koq": "var(--xwer47h)",
+    "--xhl41de": "var(--x2cnrkn)",
+    "--x12pkjfs": "var(--x1q37ms0)",
+    "--x9c86sw": "7.5rem",
+    "--xk032f8": "5.625rem",
+    "--x1u697n0": ".5rem",
+    "--xnbpcmr": "1.5rem",
+    "--xfsa03i": "var(--xomnu2l)",
+    "--x1onn7u3": "var(--x1ov5pza)",
+    "--x1vb5052": "var(--x7fwydj)"
+   }
+  },
+  {
+   "selector": ":root, .x1o4ecdd",
+   "decls": {
+    "--xqjpfcj": "62.4375rem",
+    "--x15l1r2s": ".625rem",
+    "--x1ro2yql": "1.25rem"
+   }
+  },
+  {
+   "selector": ":root, .xb8pdi6",
+   "decls": {
+    "--xqkix7d": "1",
+    "--xyvjedx": "0 7.5px 0 0",
+    "--xryrkgm": "0%",
+    "--x10hdnfn": "50%",
+    "--x1hmpd8": "100%",
+    "--x1motuqe": "50%",
+    "--x1hovohs": "0px",
+    "--x1240wuo": "linear",
+    "--x1u1eqmy": "linear(1, 1)"
+   }
+  },
+  {
+   "selector": ":root, .xzx9toi",
+   "decls": {
+    "--xqvr5eo": "1.5rem"
+   }
+  },
+  {
+   "selector": ":root, .xmgp10o",
+   "decls": {
+    "--xwer47h": "400",
+    "--xsa2suv": "400",
+    "--x1r5tzmc": "600",
+    "--x3u3szb": "400",
+    "--x1qre76x": "600",
+    "--x182x845": "400",
+    "--x1myigjb": "600",
+    "--x1u9dbiw": "400",
+    "--x9t4qzd": "500",
+    "--x17s5s96": "400",
+    "--x1ljxlxb": "600",
+    "--x1dnqxiz": "400",
+    "--x1cbokr9": "600",
+    "--x1swr4tb": "500",
+    "--x1jzeq78": "600",
+    "--xmr9ns7": "400",
+    "--x1vietnx": "400",
+    "--xmr7u5m": "500",
+    "--x1mqwqfm": "500",
+    "--xhe8ybs": "600",
+    "--x1d7g964": "500",
+    "--x1x0ath9": "600"
+   }
+  },
+  {
+   "selector": ":root, .x1n3hvnb",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x15fc8f": ".875rem",
+    "--xv1m4bd": ".875rem",
+    "--xyachhe": "2.25rem",
+    "--x1d31c3d": "2.25rem",
+    "--x1mgxadn": ".875rem",
+    "--xi2ugem": ".875rem",
+    "--x10v19gs": ".75rem",
+    "--x1evkb66": ".75rem",
+    "--x7cs6ew": "1.5rem",
+    "--x8rmxsc": "1.5rem",
+    "--x1i5dzj9": "1.375rem",
+    "--xb162l2": "1.375rem"
+   }
+  },
+  {
+   "selector": ":root, .xsww7rs",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1bitlb": "var(--lightningcss-light,#cdcdcd)var(--lightningcss-dark,#212121)"
+   }
+  },
+  {
+   "selector": ":root, .x18zno8v",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1c4gh12": "var(--lightningcss-light,#153bc2)var(--lightningcss-dark,#81a6f9)",
+    "--x15q1f8z": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--x1algu8q": "var(--lightningcss-light,#0b5c7c)var(--lightningcss-dark,#26b2eb)",
+    "--x9vq2bi": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--x19di6af": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#19b79e)",
+    "--xupoe60": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--x1k0u8eg": "var(--lightningcss-light,#3c4b06)var(--lightningcss-dark,#b0d718)",
+    "--xs9ject": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--x1kamjed": "var(--lightningcss-light,#8b0484)var(--lightningcss-dark,#fba0f1)",
+    "--xjf13kb": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--x1redn23": "#5d5d5d",
+    "--xhxblun": "var(--lightningcss-light,#ab1616)var(--lightningcss-dark,#ff8771)",
+    "--x1xh1iyw": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--x1wgcegi": "var(--lightningcss-light,#971459)var(--lightningcss-dark,#fa70ab)",
+    "--xp8qjqd": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--xw2eubu": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#c8a4fb)",
+    "--x1drbscd": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--xvez8qp": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#fdcd54)",
+    "--x13zopcy": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--x1sbgvk7": "var(--lightningcss-light,#afafaf)var(--lightningcss-dark,#303030)",
+    "--xji8h49": "var(--lightningcss-light,#cdcdcd)var(--lightningcss-dark,#212121)",
+    "--x1de06y5": "#6e1615",
+    "--x13wz67v": "#4d100e",
+    "--xxqqunj": "var(--lightningcss-light,#5d5d5d)var(--lightningcss-dark,#afafaf)",
+    "--x1jnctk8": "var(--xr3sjk8)",
+    "--x1jc4d6b": "var(--x1f5x1xa)",
+    "--x184azjj": "var(--x1lz9yvi)",
+    "--x16hqbul": "var(--lightningcss-light,#414141)var(--lightningcss-dark,#cdcdcd)",
+    "--x18sw7ie": "var(--lightningcss-light,#cdcdcd)var(--lightningcss-dark,#212121)",
+    "--x1sitdkx": "var(--lightningcss-light,#414141)var(--lightningcss-dark,#cdcdcd)"
+   }
+  },
+  {
+   "selector": ":root, .x18zno8v",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1c4gh12": "oklch(56.0902% .214451 265.129)",
+    "--x1c4s838": "var(--lightningcss-light,oklch(96.27% .0178832 265.129))var(--lightningcss-dark,oklch(23.2185% .150014 265.129))",
+    "--xd41oxi": "var(--lightningcss-light,oklch(56.0902% .214451 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))",
+    "--x1q8jmc3": "oklch(56.0902% .214451 265.129)",
+    "--x17fb1mn": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(83.5528% .0864247 265.129))",
+    "--x17g5981": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))",
+    "--x1c48jv7": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(83.5528% .0864247 265.129))",
+    "--x15q1f8z": "#fff",
+    "--x1hef3ye": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(92.2715% .0401458 265.129))",
+    "--x1algu8q": "oklch(71.774% .192698 232.058)",
+    "--x152uuxh": "var(--lightningcss-light,oklch(96.9889% .0189854 232.058))var(--lightningcss-dark,oklch(25.88% .0691805 232.058))",
+    "--xicvfor": "var(--lightningcss-light,oklch(53.7497% .136655 232.058))var(--lightningcss-dark,oklch(71.774% .192698 232.058))",
+    "--x6jrz9r": "oklch(71.774% .192698 232.058)",
+    "--x5ysh6b": "var(--lightningcss-light,oklch(44.5175% .111821 232.058))var(--lightningcss-dark,oklch(89.0082% .0657298 232.058))",
+    "--xsq3su": "var(--lightningcss-light,oklch(53.7497% .136655 232.058))var(--lightningcss-dark,oklch(89.0082% .0657298 232.058))",
+    "--xq0snol": "var(--lightningcss-light,oklch(44.5175% .111821 232.058))var(--lightningcss-dark,oklch(89.0082% .0657298 232.058))",
+    "--x9vq2bi": "#fff",
+    "--xjnd638": "var(--lightningcss-light,oklch(53.7497% .136655 232.058))var(--lightningcss-dark,oklch(89.0082% .0657298 232.058))",
+    "--x19di6af": "oklch(69.7942% .173713 177.997)",
+    "--xl7gw2v": "var(--lightningcss-light,oklch(96.8981% .04655 177.997))var(--lightningcss-dark,oklch(25.544% .0623645 177.997))",
+    "--x1guwsjx": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(69.7942% .173713 177.997))",
+    "--x1p6bxnr": "oklch(69.7942% .173713 177.997)",
+    "--x8oks6c": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(81.3571% .133551 177.997))",
+    "--x19crzcb": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(88.3195% .0977213 177.997))",
+    "--xxuj0li": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(81.3571% .133551 177.997))",
+    "--xupoe60": "#fff",
+    "--x1pokv4u": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(88.3195% .0977213 177.997))",
+    "--x1k0u8eg": "oklch(82.0784% .230112 122.019)",
+    "--x1xnwljl": "var(--lightningcss-light,oklch(97.4611% .0616632 122.019))var(--lightningcss-dark,oklch(27.6286% .0760033 122.019))",
+    "--x16xl66x": "var(--lightningcss-light,oklch(60.694% .163187 122.019))var(--lightningcss-dark,oklch(82.0784% .230112 122.019))",
+    "--x1512723": "oklch(82.0784% .230112 122.019)",
+    "--x3zssw3": "var(--lightningcss-light,oklch(49.7406% .133531 122.019))var(--lightningcss-dark,oklch(92.5924% .129448 122.019))",
+    "--xq7lchg": "var(--lightningcss-light,oklch(49.7406% .133531 122.019))var(--lightningcss-dark,oklch(92.5924% .129448 122.019))",
+    "--x1uw8337": "var(--lightningcss-light,oklch(49.7406% .133531 122.019))var(--lightningcss-dark,oklch(92.5924% .129448 122.019))",
+    "--xs9ject": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1lrbgcu": "var(--lightningcss-light,oklch(49.7406% .133531 122.019))var(--lightningcss-dark,oklch(92.5924% .129448 122.019))",
+    "--x1kamjed": "oklch(71.4553% .225482 331.049)",
+    "--x1htlena": "var(--lightningcss-light,oklch(96.9743% .03101 331.049))var(--lightningcss-dark,oklch(25.8259% .122823 331.049))",
+    "--x17vjzrr": "var(--lightningcss-light,oklch(62.6185% .226035 331.049))var(--lightningcss-dark,oklch(71.4553% .225482 331.049))",
+    "--xlzars": "oklch(71.4553% .225482 331.049)",
+    "--x1fgrj7r": "var(--lightningcss-light,oklch(53.535% .223206 331.049))var(--lightningcss-dark,oklch(88.8973% .116696 331.049))",
+    "--x1uhzc79": "var(--lightningcss-light,oklch(53.535% .223206 331.049))var(--lightningcss-dark,oklch(88.8973% .116696 331.049))",
+    "--xyff653": "var(--lightningcss-light,oklch(53.535% .223206 331.049))var(--lightningcss-dark,oklch(88.8973% .116696 331.049))",
+    "--xjf13kb": "#fff",
+    "--x10n98sh": "var(--lightningcss-light,oklch(53.535% .223206 331.049))var(--lightningcss-dark,oklch(88.8973% .116696 331.049))",
+    "--x1uvdo5l": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,#fff)",
+    "--xr3sjk8": "var(--lightningcss-light,oklch(96.4154% 0 none))var(--lightningcss-dark,oklch(30.9186% 0 none))",
+    "--x1e4xz8w": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(30.9186% 0 none))",
+    "--x1redn23": "var(--lightningcss-light,#0003)var(--lightningcss-dark,#fff3)",
+    "--xipjjho": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,#fff)",
+    "--x1i00kr6": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,#fff)",
+    "--xt664t1": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xhxblun": "oklch(75.1347% .192263 31.5112)",
+    "--x19y7bee": "var(--lightningcss-light,oklch(97.1429% .0174271 31.5112))var(--lightningcss-dark,oklch(28.526% .123552 25.0362))",
+    "--xq131nz": "var(--lightningcss-light,oklch(56.8298% .214017 29.2744))var(--lightningcss-dark,oklch(75.1347% .192263 31.5112))",
+    "--x49uv1z": "oklch(75.1347% .192263 31.5112)",
+    "--x52qnn9": "var(--lightningcss-light,oklch(47.4537% .214138 27.9311))var(--lightningcss-dark,oklch(84.5236% .105892 31.5112))",
+    "--xars9hp": "var(--lightningcss-light,oklch(56.8298% .214017 29.2744))var(--lightningcss-dark,oklch(90.1771% .0655814 31.5112))",
+    "--x1tvc75v": "var(--lightningcss-light,oklch(47.4537% .214138 27.9311))var(--lightningcss-dark,oklch(84.5236% .105892 31.5112))",
+    "--x1xh1iyw": "#fff",
+    "--xrj1zle": "var(--lightningcss-light,oklch(56.8298% .214017 29.2744))var(--lightningcss-dark,oklch(90.1771% .0655814 31.5112))",
+    "--x1wgcegi": "oklch(72.6265% .24906 355.639)",
+    "--xxtdii5": "var(--lightningcss-light,oklch(97.0279% .0207693 355.639))var(--lightningcss-dark,oklch(26.0247% .114828 355.639))",
+    "--x1cx54ju": "var(--lightningcss-light,oklch(63.6014% .249672 355.639))var(--lightningcss-dark,oklch(72.6265% .24906 355.639))",
+    "--xsmskin": "oklch(72.6265% .24906 355.639)",
+    "--xfb4gj0": "var(--lightningcss-light,oklch(54.3242% .246547 355.639))var(--lightningcss-dark,oklch(83.0364% .137173 355.639))",
+    "--x13zne8e": "var(--lightningcss-light,oklch(54.3242% .246547 355.639))var(--lightningcss-dark,oklch(89.3047% .0781586 355.639))",
+    "--xghc5ds": "var(--lightningcss-light,oklch(54.3242% .246547 355.639))var(--lightningcss-dark,oklch(83.0364% .137173 355.639))",
+    "--xp8qjqd": "#fff",
+    "--x1w9dnm": "var(--lightningcss-light,oklch(54.3242% .246547 355.639))var(--lightningcss-dark,oklch(89.3047% .0781586 355.639))",
+    "--xw2eubu": "oklch(64.6247% .249504 302.255)",
+    "--x11rsxqz": "var(--lightningcss-light,oklch(96.6612% .0208063 302.255))var(--lightningcss-dark,oklch(24.6668% .125035 302.255))",
+    "--xvd0jmq": "var(--lightningcss-light,oklch(56.8863% .250116 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--xzou9h7": "oklch(64.6247% .249504 302.255)",
+    "--xbw0yp6": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--xerr3a2": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(86.5214% .0851064 302.255))",
+    "--x1lw8r3d": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--x1drbscd": "#fff",
+    "--x5qqm51": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(86.5214% .0851064 302.255))",
+    "--xvez8qp": "oklch(86.9317% .187086 86.9002)",
+    "--xfe2xz4": "var(--lightningcss-light,oklch(97.6836% .0347406 90.6335))var(--lightningcss-dark,oklch(34.1409% .105129 47.288))",
+    "--x14d1w3w": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(86.9317% .187086 86.9002))",
+    "--x1el5b2i": "oklch(86.9317% .187086 86.9002)",
+    "--x1vmbnit": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(91.5186% .116318 87.9669))",
+    "--xr24gva": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(94.2805% .0829131 89.0336))",
+    "--x1hj7q25": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(91.5186% .116318 87.9669))",
+    "--x13zopcy": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xv0cl2u": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(94.2805% .0829131 89.0336))",
+    "--x1lz9yvi": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(24.7759% 0 none))",
+    "--x1f5x1xa": "var(--lightningcss-light,oklch(93.0999% 0 none))var(--lightningcss-dark,oklch(37.5299% 0 none))",
+    "--x9vd42p": "var(--lightningcss-light,oklch(99.1069% 0 none))var(--lightningcss-dark,#000)",
+    "--x1sbgvk7": "var(--lightningcss-light,#0000001a)var(--lightningcss-dark,#ffffff26)",
+    "--xji8h49": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)",
+    "--x1de06y5": "oklch(43.0772% .162466 27.4119)",
+    "--x13wz67v": "oklch(35.5025% .128998 26.5356)",
+    "--x411rn1": "oklch(51.4636% .201816 27.4561)",
+    "--x1h2zm8q": "#0000",
+    "--x17rt7ar": "#0000",
+    "--x1hpogdp": "#fff",
+    "--xxqqunj": "var(--lightningcss-light,oklch(65.0041% 0 none))var(--lightningcss-dark,oklch(75.4017% 0 none))",
+    "--xnesh6n": "var(--lightningcss-light,oklch(24.7759% 0 none))var(--lightningcss-dark,oklch(93.0999% 0 none))",
+    "--x1helnwt": "var(--lightningcss-light,oklch(30.9186% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))",
+    "--x2b1p3o": "#0000",
+    "--x1lfzqcd": "#0000",
+    "--x1jnctk8": "var(--lightningcss-light,oklch(93.0999% 0 none))var(--lightningcss-dark,oklch(37.5299% 0 0/.65))",
+    "--x1jc4d6b": "var(--lightningcss-light,oklch(84.8322% 0 none))var(--lightningcss-dark,oklch(37.5299% 0 0/.8))",
+    "--x184azjj": "var(--lightningcss-light,oklch(96.4154% 0 none))var(--lightningcss-dark,oklch(37.5299% 0 0/.5))",
+    "--xudgrot": "#0000",
+    "--x1yl8m1y": "#0000",
+    "--xi2dec2": "#0000",
+    "--xu9toup": "#0000",
+    "--xom64qg": "#0000",
+    "--x1dt13q2": "var(--lightningcss-light,oklch(51.4636% .201816 27.4561))var(--lightningcss-dark,oklch(65.2741% .241466 26.767))",
+    "--x16hqbul": "var(--lightningcss-light,oklch(47.8359% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))",
+    "--x18sw7ie": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)",
+    "--x17y296b": "var(--lightningcss-light,oklch(56.0902% .214451 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))",
+    "--x14kdum4": "var(--lightningcss-light,oklch(56.8863% .250116 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--xjm22oe": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(69.7942% .173713 177.997))",
+    "--x1vqlmid": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(86.9317% .187086 86.9002))",
+    "--xjv9b4": "var(--lightningcss-light,oklch(56.8298% .214017 29.2744))var(--lightningcss-dark,oklch(75.1347% .192263 31.5112))",
+    "--x1dh5cex": "var(--lightningcss-light,oklch(51.4636% .201816 27.4561))var(--lightningcss-dark,oklch(70.5326% .2032 24.2257))",
+    "--x11cauki": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(81.3571% .133551 177.997))",
+    "--xvd3nt1": "oklch(56.0902% .214451 265.129)",
+    "--x1sitdkx": "var(--lightningcss-light,oklch(47.8359% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))",
+    "--xtchrd9": "#00000080",
+    "--x1jdic7c": "var(--lightningcss-light,oklch(93.4071% .0336801 20.0485))var(--lightningcss-dark,oklch(28.1438% .0950638 26.7972))",
+    "--x1pkpaj2": "var(--lightningcss-light,oklch(51.4636% .201816 27.4561))var(--lightningcss-dark,oklch(70.5326% .2032 24.2257))",
+    "--x13inqrz": "oklch(49.7241% .214978 265.129)",
+    "--xagto6j": "var(--lightningcss-light,oklch(94.2954% .0294572 265.129))var(--lightningcss-dark,oklch(23.2185% .150014 265.129))",
+    "--xt7zeb3": "var(--lightningcss-light,oklch(56.0902% .214451 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))",
+    "--xbfhylg": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(83.5528% .0864247 265.129))",
+    "--x46qu4l": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(83.5528% .0864247 265.129))",
+    "--x16u6471": "oklch(52.4155% .123191 177.997)",
+    "--xaxybr8": "var(--lightningcss-light,oklch(95.5661% .0549309 177.997))var(--lightningcss-dark,oklch(25.544% .0623645 177.997))",
+    "--x1pzzbjw": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(69.7942% .173713 177.997))",
+    "--x1nwm3d8": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(81.3571% .133551 177.997))",
+    "--x1cg81t7": "oklch(53.936% .138941 60.8439)",
+    "--x6nmf2d": "var(--lightningcss-light,oklch(97.1552% .0421512 90.3669))var(--lightningcss-dark,oklch(34.1409% .105129 47.288))",
+    "--x1medoxg": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(86.9317% .187086 86.9002))",
+    "--xg11ayp": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(91.5186% .116318 87.9669))",
+    "--xuuezdx": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(91.5186% .116318 87.9669))"
+   }
+  },
+  {
+   "selector": ":root, .x976rto",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x1iefjqg": "600",
+    "--xula2oc": "500",
+    "--x1puw247": "500",
+    "--x1aqjstz": "500",
+    "--xujkaip": "500",
+    "--x1e7iajt": "700",
+    "--xichyst": "700",
+    "--xcon2yd": "700"
+   }
+  },
+  {
+   "selector": ":root, .xmgp10o",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x1qre76x": "500",
+    "--x1myigjb": "500",
+    "--x1ljxlxb": "500",
+    "--x1dnqxiz": "500",
+    "--x1cbokr9": "700",
+    "--xhe8ybs": "700",
+    "--x1x0ath9": "700"
+   }
+  },
+  {
+   "selector": ":root, .x15g2lx2",
+   "condition": "screen and (max-width: 63.999rem) and (-webkit-touch-callout:none)",
+   "decls": {
+    "--x1nkprnx": "-apple-system, \"BlinkMacSystemFont\", \"OpenAI Sans\", sans-serif"
+   }
+  },
+  {
+   "selector": ":root, .x15g2lx2",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x1nkprnx": "\"Roboto\", \"OpenAI Sans\", sans-serif"
+   }
+  },
+  {
+   "selector": ":root, .xsr3kt8",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x1q37ms0": ".00625rem",
+    "--x1axmopj": ".00625rem",
+    "--x13wrs7": ".00625rem",
+    "--x1e3wdvt": ".0125rem",
+    "--xq6ryq5": ".0125rem",
+    "--x5jdtdq": ".0125rem",
+    "--x1wm7iyn": ".0125rem",
+    "--x1a6ce2i": "-.02rem",
+    "--x1svjsip": "-.02rem",
+    "--x1w0spnj": ".0125rem",
+    "--x1nzmlqe": ".0125rem",
+    "--x1o24er0": ".00625rem",
+    "--x1nwa549": ".00625rem",
+    "--xkjttp5": "-.02rem",
+    "--x1vli9i2": "-.02rem",
+    "--x17ogli7": ".00625rem",
+    "--xjujxfb": ".00625rem",
+    "--xkrk4gk": ".00625rem",
+    "--x2doyzw": ".00625rem"
+   }
+  },
+  {
+   "selector": ":root, .xrdlfjs",
+   "condition": "(color:light-dark(black, white))",
+   "decls": {
+    "--x1qja2r7": "light-dark(#000000d1,#383838c7)",
+    "--xcl6qi8": "light-dark(#2e2e2e,#383838)"
+   }
+  },
+  {
+   "selector": ":root, .x1ei8u7",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x1ray7m4": ".1875rem"
+   }
+  },
+  {
+   "selector": ":root, .x1oipjf1",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--x1s6vvuw": "128px"
+   }
+  },
+  {
+   "selector": ":root, .x9ahvrg",
+   "condition": "(container-type:inline-size)",
+   "decls": {
+    "--x1uxmxzn": "1cqw"
+   }
+  },
+  {
+   "selector": ":root, .x1orkcp4",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x1vnmvs9": ".875rem",
+    "--xv1t6gl": ".875rem",
+    "--xp5hqwe": "2.25rem",
+    "--xl7g8r0": "2.25rem",
+    "--x1dpd8kr": ".875rem",
+    "--x153y00s": ".875rem",
+    "--xpt5c4i": ".75rem",
+    "--x16443ih": "1.5rem",
+    "--x1c75ip5": "1.5rem",
+    "--xesidr7": "1.375rem"
+   }
+  },
+  {
+   "selector": ":root, .x1wb3ek",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--x6hewzw": "1.42857",
+    "--xdmwdyr": "1.42857",
+    "--x1gpdu9g": "1.22222",
+    "--x19342hw": "1.22222",
+    "--x3dznoq": "1.42857",
+    "--x1wiqngp": "1.42857",
+    "--x1m0yrzn": "1.52941",
+    "--x1wr45eb": "1.28571",
+    "--xxhtj9p": "1.28571",
+    "--x18fmx3": "1.33333",
+    "--xf7ghz5": "1.33333",
+    "--x176db7t": "1.27273",
+    "--xygxmyi": "1.27273"
+   }
+  },
+  {
+   "selector": ":root, .xsww7rs",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x2vz5pf": "var(--lightningcss-light,oklch(24.7759% 0 none))var(--lightningcss-dark,oklch(93.0999% 0 none))",
+    "--x1weeliy": "var(--lightningcss-light,oklch(30.9186% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))"
+   }
+  },
+  {
+   "selector": ":root, .xecdyzz",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--xfj0kxp": ".00625rem",
+    "--x1l01qn2": ".00625rem",
+    "--xz390j2": ".00625rem",
+    "--x1c6adye": ".00625rem",
+    "--x1lqft5l": ".0125rem",
+    "--x1bag2ra": ".0125rem",
+    "--x1apu0mf": ".0125rem",
+    "--xwxykuu": ".0125rem",
+    "--x1ikjux1": "-.02rem",
+    "--x1mqv21m": "-.02rem",
+    "--xbuk0hb": ".0125rem",
+    "--x1y235p0": ".0125rem",
+    "--x1n0o9yn": ".00625rem",
+    "--x1b0yhyi": ".00625rem",
+    "--x1ymvgx1": ".00625rem",
+    "--xhhduqr": ".00625rem",
+    "--x1fi18mk": "-.02rem",
+    "--x8ymj0": "-.02rem",
+    "--xhik7cb": ".00625rem",
+    "--x1xbcj9t": ".00625rem",
+    "--xmhzemy": ".00625rem",
+    "--x1ybpsb3": ".00625rem"
+   }
+  },
+  {
+   "selector": ":root, .x7rorad",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--xgnzci": "360px"
+   }
+  },
+  {
+   "selector": ":root, .x7rorad",
+   "condition": "(width:1cqw)",
+   "decls": {
+    "--xgnzci": "46.875cqw"
+   }
+  },
+  {
+   "selector": ":root, .xsajpkq",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x10rv1f2": "#6e1615",
+    "--x1c5c6i": "#4d100e",
+    "--x9rvtud": "var(--lightningcss-light,#414141)var(--lightningcss-dark,#cdcdcd)",
+    "--x1gatu3h": "var(--lightningcss-light,#cdcdcd)var(--lightningcss-dark,#212121)"
+   }
+  },
+  {
+   "selector": ":root, .xvji3hk",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--xloiy2a": "var(--lightningcss-light,#00000005)var(--lightningcss-dark,#ffffff1a)"
+   }
+  },
+  {
+   "selector": ":root, .xsajpkq",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x10rv1f2": "oklch(43.0772% .162466 27.4119)",
+    "--x1c5c6i": "oklch(35.5025% .128998 26.5356)",
+    "--x12gc1hm": "oklch(51.4636% .201816 27.4561)",
+    "--xvs6sz5": "#0000",
+    "--x1ndzl5g": "#0000",
+    "--x1ov5pza": "#fff",
+    "--x1rkdcxl": "#0000",
+    "--x1bterz": "#0000",
+    "--x5bht2f": "#0000",
+    "--x15yb5o2": "#0000",
+    "--xu7d3jt": "#0000",
+    "--x1o4h194": "var(--lightningcss-light,oklch(51.4636% .201816 27.4561))var(--lightningcss-dark,oklch(65.2741% .241466 26.767))",
+    "--x9rvtud": "var(--lightningcss-light,oklch(47.8359% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))",
+    "--x1gatu3h": "var(--lightningcss-light,#0000000d)var(--lightningcss-dark,#ffffff1a)",
+    "--xivnm23": "var(--lightningcss-light,oklch(56.0902% .214451 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))",
+    "--x60nhlx": "var(--lightningcss-light,oklch(56.8863% .250116 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--x1b9m67z": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(70.8262% .131124 176.759))",
+    "--x131p452": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(86.684% .162382 88.3396))",
+    "--x20r1qt": "var(--lightningcss-light,oklch(56.8298% .214017 29.2744))var(--lightningcss-dark,oklch(73.9659% .160143 32.9348))",
+    "--x8axsc6": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(81.3571% .133551 177.997))",
+    "--xomnu2l": "#00000080",
+    "--x1a4yvy8": "var(--lightningcss-light,oklch(93.4071% .0336801 20.0485))var(--lightningcss-dark,oklch(28.1438% .0950638 26.7972))",
+    "--x1ub3vle": "var(--lightningcss-light,oklch(51.4636% .201816 27.4561))var(--lightningcss-dark,oklch(70.5326% .2032 24.2257))",
+    "--x1labttc": "oklch(49.7241% .214978 265.129)",
+    "--x1cjgdn4": "var(--lightningcss-light,oklch(94.2954% .0294572 265.129))var(--lightningcss-dark,oklch(23.2185% .150014 265.129))",
+    "--x1rz22zo": "var(--lightningcss-light,oklch(56.0902% .214451 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))",
+    "--xnugslg": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(83.5528% .0864247 265.129))",
+    "--xz5y3vh": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(83.5528% .0864247 265.129))",
+    "--xtveoll": "oklch(52.4155% .123191 177.997)",
+    "--xakxzc7": "var(--lightningcss-light,oklch(95.5661% .0549309 177.997))var(--lightningcss-dark,oklch(25.544% .0623645 177.997))",
+    "--x17aac8x": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(70.8262% .131124 176.759))",
+    "--xam959g": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(81.3571% .133551 177.997))",
+    "--x1i3uyjs": "oklch(53.936% .138941 60.8439)",
+    "--x1m3ntcj": "var(--lightningcss-light,oklch(97.1552% .0421512 90.3669))var(--lightningcss-dark,oklch(34.1409% .105129 47.288))",
+    "--x52cqm6": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(86.684% .162382 88.3396))",
+    "--x1ofh8b3": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(91.5186% .116318 87.9669))"
+   }
+  },
+  {
+   "selector": ":root, .x11k1yyg",
+   "condition": "screen and (max-width: 63.999rem) and (any-pointer: coarse) and (-webkit-tap-highlight-color:transparent) and (not (-webkit-touch-callout:none))",
+   "decls": {
+    "--xm14a2r": "1.52941",
+    "--xk3c1t2": "1.52941",
+    "--x1vlg2d1": "1.42857",
+    "--xthg2zz": "1.42857",
+    "--xo0fbbw": "1.22222",
+    "--x90jhkw": "1.22222",
+    "--xq2bq0h": "1.42857",
+    "--xdxj51w": "1.42857",
+    "--x30ivq4": "1.52941",
+    "--x1xc4z3q": "1.52941",
+    "--x54j58w": "1.28571",
+    "--xgl7up3": "1.28571",
+    "--x1j6ktpk": "1.33333",
+    "--x8mh63w": "1.33333",
+    "--xxagxkg": "1.27273",
+    "--x4umshn": "1.27273"
+   }
+  },
+  {
+   "selector": ":root, .x18zno8v",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1c4gh12": "var(--lightningcss-light,oklch(43.1803% .212287 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))",
+    "--x15q1f8z": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1algu8q": "var(--lightningcss-light,oklch(44.5175% .111821 232.058))var(--lightningcss-dark,oklch(71.774% .192698 232.058))",
+    "--x9vq2bi": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x19di6af": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(69.7942% .173713 177.997))",
+    "--xupoe60": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1k0u8eg": "var(--lightningcss-light,oklch(38.7125% .106463 122.019))var(--lightningcss-dark,oklch(82.0784% .230112 122.019))",
+    "--xs9ject": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1kamjed": "var(--lightningcss-light,oklch(44.3559% .215789 331.049))var(--lightningcss-dark,oklch(82.342% .173351 331.049))",
+    "--xjf13kb": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1redn23": "var(--lightningcss-light,oklch(47.8359% 0 none))var(--lightningcss-dark,oklch(47.8359% 0 none))",
+    "--xhxblun": "var(--lightningcss-light,oklch(47.4537% .214138 27.9311))var(--lightningcss-dark,oklch(75.1347% .192263 31.5112))",
+    "--x1xh1iyw": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1wgcegi": "var(--lightningcss-light,oklch(44.9496% .201743 355.639))var(--lightningcss-dark,oklch(72.6265% .24906 355.639))",
+    "--xp8qjqd": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xw2eubu": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--x1drbscd": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xvez8qp": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(86.9317% .187086 86.9002))",
+    "--x13zopcy": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1sbgvk7": "var(--lightningcss-light,oklch(75.4017% 0 none))var(--lightningcss-dark,oklch(30.9186% 0 none))",
+    "--xji8h49": "var(--lightningcss-light,oklch(84.8322% 0 none))var(--lightningcss-dark,oklch(24.7759% 0 none))",
+    "--x1de06y5": "oklch(35.5025% .128998 26.5356)",
+    "--x13wz67v": "oklch(28.1438% .0950638 26.7972)",
+    "--xxqqunj": "var(--lightningcss-light,oklch(47.8359% 0 none))var(--lightningcss-dark,oklch(75.4017% 0 none))",
+    "--x1jnctk8": "var(--xr3sjk8)",
+    "--x1jc4d6b": "var(--x1f5x1xa)",
+    "--x184azjj": "var(--x1lz9yvi)",
+    "--x16hqbul": "var(--lightningcss-light,oklch(37.5299% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))",
+    "--x18sw7ie": "var(--lightningcss-light,oklch(84.8322% 0 none))var(--lightningcss-dark,oklch(24.7759% 0 none))",
+    "--x1sitdkx": "var(--lightningcss-light,oklch(37.5299% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))"
+   }
+  },
+  {
+   "selector": ":root, .xsajpkq",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x10rv1f2": "oklch(35.5025% .128998 26.5356)",
+    "--x1c5c6i": "oklch(28.1438% .0950638 26.7972)",
+    "--x9rvtud": "var(--lightningcss-light,oklch(37.5299% 0 none))var(--lightningcss-dark,oklch(84.8322% 0 none))",
+    "--x1gatu3h": "var(--lightningcss-light,oklch(84.8322% 0 none))var(--lightningcss-dark,oklch(24.7759% 0 none))"
+   }
+  },
+  {
+   "selector": ".x2dfdt0.x2dfdt0, .x2dfdt0.x2dfdt0:root",
+   "decls": {
+    "--fallback-shell-base-composer-reserve": "var(--mobile-thread-composer-reserve)",
+    "--fallback-shell-base-disclosure-clearance": "var(--mobile-thread-disclosure-fade-clearance)",
+    "--fallback-shell-base-disclosure-offset": "var(--mobile-thread-disclosure-sticky-offset)",
+    "--fallback-shell-base-mask-size": "var(--mobile-scroll-mask-bottom-size)",
+    "--fallback-shell-detail-open-shift": "var(--fallback-shell-sidebar-width)",
+    "--fallback-shell-sidebar-width": "min(calc(76 * 1vi), 360px)"
+   }
+  },
+  {
+   "selector": ".xdbz2hk.xdbz2hk, .xdbz2hk.xdbz2hk:root",
+   "decls": {
+    "--mobile-scroll-mask-bottom-size": "calc(var(--fallback-shell-base-mask-size) + var(--mobile-footer-safe-area-bottom))",
+    "--mobile-thread-composer-reserve": "calc(var(--fallback-shell-base-composer-reserve) + var(--mobile-footer-safe-area-bottom))",
+    "--mobile-thread-disclosure-fade-clearance": "calc(var(--fallback-shell-base-disclosure-clearance) + var(--mobile-footer-safe-area-bottom))",
+    "--mobile-thread-disclosure-sticky-offset": "calc(var(--fallback-shell-base-disclosure-offset) + var(--mobile-footer-safe-area-bottom))"
+   }
+  },
+  {
+   "selector": ".x1catl1g.x1catl1g, .x1catl1g.x1catl1g:root",
+   "decls": {
+    "--mobile-thread-content-margin-inline": ".625rem",
+    "--page-margin-top": "env(safe-area-inset-top,0px)"
+   }
+  },
+  {
+   "selector": ".xrfaljq.xrfaljq, .xrfaljq.xrfaljq:root",
+   "decls": {
+    "--mobile-thread-content-margin-inline": ".75rem",
+    "--page-margin-top": "max(1rem, env(safe-area-inset-top))"
+   }
+  },
+  {
+   "selector": ".xuuddzc.xuuddzc, .xuuddzc.xuuddzc:root",
+   "decls": {
+    "--mobile-thread-content-margin-inline": "0px",
+    "--page-margin-top": "max(1rem, env(safe-area-inset-top))"
+   }
+  },
+  {
+   "selector": ".xg3ptho.xg3ptho, .xg3ptho.xg3ptho:root",
+   "decls": {
+    "--mobile-thread-content-margin-inline": "1rem",
+    "--page-margin-top": "max(1rem, env(safe-area-inset-top))"
+   }
+  },
+  {
+   "selector": ".xcpvxwq.xcpvxwq, .xcpvxwq.xcpvxwq:root",
+   "decls": {
+    "--swipable-layout-browser-chrome-runway": "4rem",
+    "--swipable-layout-gesture-width": "calc(var(--swipable-layout-sidebar-width) / 1)",
+    "--swipable-layout-sidebar-width": "min(calc(76 * 1%), 360px)",
+    "--swipable-layout-vertical-gesture-track-size": "max(0px, calc(calc(var(--swipable-layout-document-scroll-height,calc(100lvb - env(keyboard-inset-height,0px))) + env(keyboard-inset-height,0px)) - 100lvb))"
+   }
+  },
+  {
+   "selector": ".xgsppoo.xgsppoo, .xgsppoo.xgsppoo:root",
+   "decls": {
+    "--x13mh34a": "52px"
+   }
+  },
+  {
+   "selector": ".x14xecuh.x14xecuh, .x14xecuh.x14xecuh:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#0d78a1)var(--lightningcss-dark,#00b1ff)",
+    "--x106dgun": "var(--lightningcss-light,#0b5c7c)var(--lightningcss-dark,#b3e3fc)",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,#0d78a1)var(--lightningcss-dark,#b3e3fc)",
+    "--x1hik4yf": "var(--xlmsz48)"
+   }
+  },
+  {
+   "selector": ".x1dt2z8e.x1dt2z8e, .x1dt2z8e.x1dt2z8e:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#04bb9f)",
+    "--x106dgun": "var(--lightningcss-light,#055f51)var(--lightningcss-dark,#42dec2)",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,#027c6a)var(--lightningcss-dark,#8deed8)",
+    "--x1hik4yf": "var(--xlmsz48)"
+   }
+  },
+  {
+   "selector": ".x13qp82k.x13qp82k, .x13qp82k.x13qp82k:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#3566f0)var(--lightningcss-dark,#81a6f9)",
+    "--x106dgun": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#b0c9fe)",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,#2451da)var(--lightningcss-dark,#81a6f9)",
+    "--x1hik4yf": "var(--xlmsz48)"
+   }
+  },
+  {
+   "selector": ".x2nivo4.x2nivo4, .x2nivo4.x2nivo4:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#4a6e98)var(--lightningcss-dark,#94b1d5)",
+    "--x106dgun": "var(--lightningcss-light,#4a6e98)var(--lightningcss-dark,#acc7e8)",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,#4a6e98)var(--lightningcss-dark,#acc7e8)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1hik4yf": "var(--xlmsz48)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".x42czut.x42czut, .x42czut.x42czut:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#9639ed)var(--lightningcss-dark,#c8a4fb)",
+    "--x106dgun": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#c8a4fb)",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,#7e14d0)var(--lightningcss-dark,#dcc7fe)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1hik4yf": "var(--xlmsz48)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".xxpg8uy.xxpg8uy, .xxpg8uy.xxpg8uy:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#758e1a)var(--lightningcss-dark,#b6d80b)",
+    "--x106dgun": "var(--lightningcss-light,#586c11)var(--lightningcss-dark,#d8f590)",
+    "--xlmsz48": "#0d0d0d",
+    "--x1704doi": "var(--lightningcss-light,#586c11)var(--lightningcss-dark,#d8f590)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1hik4yf": "var(--xlmsz48)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".xdzwo6c.xdzwo6c, .xdzwo6c.xdzwo6c:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#cf42c5)var(--lightningcss-dark,#dd6adc)",
+    "--x106dgun": "var(--lightningcss-light,#af1fa7)var(--lightningcss-dark,#fec5f6)",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,#af1fa7)var(--lightningcss-dark,#fec5f6)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1hik4yf": "var(--xlmsz48)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".x1marltc.x1marltc, .x1marltc.x1marltc:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#f31c91)var(--lightningcss-dark,#fa70ab)",
+    "--x106dgun": "var(--lightningcss-light,#c31b74)var(--lightningcss-dark,#fbadca)",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,#c31b74)var(--lightningcss-dark,#feccdd)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1hik4yf": "var(--xlmsz48)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".xlwh8ez.xlwh8ez, .xlwh8ez.xlwh8ez:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#d8241a)var(--lightningcss-dark,#ff8066)",
+    "--x106dgun": "var(--lightningcss-light,#ab1616)var(--lightningcss-dark,#fdb9ab)",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,#d8241a)var(--lightningcss-dark,#ffd3ca)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1hik4yf": "var(--xlmsz48)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".xrf8t27.xrf8t27, .xrf8t27.xrf8t27:root",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#ffcc38)",
+    "--x106dgun": "var(--lightningcss-light,#7d3f09)var(--lightningcss-dark,#fee096)",
+    "--xlmsz48": "#0d0d0d",
+    "--x1704doi": "var(--lightningcss-light,#9f5c14)var(--lightningcss-dark,#feebbb)",
+    "--x1fwcpeh": "color-mix(in srgb, var(--x4sldyk) 88%, #000)",
+    "--x1hqqq8t": "color-mix(in srgb, var(--x4sldyk) 78%, #000)",
+    "--x4sldyk": "var(--x1e4keym)",
+    "--x1hik4yf": "var(--xlmsz48)",
+    "--x1k8gdzs": "var(--xjq2c5c)"
+   }
+  },
+  {
+   "selector": ".x1dj2jm8.x1dj2jm8, .x1dj2jm8.x1dj2jm8:root",
+   "decls": {
+    "--xqkix7d": "-1",
+    "--xyvjedx": "0 0 0 7.5px"
+   }
+  },
+  {
+   "selector": ".x2dfdt0.x2dfdt0, .x2dfdt0.x2dfdt0:root",
+   "condition": "not (height:100dvb)",
+   "decls": {
+    "--fallback-shell-sidebar-width": "min(calc(76 * 1vw), 360px)"
+   }
+  },
+  {
+   "selector": ".xg3ptho.xg3ptho, .xg3ptho.xg3ptho:root",
+   "condition": "(width >= 40rem)",
+   "decls": {
+    "--mobile-thread-content-margin-inline": "1.5rem"
+   }
+  },
+  {
+   "selector": ".xrfaljq.xrfaljq, .xrfaljq.xrfaljq:root",
+   "condition": "(width >= 48rem) and (width <= 63.999rem)",
+   "decls": {
+    "--mobile-thread-content-margin-inline": "1.5rem"
+   }
+  },
+  {
+   "selector": ".xg3ptho.xg3ptho, .xg3ptho.xg3ptho:root, .xrfaljq.xrfaljq, .xrfaljq.xrfaljq:root",
+   "condition": "(width >= 64rem)",
+   "decls": {
+    "--mobile-thread-content-margin-inline": "4rem"
+   }
+  },
+  {
+   "selector": ".xg3ptho.xg3ptho, .xg3ptho.xg3ptho:root, .xrfaljq.xrfaljq, .xrfaljq.xrfaljq:root, .xuuddzc.xuuddzc, .xuuddzc.xuuddzc:root",
+   "condition": "(width >= 48rem)",
+   "decls": {
+    "--page-margin-top": "0px"
+   }
+  },
+  {
+   "selector": ".xcpvxwq.xcpvxwq, .xcpvxwq.xcpvxwq:root",
+   "condition": "(width >= 48rem)",
+   "decls": {
+    "--swipable-layout-sidebar-width": "260px"
+   }
+  },
+  {
+   "selector": ".x1dt2z8e.x1dt2z8e, .x1dt2z8e.x1dt2z8e:root, .x14xecuh.x14xecuh, .x14xecuh.x14xecuh:root, .x13qp82k.x13qp82k, .x13qp82k.x13qp82k:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".x2nivo4.x2nivo4, .x2nivo4.x2nivo4:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,#395473)var(--lightningcss-dark,#acc7e8)",
+    "--x106dgun": "var(--lightningcss-light,#395473)var(--lightningcss-dark,#d8e6f8)",
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)",
+    "--x1704doi": "var(--lightningcss-light,#395473)var(--lightningcss-dark,#d8e6f8)"
+   }
+  },
+  {
+   "selector": ".xxpg8uy.xxpg8uy, .xxpg8uy.xxpg8uy:root, .xrf8t27.xrf8t27, .xrf8t27.xrf8t27:root, .x42czut.x42czut, .x42czut.x42czut:root, .xdzwo6c.xdzwo6c, .xdzwo6c.xdzwo6c:root, .x1marltc.x1marltc, .x1marltc.x1marltc:root, .xlwh8ez.xlwh8ez, .xlwh8ez.xlwh8ez:root",
+   "condition": "(prefers-contrast: more)",
+   "decls": {
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,#0d0d0d)"
+   }
+  },
+  {
+   "selector": ".x13qp82k.x13qp82k, .x13qp82k.x13qp82k:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x15esjau": "var(--lightningcss-light,oklch(56.0902% .214451 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))",
+    "--x106dgun": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(83.5528% .0864247 265.129))",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,oklch(49.7241% .214978 265.129))var(--lightningcss-dark,oklch(73.2314% .139546 265.129))"
+   }
+  },
+  {
+   "selector": ".x42czut.x42czut, .x42czut.x42czut:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(63.3487% .232433 299.596)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(96.6612% .0208063 302.255))var(--lightningcss-dark,oklch(24.6668% .125035 302.255))",
+    "--x15esjau": "var(--lightningcss-light,oklch(56.8863% .250116 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--x106dgun": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(86.5214% .0851064 302.255))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(86.5214% .0851064 302.255))"
+   }
+  },
+  {
+   "selector": ".x2nivo4.x2nivo4, .x2nivo4.x2nivo4:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(68.3185% .0680793 253.681)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(96.9743% .014776 251.155))var(--lightningcss-dark,oklch(25.6536% .0268524 253.344))",
+    "--x15esjau": "var(--lightningcss-light,oklch(52.9237% .0783781 253.005))var(--lightningcss-dark,oklch(75.1288% .0611661 254.032))",
+    "--x106dgun": "var(--lightningcss-light,oklch(52.9237% .0783781 253.005))var(--lightningcss-dark,oklch(82.0633% .0551111 253.592))",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,oklch(52.9237% .0783781 253.005))var(--lightningcss-dark,oklch(82.0633% .0551111 253.592))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(52.9237% .0783781 253.005))var(--lightningcss-dark,oklch(82.0633% .0551111 253.592))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(52.9237% .0783781 253.005))var(--lightningcss-dark,oklch(82.0633% .0551111 253.592))"
+   }
+  },
+  {
+   "selector": ".xdzwo6c.xdzwo6c, .xdzwo6c.xdzwo6c:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(70.0694% .197716 327.758)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(96.9743% .03101 331.049))var(--lightningcss-dark,oklch(25.8259% .122823 331.049))",
+    "--x15esjau": "var(--lightningcss-light,oklch(62.6185% .226035 331.049))var(--lightningcss-dark,oklch(70.0694% .197716 327.758))",
+    "--x106dgun": "var(--lightningcss-light,oklch(53.535% .223206 331.049))var(--lightningcss-dark,oklch(88.8973% .116696 331.049))",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,oklch(53.535% .223206 331.049))var(--lightningcss-dark,oklch(88.8973% .116696 331.049))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(53.535% .223206 331.049))var(--lightningcss-dark,oklch(88.8973% .116696 331.049))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(53.535% .223206 331.049))var(--lightningcss-dark,oklch(88.8973% .116696 331.049))"
+   }
+  },
+  {
+   "selector": ".x1dt2z8e.x1dt2z8e, .x1dt2z8e.x1dt2z8e:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(70.8262% .131124 176.759)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(96.8981% .04655 177.997))var(--lightningcss-dark,oklch(25.544% .0623645 177.997))",
+    "--x15esjau": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(70.8262% .131124 176.759))",
+    "--x106dgun": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(81.3571% .133551 177.997))",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(88.3195% .0977213 177.997))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(81.3571% .133551 177.997))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(52.4155% .123191 177.997))var(--lightningcss-dark,oklch(88.3195% .0977213 177.997))"
+   }
+  },
+  {
+   "selector": ".x14xecuh.x14xecuh, .x14xecuh.x14xecuh:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(72.313% .16242 238.815)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(96.9889% .0189854 232.058))var(--lightningcss-dark,oklch(25.88% .0691805 232.058))",
+    "--x15esjau": "var(--lightningcss-light,oklch(53.7497% .136655 232.058))var(--lightningcss-dark,oklch(72.313% .16242 238.815))",
+    "--x106dgun": "var(--lightningcss-light,oklch(44.5175% .111821 232.058))var(--lightningcss-dark,oklch(89.0082% .0657298 232.058))",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,oklch(53.7497% .136655 232.058))var(--lightningcss-dark,oklch(89.0082% .0657298 232.058))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(44.5175% .111821 232.058))var(--lightningcss-dark,oklch(89.0082% .0657298 232.058))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(53.7497% .136655 232.058))var(--lightningcss-dark,oklch(89.0082% .0657298 232.058))"
+   }
+  },
+  {
+   "selector": ".x1marltc.x1marltc, .x1marltc.x1marltc:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(72.6265% .24906 355.639)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(97.0279% .0207693 355.639))var(--lightningcss-dark,oklch(26.0247% .114828 355.639))",
+    "--x15esjau": "var(--lightningcss-light,oklch(63.6014% .249672 355.639))var(--lightningcss-dark,oklch(72.6265% .24906 355.639))",
+    "--x106dgun": "var(--lightningcss-light,oklch(54.3242% .246547 355.639))var(--lightningcss-dark,oklch(83.0364% .137173 355.639))",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,oklch(54.3242% .246547 355.639))var(--lightningcss-dark,oklch(89.3047% .0781586 355.639))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(54.3242% .246547 355.639))var(--lightningcss-dark,oklch(83.0364% .137173 355.639))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(54.3242% .246547 355.639))var(--lightningcss-dark,oklch(89.3047% .0781586 355.639))"
+   }
+  },
+  {
+   "selector": ".xlwh8ez.xlwh8ez, .xlwh8ez.xlwh8ez:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(73.9659% .160143 32.9348)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(97.1429% .0174271 31.5112))var(--lightningcss-dark,oklch(28.526% .123552 25.0362))",
+    "--x15esjau": "var(--lightningcss-light,oklch(56.8298% .214017 29.2744))var(--lightningcss-dark,oklch(73.9659% .160143 32.9348))",
+    "--x106dgun": "var(--lightningcss-light,oklch(47.4537% .214138 27.9311))var(--lightningcss-dark,oklch(84.5236% .105892 31.5112))",
+    "--xlmsz48": "#fff",
+    "--x1704doi": "var(--lightningcss-light,oklch(56.8298% .214017 29.2744))var(--lightningcss-dark,oklch(90.1771% .0655814 31.5112))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(47.4537% .214138 27.9311))var(--lightningcss-dark,oklch(84.5236% .105892 31.5112))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(56.8298% .214017 29.2744))var(--lightningcss-dark,oklch(90.1771% .0655814 31.5112))"
+   }
+  },
+  {
+   "selector": ".xxpg8uy.xxpg8uy, .xxpg8uy.xxpg8uy:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(82.7907% .196026 120.522)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(97.4611% .0616632 122.019))var(--lightningcss-dark,oklch(27.6286% .0760033 122.019))",
+    "--x15esjau": "var(--lightningcss-light,oklch(60.694% .163187 122.019))var(--lightningcss-dark,oklch(82.7907% .196026 120.522))",
+    "--x106dgun": "var(--lightningcss-light,oklch(49.7406% .133531 122.019))var(--lightningcss-dark,oklch(92.5924% .129448 122.019))",
+    "--xlmsz48": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1704doi": "var(--lightningcss-light,oklch(49.7406% .133531 122.019))var(--lightningcss-dark,oklch(92.5924% .129448 122.019))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(49.7406% .133531 122.019))var(--lightningcss-dark,oklch(92.5924% .129448 122.019))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(49.7406% .133531 122.019))var(--lightningcss-dark,oklch(92.5924% .129448 122.019))"
+   }
+  },
+  {
+   "selector": ".xrf8t27.xrf8t27, .xrf8t27.xrf8t27:root",
+   "condition": "(color-gamut: p3)",
+   "decls": {
+    "--x1scdecw": "oklch(86.684% .162382 88.3396)",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(97.6836% .0347406 90.6335))var(--lightningcss-dark,oklch(64.2093% .160514 68.2141))",
+    "--x15esjau": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(86.684% .162382 88.3396))",
+    "--x106dgun": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(91.5186% .116318 87.9669))",
+    "--xlmsz48": "var(--lightningcss-light,oklch(15.9066% 0 none))var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1704doi": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(94.2805% .0829131 89.0336))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(91.5186% .116318 87.9669))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(53.936% .138941 60.8439))var(--lightningcss-dark,oklch(94.2805% .0829131 89.0336))"
+   }
+  },
+  {
+   "selector": ".xxpg8uy.xxpg8uy, .xxpg8uy.xxpg8uy:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".x13qp82k.x13qp82k, .x13qp82k.x13qp82k:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".x1dt2z8e.x1dt2z8e, .x1dt2z8e.x1dt2z8e:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(43.5139% .100804 177.997))var(--lightningcss-dark,oklch(70.8262% .131124 176.759))",
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".x2nivo4.x2nivo4, .x2nivo4.x2nivo4:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(43.8188% .0610134 252.57))var(--lightningcss-dark,oklch(82.0633% .0551111 253.592))",
+    "--x15esjau": "var(--lightningcss-light,oklch(43.8188% .0610134 252.57))var(--lightningcss-dark,oklch(82.0633% .0551111 253.592))",
+    "--x106dgun": "var(--lightningcss-light,oklch(43.8188% .0610134 252.57))var(--lightningcss-dark,oklch(91.9887% .0287939 254.682))",
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--x1704doi": "var(--lightningcss-light,oklch(43.8188% .0610134 252.57))var(--lightningcss-dark,oklch(91.9887% .0287939 254.682))",
+    "--xbn88x4": "var(--lightningcss-light,oklch(43.8188% .0610134 252.57))var(--lightningcss-dark,oklch(91.9887% .0287939 254.682))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xn2d1jy": "var(--lightningcss-light,oklch(43.8188% .0610134 252.57))var(--lightningcss-dark,oklch(91.9887% .0287939 254.682))"
+   }
+  },
+  {
+   "selector": ".xrf8t27.xrf8t27, .xrf8t27.xrf8t27:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(43.9384% .123953 53.9117))var(--lightningcss-dark,oklch(86.684% .162382 88.3396))",
+    "--x1y9qfar": "var(--lightningcss-light,oklch(97.6836% .0347406 90.6335))var(--lightningcss-dark,oklch(34.1409% .105129 47.288))",
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".xdzwo6c.xdzwo6c, .xdzwo6c.xdzwo6c:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(44.3559% .215789 331.049))var(--lightningcss-dark,oklch(82.342% .173351 331.049))",
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".x14xecuh.x14xecuh, .x14xecuh.x14xecuh:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(44.5175% .111821 232.058))var(--lightningcss-dark,oklch(72.313% .16242 238.815))",
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".x1marltc.x1marltc, .x1marltc.x1marltc:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(44.9496% .201743 355.639))var(--lightningcss-dark,oklch(72.6265% .24906 355.639))",
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".xlwh8ez.xlwh8ez, .xlwh8ez.xlwh8ez:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(47.4537% .214138 27.9311))var(--lightningcss-dark,oklch(73.9659% .160143 32.9348))",
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".x42czut.x42czut, .x42czut.x42czut:root",
+   "condition": "(prefers-contrast: more) and (color-gamut: p3)",
+   "decls": {
+    "--x1e4keym": "var(--lightningcss-light,oklch(48.9318% .246986 302.255))var(--lightningcss-dark,oklch(78.2919% .137418 302.255))",
+    "--xlmsz48": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))",
+    "--xjq2c5c": "var(--lightningcss-light,#fff)var(--lightningcss-dark,oklch(15.9066% 0 none))"
+   }
+  },
+  {
+   "selector": ".xb4n8m5.xb4n8m5:where(:has(.x1nx8xdy:popover-open))",
+   "decls": {
+    "--x1hd81vz": "calc(420px + 24px)"
+   }
+  },
+  {
+   "selector": ".x80uccm.x80uccm:where(:has(.x1nx8xdy:popover-open))",
+   "decls": {
+    "--x327334": "24px"
+   }
+  },
+  {
+   "selector": ".xlqepax.xlqepax",
+   "condition": "not (height:100dvb)",
+   "decls": {
+    "--mobile-thread-viewport-height": "100vh"
+   }
+  },
+  {
+   "selector": ".xwiq36j.xwiq36j:where(.xvilvj6:where(*) *)",
+   "decls": {
+    "--mobile-footer-safe-area-bottom": "0px"
+   }
+  },
+  {
+   "selector": ".xv1mrsu.xv1mrsu:where(.xviljdw:where(*) *)",
+   "decls": {
+    "--mobile-thread-viewport-height": "calc(100dvb - env(keyboard-inset-height,0px))"
+   }
+  },
+  {
+   "selector": ".xwxb804.xwxb804:where(.xvilvj6:where(*) *)",
+   "decls": {
+    "--mobile-thread-viewport-height": "var(--x9ivpb4)"
+   }
+  },
+  {
+   "selector": ".xj9vt9s.xj9vt9s:where(.xvilvj6:where(*) *)",
+   "decls": {
+    "--page-margin-bottom": "calc(var(--mobile-footer-safe-area-bottom) + .5rem)"
+   }
+  },
+  {
+   "selector": ".x1k6k4fv.x1k6k4fv:where(.xxwiwo5:where(*) *), .x1o7qd6d.x1o7qd6d:where(.xndw08s:where(*) *)",
+   "decls": {
+    "--swipable-layout-inline-progress": "0"
+   }
+  },
+  {
+   "selector": ".x1p56c4t.x1p56c4t:where(.xviljdw:where(*) *)",
+   "decls": {
+    "--x9ivpb4": "calc(100dvb - env(keyboard-inset-height,0px))"
+   }
+  },
+  {
+   "selector": ".x1tygzy3.x1tygzy3:where(.xv50y6m:where(*) *):where(.xvj2ema:where(*) *), .x4o8btc.x4o8btc:where(.xdi0ktf:where(*) *):where(.xvj2ema:where(*) *)",
+   "decls": {
+    "--mobile-thread-viewport-height": "var(--xh92iyd)"
+   }
+  },
+  {
+   "selector": ".x1gkil6q.x1gkil6q:where(.xdi0ktf:where(*) *):where(.xvilvj6:where(*) *):where(.xvj2ema:where(*) *), .xc77bob.xc77bob:where(.xv50y6m:where(*) *):where(.xvilvj6:where(*) *):where(.xvj2ema:where(*) *)",
+   "decls": {
+    "--mobile-thread-viewport-height": "var(--x9ivpb4)"
+   }
+  },
+  {
+   "selector": ".x1tk1ite.x1tk1ite",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-compact-height": "calc(100dvb - env(keyboard-inset-height,0px))"
+   }
+  },
+  {
+   "selector": ".xvo1969.xvo1969",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-compact-height": "min(calc(100svh - max(3.875rem,calc(max(.875rem,env(safe-area-inset-top)) + 3.5rem))),var(--bottom-sheet-natural-height))"
+   }
+  },
+  {
+   "selector": ".x19aniz7.x19aniz7",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-compact-height": "min(var(--bottom-sheet-input-viewport-height),max(5rem,calc(var(--bottom-sheet-input-viewport-height) - max(3.875rem,calc(max(.875rem,env(safe-area-inset-top)) + 3.5rem)))))"
+   }
+  },
+  {
+   "selector": ".x141fojj.x141fojj",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-compact-height": "min(var(--bottom-sheet-natural-height),calc(100svh - max(3.875rem,calc(max(.875rem,env(safe-area-inset-top)) + 3.5rem))),calc(min(70svh,34rem) + var(--bottom-sheet-content-chrome-height)))"
+   }
+  },
+  {
+   "selector": ".x1kczsbw.x1kczsbw",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-open-height": "calc(100dvb - env(keyboard-inset-height,0px))"
+   }
+  },
+  {
+   "selector": ".x15hoa4z.x15hoa4z",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-open-height": "calc(100dvh - max(3.875rem,calc(max(.875rem,env(safe-area-inset-top)) + 3.5rem)))"
+   }
+  },
+  {
+   "selector": ".xunpt7n.xunpt7n",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-open-height": "calc(100svh - max(3.875rem,calc(max(.875rem,env(safe-area-inset-top)) + 3.5rem)))"
+   }
+  },
+  {
+   "selector": ".xfsyp0d.xfsyp0d",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-open-height": "max(5rem,var(--bottom-sheet-input-viewport-height))"
+   }
+  },
+  {
+   "selector": ".x16k6bpc.x16k6bpc",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-open-height": "min(var(--bottom-sheet-input-viewport-height),max(5rem,calc(var(--bottom-sheet-input-viewport-height) - max(3.875rem,calc(max(.875rem,env(safe-area-inset-top)) + 3.5rem)))))"
+   }
+  },
+  {
+   "selector": ".x1p1n508.x1p1n508",
+   "condition": "(hover: none) and (pointer: coarse)",
+   "decls": {
+    "--bottom-sheet-open-height": "var(--bottom-sheet-compact-height)"
+   }
+  },
+  {
+   "selector": ".x1cvjcra.x1cvjcra",
+   "condition": "(prefers-reduced-motion: reduce)",
+   "decls": {
+    "--content-card-fade-duration": "0s"
+   }
+  },
+  {
+   "selector": ".x1098a9x.x1098a9x",
+   "condition": "(hover: hover)",
+   "decls": {
+    "--d-image-action-opacity": "0"
+   }
+  },
+  {
+   "selector": ".xavatu7.xavatu7",
+   "condition": "(hover: hover)",
+   "decls": {
+    "--d-image-action-pointer-events": "none"
+   }
+  },
+  {
+   "selector": ".xpwm1b1.xpwm1b1",
+   "condition": "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (forced-colors: none)",
+   "decls": {
+    "--d-image-zoom": "1"
+   }
+  },
+  {
+   "selector": ".x1ft6gmf.x1ft6gmf",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--x19wzik9": "calc((100% - min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px)) / 2 + (min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) + var(--x1hctqxf)) / var(--x1jxi29g))"
+   }
+  },
+  {
+   "selector": ".x1b62p9.x1b62p9",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--x1hctqxf": "1rem"
+   }
+  },
+  {
+   "selector": ".xuj0k2k.xuj0k2k",
+   "condition": "(width >= 600px) and (width <= 899.98px)",
+   "decls": {
+    "--x1hctqxf": ".75rem"
+   }
+  },
+  {
+   "selector": ".xlgu8kv.xlgu8kv",
+   "condition": "(width >= 600px)",
+   "decls": {
+    "--x1jxi29g": "6"
+   }
+  },
+  {
+   "selector": ".x42sint.x42sint",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--x1jxi29g": "10"
+   }
+  },
+  {
+   "selector": ".x1ymtd45.x1ymtd45",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--x1jxi29g": "12"
+   }
+  },
+  {
+   "selector": ".xu3zvc7.xu3zvc7",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--x1jxi29g": "8"
+   }
+  },
+  {
+   "selector": ".xbvi83x.xbvi83x",
+   "condition": "(width >= 600px) and (width <= 899.98px)",
+   "decls": {
+    "--x1jxi29g": "6"
+   }
+  },
+  {
+   "selector": ".xw717y8.xw717y8",
+   "condition": "(width >= 600px) and (width <= 899.98px)",
+   "decls": {
+    "--x1jxi29g": "8"
+   }
+  },
+  {
+   "selector": ".xtgh5om.xtgh5om",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--x1lp062e": "calc((100% - min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px)) / 2 + 2 * (min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) + var(--x1hctqxf)) / var(--x1jxi29g))"
+   }
+  },
+  {
+   "selector": ".x1ko4voz.x1ko4voz",
+   "condition": "(width >= 600px) and (width <= 899.98px)",
+   "decls": {
+    "--x1lp062e": "calc((100% - min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px)) / 2 + (min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) + var(--x1hctqxf)) / var(--x1jxi29g))"
+   }
+  },
+  {
+   "selector": ".x1pvwi77.x1pvwi77",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--x1mvlsag": "34px"
+   }
+  },
+  {
+   "selector": ".xj00j38.xj00j38",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xf44odk": ".75rem"
+   }
+  },
+  {
+   "selector": ".xwctl98.xwctl98",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xm9m38b": ".375rem"
+   }
+  },
+  {
+   "selector": ".x1bcencx.x1bcencx",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xm9m38b": "var(--x-oftk6n)"
+   }
+  },
+  {
+   "selector": ".x1wmh2gq.x1wmh2gq",
+   "condition": "(width >= 1200px)",
+   "decls": {
+    "--xnsfh9x": "0px"
+   }
+  },
+  {
+   "selector": ".x9iaq2a.x9iaq2a",
+   "condition": "(width >= 600px) and (width <= 1199.98px)",
+   "decls": {
+    "--xnsfh9x": "1.5rem"
+   }
+  },
+  {
+   "selector": ".x9nud9r.x9nud9r",
+   "condition": "(width >= 900px)",
+   "decls": {
+    "--xwck8lh": "[full-start] minmax(0,1fr) [content-start] minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g))) [secondary-start] minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g))) [primary-start] minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g))) [tertiary-start] repeat(6,minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g)))) [tertiary-end] minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g))) [primary-end] minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g))) [secondary-end] minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g))) [content-end] minmax(0,1fr) [full-end]"
+   }
+  },
+  {
+   "selector": ".x1wb7r3y.x1wb7r3y",
+   "condition": "(width >= 600px) and (width <= 899.98px)",
+   "decls": {
+    "--xwck8lh": "[full-start] minmax(0,1fr) [content-start secondary-start] minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g))) [primary-start tertiary-start] repeat(6,minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g)))) [tertiary-end primary-end] minmax(0,calc((min(100% - 2 * max(var(--xnsfh9x),var(--x1hctqxf)),1160px) - (var(--x1jxi29g) - 1) * var(--x1hctqxf)) / var(--x1jxi29g))) [secondary-end content-end] minmax(0,1fr) [full-end]"
+   }
+  },
+  {
+   "selector": ".x1b3qf38.x1b3qf38.x1b3qf38:where(.xviljdw:where(*) *)",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--page-margin-bottom": "calc(var(--mobile-footer-safe-area-bottom) + 1rem)"
+   }
+  },
+  {
+   "selector": ".x84j4gz.x84j4gz.x84j4gz:where(.xviljdw:where(*) *)",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--page-margin-bottom": "calc(var(--mobile-footer-safe-area-bottom) + max(1rem,calc(.25rem + min(2rem,env(keyboard-inset-height,0px)))))"
+   }
+  },
+  {
+   "selector": ".x1dal03z.x1dal03z:has(:focus-visible)",
+   "condition": "(hover: hover)",
+   "decls": {
+    "--d-image-action-opacity": "1"
+   }
+  },
+  {
+   "selector": ".xguwz6j.xguwz6j:has(:focus-visible)",
+   "condition": "(hover: hover)",
+   "decls": {
+    "--d-image-action-pointer-events": "auto"
+   }
+  },
+  {
+   "selector": ".xssgg6g.xssgg6g:has(:focus-visible)",
+   "condition": "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (forced-colors: none)",
+   "decls": {
+    "--d-image-zoom": "1.03"
+   }
+  },
+  {
+   "selector": ".x1p57s0u.x1p57s0u.x1p57s0u:where(.xviljdw:where(*) *):where(.xvilvj6:where(*) *)",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--page-margin-bottom": "calc(var(--mobile-footer-safe-area-bottom) + .5rem)"
+   }
+  },
+  {
+   "selector": ".x1x76h7o.x1x76h7o.x1x76h7o:where(.x12bjfvb:where(*) *):where(.xewzsk0:where(*) *)",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xf44odk": ".75rem"
+   }
+  },
+  {
+   "selector": ".xb5nsb2.xb5nsb2.xb5nsb2:where(.x1efa4tz:where(*) *):where(.xdi0ktf:where(*) *)",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xf44odk": "var(--x-7rsvzg)"
+   }
+  },
+  {
+   "selector": ".x1u11gt5.x1u11gt5.x1u11gt5:where(.x12bjfvb:where(*) *):where(.xewzsk0:where(*) *)",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xm9m38b": ".25rem"
+   }
+  },
+  {
+   "selector": ".xb05g4.xb05g4.xb05g4:where(.x1efa4tz:where(*) *):where(.xdi0ktf:where(*) *)",
+   "condition": "(width <= 47.999rem)",
+   "decls": {
+    "--xm9m38b": "var(--x-12jg113)"
+   }
+  },
+  {
+   "selector": ".xpoy8fw.xpoy8fw",
+   "condition": "(width < 576px)",
+   "decls": {
+    "--carousel-continuation-cue-ratio": ".1"
+   }
+  },
+  {
+   "selector": ".x1mad691.x1mad691:hover",
+   "condition": "(hover: hover) and (pointer: fine)",
+   "decls": {
+    "--d-entity-hover-color": "var(--theme-entity-accent,var(--blue-400,#0285ff))"
+   }
+  },
+  {
+   "selector": ".x1r0sxk.x1r0sxk:hover",
+   "condition": "(hover: hover) and (pointer: fine)",
+   "decls": {
+    "--d-entity-hover-color": "var(--x-a2xssh)"
+   }
+  },
+  {
+   "selector": ".xa68b5s.xa68b5s:hover",
+   "condition": "(hover: hover) and (pointer: fine)",
+   "decls": {
+    "--d-entity-hover-decoration": "currentcolor"
+   }
+  },
+  {
+   "selector": ".x10xtvbl.x10xtvbl:hover",
+   "condition": "(hover: hover) and (pointer: fine)",
+   "decls": {
+    "--d-entity-hover-decoration": "var(--x-tflnql)"
+   }
+  },
+  {
+   "selector": ".xf9f6pw.xf9f6pw:hover",
+   "condition": "(hover: hover)",
+   "decls": {
+    "--d-image-action-opacity": "1"
+   }
+  },
+  {
+   "selector": ".x450rce.x450rce:hover",
+   "condition": "(hover: hover)",
+   "decls": {
+    "--d-image-action-pointer-events": "auto"
+   }
+  },
+  {
+   "selector": ".x1t0pppl.x1t0pppl:hover",
+   "condition": "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (forced-colors: none)",
+   "decls": {
+    "--d-image-zoom": "1.03"
+   }
+  },
+  {
+   "selector": ".x1rh0hwf.x1rh0hwf:hover",
+   "condition": "(hover: hover) and (pointer: fine)",
+   "decls": {
+    "--d-link-hover-color": "var(--theme-entity-accent,var(--blue-400,#0285ff))"
+   }
+  },
+  {
+   "selector": ".xymkii4.xymkii4:hover",
+   "condition": "(hover: hover) and (pointer: fine)",
+   "decls": {
+    "--d-link-hover-decoration": "currentcolor"
+   }
+  },
+  {
+   "selector": ".x7in9yn.x7in9yn",
+   "condition": "(width >= 800.01px) and (pointer: fine), (width >= 800.01px) and (pointer: none)",
+   "decls": {
+    "--x1mvlsag": "calc(2rem + .25rem)"
+   }
+  },
+  {
+   "selector": ".xuwbqqx.xuwbqqx",
+   "condition": "(prefers-color-scheme: dark)",
+   "decls": {
+    "--lightningcss-light": "",
+    "--lightningcss-dark": "initial"
+   }
+  }
+ ]
+}
