@@ -157,6 +157,7 @@ h1 { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
 .contrast { margin: 0; color: var(--muted); font-size: 11.5px; }
 
 /* Tint */
+.tint label { white-space: nowrap; }
 .tint { display: grid; grid-template-columns: auto 1fr 26px; align-items: center; gap: 10px; }
 .tint input { margin: 0; accent-color: var(--fill); }
 .tint output { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }

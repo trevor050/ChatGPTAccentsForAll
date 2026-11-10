@@ -46,6 +46,8 @@ describe("discoverTokens on chatgpt.com CSS captured 2026-11-10", () => {
   it("collects neutral surfaces but not status colours", () => {
     expect(found.neutrals["--x17e9krr"]).toEqual({ kind: "color", light: "#ffffff", dark: "#212121" });
     expect(found.neutrals["--x701wd9"]).toBeUndefined(); // red error colour
+    expect(found.neutrals["--x9vd42p"]).toEqual({ kind: "color", light: "#fcfcfc", dark: "#000000" }); // sidebar, other group
+    expect(found.neutrals["--x1ov5pza"]).toBeUndefined(); // constant #fff primitive
     expect(Object.keys(found.neutrals).length).toBeGreaterThan(10);
   });
 

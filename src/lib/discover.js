@@ -8,8 +8,8 @@
 //   * The accent group: the cluster of theme classes that override the same
 //     variables with many different hues (blue, green, pink, ...).
 //   * Base classes: `:root, .Y { ... }` rules that give those variables defaults.
-//   * Neutrals: achromatic colours declared by the base classes (surfaces, text,
-//     borders), used for the optional background tint.
+//   * Neutrals: greys that differ between light and dark in any `:root` group
+//     (surfaces, text, borders), used for the optional background tint.
 
 import { deltaE, hexToOklch, parseColor, toHex } from "./color.js";
 
@@ -170,17 +170,24 @@ export function discoverTokens(rules) {
   // Base classes: `:root, .Y` groups that give the accent variables defaults.
   const baseClasses = [...bases.entries()].filter(([, d]) => Object.keys(d).some((n) => names.has(n))).map(([c]) => c);
 
-  // Neutrals in those base groups: achromatic literal colours, excluding accent vars.
+  // Neutrals: theme-aware greys (different in light and dark) from any `:root, .Y`
+  // group, i.e. surfaces, text and borders. Constant greys (#fff in both modes) are
+  // palette primitives and stay untouched, as do the accent variables themselves.
   const neutrals = {};
-  for (const cls of baseClasses) for (const [name, raw] of Object.entries(bases.get(cls))) {
+  const neutralClasses = new Set();
+  for (const [cls, decls] of bases) for (const [name, raw] of Object.entries(decls)) {
     if (names.has(name)) continue;
     const p = parseValue(raw);
-    if (p.kind !== "color") continue;
+    if (p.kind !== "color" || p.light === p.dark) continue;
     const visible = parseColor(p.light).a > 0 || parseColor(p.dark).a > 0;
-    if (visible && chroma(p.light) < 0.02 && chroma(p.dark) < 0.02) neutrals[name] = p;
+    if (visible && chroma(p.light) < 0.02 && chroma(p.dark) < 0.02) {
+      neutrals[name] = p;
+      neutralClasses.add(cls);
+    }
   }
+  const allBases = [...new Set([...baseClasses, ...neutralClasses])].sort();
 
-  return { themeClasses: [...accentClasses].sort(), baseClasses: baseClasses.sort(), referenceClass, referenceFill, accent, neutrals };
+  return { themeClasses: [...accentClasses].sort(), baseClasses: allBases, referenceClass, referenceFill, accent, neutrals };
 }
 
 /** True when two discoveries would produce the same CSS (used to skip rewrites). */

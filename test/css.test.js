@@ -13,7 +13,7 @@ const settingsFor = (light, extra = {}) => normalizeSettings({ enabled: true, li
 const PICKS = ["#e11d48", "#eab308", "#fff59d", "#0d0d0d", "#ffffff", "#00ff41", "#1e3a8a", "#ffc0cb", "#808080", "#3566f0"];
 
 const declsOf = (css) => {
-  const main = css.split("@media")[0];
+  const main = css.split("@media")[0]; // accent + neutral blocks
   return Object.fromEntries([...main.matchAll(/(--[\w-]+): ([^;]+);/g)].map((m) => [m[1], m[2]]));
 };
 const pair = (v) => {
@@ -31,6 +31,14 @@ describe("buildCss", () => {
     const css = buildCss(discovery, settingsFor("#e11d48"));
     expect(css).toContain(":root:root:root:root:root");
     expect(css).toContain(".x13qp82k.x13qp82k.x13qp82k.x13qp82k.x13qp82k");
+  });
+
+  it("leaves accent tokens alone where ChatGPT resets them (base class on <body>)", () => {
+    const [accentBlock, neutralBlock] = buildCss(discovery, settingsFor("#e11d48", { tint: 50 })).split("\n\n");
+    expect(accentBlock).toContain("--x1e4keym");
+    expect(accentBlock).not.toContain(".xsajpkq");
+    expect(neutralBlock).toContain(".xsajpkq.xsajpkq");
+    expect(neutralBlock).not.toContain("--x1e4keym");
   });
 
   it("uses the exact picked colour as the fill", () => {
@@ -96,6 +104,9 @@ describe("theme helpers", () => {
   });
   it("tint keeps lightness roughly where it was", () => {
     expect(tintNeutral("#212121", 200, 0)).toBe("#212121");
-    expect(contrastRatio(tintNeutral("#212121", 200, 100), "#212121")).toBeLessThan(1.15);
+    expect(contrastRatio(tintNeutral("#212121", 200, 100, "dark"), "#212121")).toBeLessThan(1.15);
+    // Pure black backgrounds lift slightly so the tint shows, staying far from white text.
+    expect(tintNeutral("#000000", 200, 70, "dark")).not.toBe("#000000");
+    expect(contrastRatio("#ffffff", tintNeutral("#000000", 200, 100, "dark"))).toBeGreaterThan(15);
   });
 });

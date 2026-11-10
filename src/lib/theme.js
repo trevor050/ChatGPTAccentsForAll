@@ -62,8 +62,8 @@ export function resolveAccents(settings) {
 /**
  * Map one colour from ChatGPT's reference palette onto the user's accent.
  * Lightness is preserved (so a "very light tint" stays very light and a
- * "text" colour stays text-dark), hue is replaced, and chroma is scaled by how
- * colourful the user's accent is compared with ChatGPT's blue.
+ * "text" colour stays text-dark), hue is replaced, and chroma is scaled (by the square
+ * root of) how colourful the user's accent is compared with ChatGPT's blue.
  */
 export function retint(refHex, userFillHex, refFillHex = REFERENCE.fill) {
   const ref = hexToOklch(refHex);
@@ -72,7 +72,8 @@ export function retint(refHex, userFillHex, refFillHex = REFERENCE.fill) {
   if (!ref || !user || !refFill) return refHex;
   const alpha = parseColor(refHex).a;
   if (deltaE(parseColor(refHex), parseColor(refFillHex)) < 0.02) return withAlpha(userFillHex, alpha);
-  const scale = refFill.C > 0 ? user.C / refFill.C : 0;
+  // Square root: muted accents still give a visible (if gentle) bubble tint.
+  const scale = refFill.C > 0 ? Math.sqrt(user.C / refFill.C) : 0;
   const out = oklchToHex({ L: ref.L, C: Math.min(0.37, ref.C * scale), H: user.H });
   return withAlpha(out, alpha);
 }
@@ -86,17 +87,34 @@ function withAlpha(hex, a) {
 /**
  * Background tint: shift a neutral grey towards `hue` while keeping its lightness,
  * so text/background contrast barely moves. `strength` is 0..100.
- * Pure white has no room for chroma, so near-white surfaces dip very slightly.
+ * In each mode, greys on the "surface" side (light greys in light mode, dark greys
+ * in dark mode) take the full tint; greys on the "text" side stay nearly neutral.
+ * The extremes have no room for chroma, so pure white dips and pure black lifts
+ * a little (still far from the text colours).
  */
-export function tintNeutral(hex, hue, strength) {
+export function tintNeutral(hex, hue, strength, mode = "light") {
   const c = parseColor(hex);
   if (!c || strength <= 0) return hex;
   const lch = hexToOklch(hex);
   const s = Math.min(100, strength) / 100;
-  const L = lch.L > 0.94 ? lch.L - s * 0.03 * ((lch.L - 0.94) / 0.06 + 0.4) : lch.L;
-  // Text-extreme greys (near black) take less colour so body copy stays neutral.
-  const C = s * (lch.L < 0.22 ? 0.012 : 0.045);
+  let L = lch.L;
+  if (mode === "light" && L > 0.94) L -= s * 0.03 * ((L - 0.94) / 0.06 + 0.4);
+  if (mode === "dark" && L < 0.2) L += s * 0.2 * (1 - L / 0.2);
+  const isSurfaceSide = mode === "light" ? lch.L >= 0.5 : lch.L < 0.5;
+  const C = s * (isSurfaceSide ? 0.045 : 0.012);
   return toHex({ ...parseColor(oklchToHex({ L, C, H: hue })), a: c.a });
+}
+
+/**
+ * An accent-coloured surface (the user bubble). With background tint on, it keeps
+ * at least as much colour as the tinted page so it never fades into it.
+ */
+export function accentSurface(refHex, fillHex, tint = 0, refFillHex = REFERENCE.fill) {
+  const out = retint(refHex, fillHex, refFillHex);
+  if (!tint) return out;
+  const lch = hexToOklch(out);
+  const alpha = parseColor(out).a;
+  return withAlpha(oklchToHex({ ...lch, C: Math.max(lch.C, (Math.min(100, tint) / 100) * 0.07) }), alpha);
 }
 
 /** Hue used for background tinting: the light accent's hue. */
@@ -112,8 +130,8 @@ export function rolesFor(mode, settings, minText = TEXT_CONTRAST) {
   const ref = REFERENCE[mode];
   const fill = resolveAccents(settings)[mode];
   const hue = tintHue(settings);
-  const surface = tintNeutral(ref.surface, hue, settings.tint);
-  const tint = retint(ref.tint, fill);
+  const surface = tintNeutral(ref.surface, hue, settings.tint, mode);
+  const tint = accentSurface(ref.tint, fill, settings.tint);
   return {
     fill,
     onFill: onColor(fill),

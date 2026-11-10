@@ -70,8 +70,8 @@ function renderPreview() {
   const hue = tintHue(s);
   const vars = {
     "--p-surface": roles.surface,
-    "--p-fg": tintNeutral(n.fg, hue, s.tint),
-    "--p-muted": tintNeutral(n.muted, hue, s.tint),
+    "--p-fg": tintNeutral(n.fg, hue, s.tint, state.mode),
+    "--p-muted": tintNeutral(n.muted, hue, s.tint, state.mode),
     "--p-line": n.line,
     "--p-tint": roles.tint,
     "--p-on-tint": roles.onTint,
@@ -119,7 +119,7 @@ function renderSwatches() {
     b.setAttribute("aria-pressed", String(matches(item)));
     const dark = state.mode === "dark";
     b.style.setProperty("--sw", dark ? item.dark || deriveDarkAccent(item.light) : item.light);
-    if (item.tint) b.style.setProperty("--sw-bg", tintNeutral(dark ? "#212121" : "#f3f3f3", tintHue(item), Math.max(60, item.tint)));
+    if (item.tint) b.style.setProperty("--sw-bg", tintNeutral(dark ? "#212121" : "#f3f3f3", tintHue(item), Math.max(60, item.tint), state.mode));
     b.addEventListener("click", () => {
       const next = item.id && PRESETS.includes(item) ? applyPreset(state.settings, item)
         : { ...state.settings, enabled: true, light: item.light, dark: item.dark, tint: item.tint, preset: null };
