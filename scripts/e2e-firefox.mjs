@@ -1,0 +1,79 @@
+// Live check of the Firefox build in stock Firefox via geckodriver (brew install geckodriver).
+// Installs dist/firefox as a temporary add-on, sets a colour through the real popup page,
+// and checks chatgpt.com picks it up and keeps it across a reload.
+// Usage: npm run zip && node scripts/e2e-firefox.mjs [--shots dir]
+import { Builder, By } from "selenium-webdriver";
+import firefox from "selenium-webdriver/firefox.js";
+import fs from "node:fs";
+import path from "node:path";
+
+const root = path.resolve(import.meta.dirname, "..");
+const { version } = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
+const xpi = path.join(root, `dist/chatgpt-accents-firefox-${version}.zip`);
+const shotsArg = process.argv.indexOf("--shots");
+const shots = shotsArg > 0 ? path.resolve(process.argv[shotsArg + 1]) : null;
+const ADDON_ID = "chatgpt-accents-for-all@trevor050.github.io";
+const UUID = "5e7b2a1c-0000-4000-8000-00000000c0de";
+const binary = process.env.FIREFOX_BIN || "/Applications/Firefox.app/Contents/MacOS/firefox";
+
+const options = new firefox.Options()
+  .setBinary(binary)
+  .setPreference("extensions.webextensions.uuids", JSON.stringify({ [ADDON_ID]: UUID }))
+  .windowSize({ width: 1280, height: 860 });
+// geckodriver must be told to allow chrome-context scripts (used to open the popup page).
+const service = new firefox.ServiceBuilder().addArguments("--allow-system-access");
+const driver = await new Builder().forBrowser("firefox").setFirefoxOptions(options).setFirefoxService(service).build();
+const results = [];
+const check = (name, ok, detail = "") => { results.push(ok); console.log(`${ok ? "PASS" : "FAIL"} ${name}${detail ? "  " + detail : ""}`); };
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+try {
+  await driver.installAddon(xpi, true);
+  await driver.get("https://chatgpt.com/");
+  await sleep(9000);
+  const title = await driver.getTitle();
+  check("chatgpt.com loaded", !/just a moment/i.test(title), title);
+  const chatHandle = await driver.getWindowHandle();
+
+  // WebDriver refuses to navigate to moz-extension:// URLs, so open the popup page
+  // as a tab from Firefox's privileged (chrome) context.
+  const before = new Set(await driver.getAllWindowHandles());
+  await driver.setContext(firefox.Context.CHROME);
+  await driver.executeScript(`gBrowser.selectedTab = gBrowser.addTab(arguments[0], { triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal() });`, `moz-extension://${UUID}/popup.html`);
+  await driver.setContext(firefox.Context.CONTENT);
+  await sleep(1000);
+  const popupTab = (await driver.getAllWindowHandles()).find((h) => !before.has(h));
+  await driver.switchTo().window(popupTab);
+  const status = await driver.executeAsyncScript("const done = arguments[0]; chrome.storage.local.get(['status', 'tokens'], done);");
+  check("discovery found accent tokens", status.status?.accentTokens > 5, JSON.stringify(status.status));
+  const t = status.tokens;
+  const fillVar = Object.entries(t.accent).find(([, v]) => v.kind === "color" && v.light === t.referenceFill && v.dark === t.referenceFill)?.[0];
+
+  // The popup opens on the tab matching the OS theme; edit the light accent explicitly.
+  await driver.findElement(By.id("tab-light")).click();
+  const hex = await driver.findElement(By.id("hex"));
+  await hex.click();
+  await driver.executeScript("arguments[0].select();", hex); // select all, then type over it
+  await hex.sendKeys("#7c3aed");
+  await sleep(1200);
+  if (shots) fs.writeFileSync(path.join(shots, "firefox-popup.png"), await driver.takeScreenshot(), "base64");
+  const popupHandle = await driver.getWindowHandle();
+
+  await driver.switchTo().window(chatHandle);
+  const read = () => driver.executeScript(`return getComputedStyle(document.documentElement).getPropertyValue(${JSON.stringify(fillVar)}).trim();`);
+  const isOurs = (v) => /^#7c3aed$|^light-dark\(#7c3aed,/i.test(v);
+  check("popup edit recolours the live page", isOurs(await read()), await read());
+  await driver.navigate().refresh();
+  await sleep(6000);
+  check("colour persists across reload", isOurs(await read()), await read());
+  if (shots) fs.writeFileSync(path.join(shots, "firefox-page.png"), await driver.takeScreenshot(), "base64");
+
+  await driver.switchTo().window(popupHandle);
+  const stored = await driver.executeAsyncScript("const done = arguments[0]; chrome.storage.sync.get(['settings'], done);");
+  check("settings saved to storage.sync", stored.settings?.light === "#7c3aed", JSON.stringify(stored.settings));
+} finally {
+  await driver.quit();
+}
+const failed = results.filter((ok) => !ok).length;
+console.log(`\n${results.length - failed}/${results.length} checks passed`);
+process.exit(failed ? 1 : 0);

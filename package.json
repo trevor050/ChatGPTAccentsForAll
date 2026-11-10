@@ -8,12 +8,12 @@
     "eslint": "^10.14.0",
     "globals": "^17.14.0",
     "playwright": "^1.65.0",
+    "selenium-webdriver": "^4.52.0",
     "vitest": "^5.1.0",
     "web-ext": "^10.8.0"
   },
   "version": "2.0.0",
   "description": "Browser extension that lets you pick any accent color for ChatGPT.",
-  "license": "MIT",
   "scripts": {
     "build": "node scripts/build.mjs",
     "watch": "node scripts/build.mjs --watch",
