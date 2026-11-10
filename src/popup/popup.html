@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="color-scheme" content="light dark" />
+    <title>ChatGPT Accents</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="top">
+      <h1>ChatGPT Accents</h1>
+      <label class="switch" title="Turn colors on or off">
+        <input id="enabled" type="checkbox" role="switch" aria-label="Apply colors on ChatGPT" />
+        <span class="track"><span class="knob"></span></span>
+      </label>
+    </header>
+
+    <section id="preview" class="preview" aria-label="Preview">
+      <div class="bubble">make it pop</div>
+      <div class="reply">Sure. Here's a <span class="link">link</span> in your accent.</div>
+      <div class="composer">
+        <span class="placeholder">Ask anything</span>
+        <span class="send" aria-hidden="true">
+          <svg viewBox="0 0 20 20" width="14" height="14"><path d="M10 15V5M5.5 9.5 10 5l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </section>
+
+    <section aria-label="Presets">
+      <div id="swatches" class="swatches" role="list"></div>
+    </section>
+
+    <section class="editor" aria-label="Custom color">
+      <div class="mode-row">
+        <div class="tabs" role="tablist" aria-label="Which mode to edit">
+          <button id="tab-light" role="tab" aria-selected="true" data-mode="light">Light mode</button>
+          <button id="tab-dark" role="tab" aria-selected="false" data-mode="dark">Dark mode</button>
+        </div>
+        <label id="auto-row" class="check" hidden>
+          <input id="auto-dark" type="checkbox" /> Auto
+        </label>
+      </div>
+
+      <div id="pad" class="pad" tabindex="0" role="slider" aria-label="Saturation and brightness" aria-valuetext="">
+        <div id="pad-thumb" class="pad-thumb"></div>
+      </div>
+      <input id="hue" class="hue" type="range" min="0" max="359" step="1" aria-label="Hue" />
+
+      <div class="hex-row">
+        <label class="hex">
+          <span class="chip" id="chip"></span>
+          <input id="hex" type="text" spellcheck="false" maxlength="7" aria-label="Hex color" />
+        </label>
+        <p id="contrast" class="contrast"></p>
+      </div>
+    </section>
+
+    <section class="tint">
+      <label for="tint">Tint backgrounds</label>
+      <input id="tint" type="range" min="0" max="100" step="1" />
+      <output id="tint-value" for="tint"></output>
+    </section>
+
+    <p id="status" class="status" hidden></p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
