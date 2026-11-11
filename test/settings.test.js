@@ -1,18 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_SETTINGS, MAX_SAVED, applyLook, applyTheme, fromV1Vars, migrate, normalizeSaved, normalizeSettings } from "../src/lib/settings.js";
-import { parseColor, deltaE } from "../src/lib/color.js";
+import { DEFAULT_SETTINGS, MAX_SAVED, SETTINGS_VERSION, applyLook, applyTheme, fromV1Vars, migrate, normalizeSaved, normalizeSettings, retiredTheme } from "../src/lib/settings.js";
+import { contrastRatio, parseColor, deltaE } from "../src/lib/color.js";
 import { REFERENCE, rolesFor, tintNeutral } from "../src/lib/theme.js";
-import { THEMES, DEFAULT_THEME, backgroundTone, findTheme, themeById, themeLook } from "../src/lib/themes.js";
+import { THEMES, THEME_GROUPS, DEFAULT_THEME, backgroundTone, findTheme, themeById, themeLook } from "../src/lib/themes.js";
+import { ORIGINAL_THEMES } from "../src/lib/themes-original.js";
 import { V1_PRESETS, V1_SURFACES, buildV1Vars } from "./helpers/v1.js";
 
 const original = V1_PRESETS.filter((p) => !p.reset);
 const surfaceOf = (p) => p.extras?.["--bg-primary"] ?? null;
 
-describe("named themes", () => {
+describe("the original themes (migration history)", () => {
   it("are the 1.1.0 themes: same names, order and colours", () => {
-    expect(THEMES.map((t) => t.id)).toEqual(original.map((p) => p.id));
+    expect(ORIGINAL_THEMES.map((t) => t.id)).toEqual(original.map((p) => p.id));
     for (const p of original) {
-      const t = themeById(p.id);
+      const t = ORIGINAL_THEMES.find((x) => x.id === p.id);
       expect(t, p.id).toMatchObject({
         name: p.name, accent: p.accent, bubbleBg: p.userBg, bubbleText: p.userText, submitBg: p.submitBg, submitText: p.submitText,
       });
@@ -21,7 +22,30 @@ describe("named themes", () => {
       expect(t.link ?? null, `${p.id} link`).toBe(p.extras?.["--link"] ?? null);
     }
     expect(V1_PRESETS[0]).toMatchObject({ id: "reset", name: DEFAULT_THEME.name });
-    expect(THEMES).toHaveLength(72);
+    expect(ORIGINAL_THEMES).toHaveLength(72);
+  });
+});
+
+// The curated set (2026-11-11). Changing it means updating this table and
+// checking the retirement migration below still covers every original theme.
+const CURATED = {
+  classic: ["blue", "sky", "teal", "green", "lime", "yellow", "orange", "crimson", "pink", "magenta", "purple_plus", "black_pro", "slate"],
+  dark: ["midnight", "ocean", "forest", "sage", "mocha", "autumn", "ember", "cosmos", "graphite", "nord"],
+  light: ["pastel_sky", "lagoon", "pastel_mint", "lemonade", "sunrise", "cotton_candy", "pastel_lavender", "cream", "porcelain"],
+  character: ["synthwave", "cyberpunk", "vaporwave", "miami", "gameboy", "solar", "console", "amber"],
+};
+
+describe("named themes", () => {
+  it("are the curated set, in their groups", () => {
+    expect(THEME_GROUPS.map((g) => g.id)).toEqual(Object.keys(CURATED));
+    for (const [group, ids] of Object.entries(CURATED)) expect(THEMES.filter((t) => t.group === group).map((t) => t.id), group).toEqual(ids);
+    expect(THEMES).toHaveLength(40);
+  });
+
+  it("keep Purple and Black as the formerly paywalled pair", () => {
+    expect(themeById("purple_plus")).toMatchObject({ name: "Purple", badge: "plus" });
+    expect(themeById("black_pro")).toMatchObject({ name: "Black", badge: "pro" });
+    expect(THEMES.filter((t) => t.badge).map((t) => t.id)).toEqual(["purple_plus", "black_pro"]);
   });
 
   it("have unique ids and valid colours", () => {
@@ -34,25 +58,90 @@ describe("named themes", () => {
     }
   });
 
-  it("tell light and dark backgrounds apart for the card badge", () => {
+  it("pass the contrast safety net as designed, without being adjusted", () => {
+    for (const t of THEMES) {
+      expect(contrastRatio(t.bubbleText, t.bubbleBg), `${t.id} bubble`).toBeGreaterThanOrEqual(4.5);
+      expect(contrastRatio(t.submitText, t.submitBg), `${t.id} send`).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("are distinct at a glance (no near-duplicates)", () => {
+    const d = (a, b) => deltaE(parseColor(a), parseColor(b));
+    const dist = (s, t) => Math.max(d(s.accent, t.accent), d(s.bubbleBg, t.bubbleBg) * 0.8, d(s.submitBg, t.submitBg),
+      s.surface && t.surface ? d(s.surface, t.surface) * 0.6 : !!s.surface !== !!t.surface ? 0.1 : 0);
+    for (let i = 0; i < THEMES.length; i++) for (let j = i + 1; j < THEMES.length; j++) {
+      expect(dist(THEMES[i], THEMES[j]), `${THEMES[i].id} vs ${THEMES[j].id}`).toBeGreaterThan(0.085);
+    }
+  });
+
+  it("tell light and dark backgrounds apart", () => {
     expect(backgroundTone(themeById("ocean"))).toBe("dark");
     expect(backgroundTone(themeById("pastel_mint"))).toBe("light");
     expect(backgroundTone(themeById("blue"))).toBeNull();
   });
 });
 
+describe("curation keeps everyone's colours (settings v3 -> v4)", () => {
+  const v3 = (t) => ({ ...applyTheme(DEFAULT_SETTINGS, t), v: 3, updatedAt: 5 });
+  it.each(ORIGINAL_THEMES.map((t) => [t.name, t]))("%s", (_name, t) => {
+    const m = migrate({ settings: v3(t), saved: [] });
+    expect(m.migrated).toBe(true);
+    expect(m.settings.v).toBe(SETTINGS_VERSION);
+    // Exactly the colours they had, whatever happened to the preset.
+    expect(m.settings).toMatchObject({ enabled: true, light: t.accent, roles: themeLook(t).roles, surface: themeLook(t).surface });
+    if (retiredTheme(t.id)) {
+      expect(m.settings.theme).toBe("custom");
+      expect(m.saved).toHaveLength(1);
+      expect(m.saved[0]).toMatchObject({ name: t.name, light: t.accent, roles: themeLook(t).roles, surface: themeLook(t).surface });
+    } else {
+      expect(m.settings.theme).toBe(t.id);
+      expect(m.saved).toEqual([]);
+    }
+  });
+  it("retires exactly the removed and recoloured themes", () => {
+    const retired = ORIGINAL_THEMES.filter((t) => retiredTheme(t.id)).map((t) => t.id);
+    expect(retired).toHaveLength(72 - 35); // 35 kept as they were; 3 recoloured, 34 removed
+    expect(retired).toEqual(expect.arrayContaining(["pastel_mint", "cotton_candy", "gameboy", "material_indigo", "black_bg"]));
+  });
+  it("does not save a duplicate, and respects a full saved list", () => {
+    const t = ORIGINAL_THEMES.find((x) => x.id === "material_indigo");
+    const already = migrate({ settings: v3(t), saved: [{ id: "s1", name: "Mine", ...themeLook(t) }] });
+    expect(already.saved.map((s) => s.name)).toEqual(["Mine"]);
+    const full = Array.from({ length: MAX_SAVED }, (_, i) => ({ id: `s${i}`, name: `n${i}`, light: "#123456" }));
+    const m = migrate({ settings: v3(t), saved: full });
+    expect(m.saved).toHaveLength(MAX_SAVED);
+    expect(m.settings).toMatchObject({ theme: "custom", light: t.accent });
+  });
+  it("leaves a hand-made theme and 'off' alone", () => {
+    const custom = { ...DEFAULT_SETTINGS, v: 3, enabled: true, theme: "custom", light: "#12ab34" };
+    expect(migrate({ settings: custom }).settings).toMatchObject({ theme: "custom", light: "#12ab34" });
+    expect(migrate({ settings: custom }).saved).toEqual([]);
+    expect(migrate({ settings: { ...DEFAULT_SETTINGS, v: 3 } }).settings).toMatchObject({ enabled: false, theme: null });
+  });
+  it("is idempotent once v4", () => {
+    const first = migrate({ settings: v3(ORIGINAL_THEMES.find((x) => x.id === "cobalt")), saved: [] });
+    const second = migrate({ settings: first.settings, saved: first.saved });
+    expect(second.migrated).toBe(false);
+    expect(second.saved).toHaveLength(1);
+  });
+});
+
 describe("migration from 1.1.0", () => {
-  it.each(original.map((p) => [p.name, p]))("%s comes back as the same named theme", (_name, p) => {
+  it.each(original.map((p) => [p.name, p]))("%s comes back with its colours (and its name, as a theme or saved)", (_name, p) => {
     const m = migrate({ themeVars: buildV1Vars(p) });
     expect(m.migrated).toBe(true);
     expect(m.removeKeys).toEqual(["themeVars"]);
-    expect(m.settings).toMatchObject({ v: 3, enabled: true, theme: p.id, light: p.accent, dark: null });
+    const kept = !retiredTheme(p.id);
+    expect(m.settings).toMatchObject({ v: SETTINGS_VERSION, enabled: true, theme: kept ? p.id : "custom", light: p.accent, dark: null });
+    if (!kept) expect(m.saved.map((t) => t.name)).toEqual([p.name]);
     expect(m.settings.roles).toMatchObject({ bubbleBg: p.userBg, bubbleText: p.userText, submitBg: p.submitBg, submitText: p.submitText });
     expect(m.settings.surface.color).toBe(surfaceOf(p));
   });
 
   it("keeps Obsidian and Black apart even though they share colours", () => {
-    expect(migrate({ themeVars: buildV1Vars(original.find((p) => p.id === "black_bg")) }).settings.theme).toBe("black_bg");
+    const obsidian = migrate({ themeVars: buildV1Vars(original.find((p) => p.id === "black_bg")) });
+    expect(obsidian.settings.theme).toBe("custom");
+    expect(obsidian.saved.map((t) => t.name)).toEqual(["Obsidian"]);
     expect(migrate({ themeVars: buildV1Vars(original.find((p) => p.id === "black_pro")) }).settings.theme).toBe("black_pro");
   });
 
@@ -93,7 +182,7 @@ describe("migration from 1.1.0", () => {
     expect(m.removeKeys).toEqual(["themeVars", "savedThemes"]);
   });
 
-  it("is idempotent once v3 settings exist", () => {
+  it("is idempotent once current settings exist", () => {
     const first = migrate({ themeVars: buildV1Vars(original[1]) });
     const second = migrate({ settings: first.settings, saved: first.saved, themeVars: buildV1Vars(original[2]) });
     expect(second.migrated).toBe(false);
@@ -117,7 +206,7 @@ describe("migration from 2.0.0", () => {
   it("a preset that was still selected becomes the same-named theme", () => {
     const m = migrate({ settings: V2 });
     expect(m.migrated).toBe(true);
-    expect(m.settings).toMatchObject({ v: 3, enabled: true, theme: "crimson", light: "#ef4444", updatedAt: 1234 });
+    expect(m.settings).toMatchObject({ v: SETTINGS_VERSION, enabled: true, theme: "crimson", light: "#ef4444", updatedAt: 1234 });
     expect(m.settings.roles.bubbleBg).toBe("#7f1d1d");
     expect(findTheme(m.settings)?.id).toBe("crimson");
   });
@@ -152,7 +241,7 @@ describe("migration from 2.0.0", () => {
 
   it("an old live copy still reads as a valid current one", () => {
     expect(normalizeSettings({ v: 2, enabled: true, light: "#e11d48", tint: 40, preset: "crimson" }))
-      .toMatchObject({ v: 3, enabled: true, light: "#e11d48", surface: { kind: "custom" } });
+      .toMatchObject({ v: SETTINGS_VERSION, enabled: true, light: "#e11d48", surface: { kind: "custom" } });
   });
 });
 

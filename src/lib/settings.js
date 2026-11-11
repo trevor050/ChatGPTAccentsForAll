@@ -1,8 +1,10 @@
 // Settings shape, validation and migration from the 1.x and 2.0.0 storage formats.
 import { hexToOklch, normalizeHex, oklchToHex, parseColor, toHex } from "./color.js";
-import { THEMES, THEME_IDS, findTheme, themeById, themeLook } from "./themes.js";
+import { ORIGINAL_THEMES } from "./themes-original.js";
+import { THEME_IDS, findTheme, themeById, themeLook } from "./themes.js";
 
-export const SETTINGS_VERSION = 3;
+// 3: 2.0 settings (roles, surface). 4: themes curated; see `retireTheme`.
+export const SETTINGS_VERSION = 4;
 export const MAX_SAVED = 24;
 
 export const ROLE_KEYS = ["bubbleBg", "bubbleText", "submitBg", "submitText", "link"];
@@ -127,9 +129,11 @@ export const applyTheme = (settings, theme) => applyLook(settings, themeLook(the
 // 2.0.0 preset ids that are named differently now.
 const V2_THEME_IDS = { black: "black_pro" };
 
+const originalById = (id) => ORIGINAL_THEMES.find((t) => t.id === id) || null;
+
 function upgradeV2(raw) {
   const id = V2_THEME_IDS[raw.preset] ?? raw.preset;
-  const theme = themeById(id);
+  const theme = originalById(id);
   // A preset that was still selected means "that named theme": same name, the
   // colours the 1.x popup always gave it.
   if (theme) return { ...applyTheme({}, theme), enabled: Boolean(raw.enabled), updatedAt: raw.updatedAt };
@@ -169,7 +173,7 @@ function v1Theme(vars, accent) {
   const bubbleBg = hexOf(vars["--theme-user-msg-bg"]);
   const submitBg = hexOf(vars["--theme-submit-btn-bg"]);
   const base = firstHex(vars, V1_SURFACE_KEYS);
-  return THEMES.find((t) => t.accent === accent && t.bubbleBg === bubbleBg && t.submitBg === submitBg && (t.surface ?? null) === base) || null;
+  return ORIGINAL_THEMES.find((t) => t.accent === accent && t.bubbleBg === bubbleBg && t.submitBg === submitBg && (t.surface ?? null) === base) || null;
 }
 
 /** v1 themeVars -> the look they described ({ light, dark, roles, surface }), or null if no accent. */
@@ -194,6 +198,36 @@ export function fromV1Vars(vars) {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Curated themes (settings v4, 2026-11-11): 72 became 40. Someone whose chosen
+// theme was removed or recoloured keeps exactly the colours they had, and finds
+// them again in Saved themes under the old name.
+// ---------------------------------------------------------------------------
+
+const sameColours = (a, b) => JSON.stringify(normalizeSaved([{ ...a, id: "x", name: "x" }])[0]) === JSON.stringify(normalizeSaved([{ ...b, id: "x", name: "x" }])[0]);
+
+/** The original (1.x) theme behind this id if the curated set no longer has it as it was. */
+export function retiredTheme(id) {
+  const original = originalById(id);
+  if (!original) return null;
+  const now = themeById(id);
+  return now && sameColours(themeLook(now), themeLook(original)) ? null : original;
+}
+
+/**
+ * settings (raw, pre-normalisation) + saved -> { settings, saved }. A selected theme
+ * that was retired becomes "custom" with its colours untouched, plus a saved theme
+ * of the same name (unless one with those colours is already saved, or the list is full).
+ */
+export function retireTheme(raw, saved) {
+  const original = raw?.theme && retiredTheme(raw.theme);
+  if (!original || !sameColours(raw, themeLook(original))) return { settings: raw, saved };
+  const settings = { ...raw, theme: findTheme(raw)?.id ?? "custom" };
+  const look = themeLook(original);
+  if (saved.some((t) => sameColours(t, look)) || saved.length >= MAX_SAVED) return { settings, saved };
+  return { settings, saved: [...saved, { id: `was_${original.id}`, name: original.name, ...look }] };
+}
+
 /**
  * Given everything in sync storage, return { settings, saved, migrated, removeKeys }.
  * Idempotent: once v3 "settings" exist, older keys are only cleaned up, never re-read.
@@ -202,20 +236,22 @@ export function migrate(stored) {
   const data = stored && typeof stored === "object" ? stored : {};
   const removeKeys = ["themeVars", "savedThemes"].filter((k) => k in data);
   if (data.settings) {
-    const upgrade = Number(data.settings.v) < SETTINGS_VERSION;
-    const settings = normalizeSettings(upgrade ? upgradeV2(data.settings) : data.settings);
-    return { settings, saved: normalizeSaved(data.saved), migrated: upgrade, removeKeys };
+    const v = Number(data.settings.v) || 0;
+    if (v >= SETTINGS_VERSION) return { settings: normalizeSettings(data.settings), saved: normalizeSaved(data.saved), migrated: false, removeKeys };
+    const raw = v < 3 ? upgradeV2(data.settings) : data.settings;
+    const retired = retireTheme(raw, normalizeSaved(data.saved));
+    return { settings: normalizeSettings(retired.settings), saved: normalizeSaved(retired.saved), migrated: true, removeKeys };
   }
   if (!removeKeys.length) {
     return { settings: { ...DEFAULT_SETTINGS }, saved: normalizeSaved(data.saved), migrated: false, removeKeys };
   }
   const look = fromV1Vars(data.themeVars);
-  const settings = normalizeSettings(look ? { ...look, enabled: true, updatedAt: Date.now() } : DEFAULT_SETTINGS);
-  const saved = normalizeSaved(
+  const v1Saved = normalizeSaved(
     (Array.isArray(data.savedThemes) ? data.savedThemes : []).map((t, i) => {
       const v = fromV1Vars(t?.vars);
       return v && { id: typeof t.id === "string" ? t.id : `v1_${i}`, name: t.name, ...v };
     }).filter(Boolean),
   );
-  return { settings, saved, migrated: true, removeKeys };
+  const retired = retireTheme(look ? { ...look, enabled: true, updatedAt: Date.now() } : DEFAULT_SETTINGS, v1Saved);
+  return { settings: normalizeSettings(retired.settings), saved: normalizeSaved(retired.saved), migrated: true, removeKeys };
 }

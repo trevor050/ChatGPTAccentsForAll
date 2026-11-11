@@ -11,7 +11,7 @@ import { themeById } from "../src/lib/themes.js";
 
 const app = discoverAppShell(signedIn.rules, signedIn.html);
 const themed = (id) => ({ ...applyTheme(normalizeSettings({}), themeById(id)), enabled: true });
-const SAMPLE = ["blue", "yellow", "purple_plus", "black_pro", "cyberpunk", "material_indigo", "pastel_sky", "lemonade"];
+const SAMPLE = ["blue", "yellow", "purple_plus", "black_pro", "cyberpunk", "nord", "pastel_sky", "lemonade"];
 
 /** Declarations of one top-level rule whose selector starts with `prefix`. */
 function block(css, prefix) {

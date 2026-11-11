@@ -8,9 +8,12 @@ import { discoverTokens } from "../src/lib/discover.js";
 import { DEFAULT_SETTINGS, applyLook, applyTheme, normalizeSettings } from "../src/lib/settings.js";
 import { REFERENCE, rolesFor, surfaceSpec, tintNeutral } from "../src/lib/theme.js";
 import { THEMES, themeById, themeLook } from "../src/lib/themes.js";
+import { ORIGINAL_THEMES } from "../src/lib/themes-original.js";
 
 const discovery = discoverTokens(fixture.rules);
-const themed = (id, patch = {}) => normalizeSettings({ ...applyTheme(DEFAULT_SETTINGS, themeById(id)), ...patch });
+// Current themes, or (for engine behaviour on hand-picked colours) the original 1.x ones.
+const anyTheme = (id) => themeById(id) ?? ORIGINAL_THEMES.find((t) => t.id === id);
+const themed = (id, patch = {}) => normalizeSettings({ ...applyTheme(DEFAULT_SETTINGS, anyTheme(id)), ...patch });
 const custom = (look) => normalizeSettings(applyLook(DEFAULT_SETTINGS, look));
 
 // Tokens in the captured ChatGPT stylesheet (see test/fixtures and AGENTS.md).
@@ -93,19 +96,26 @@ describe("contrast safety net", () => {
     frost: ["submitText"],
   };
 
-  it("leaves every passing pair exactly as the author designed it", () => {
+  it("leaves every curated theme exactly as designed", () => {
     for (const t of THEMES) {
       const r = rolesFor("light", themed(t.id));
+      expect([r.onTint, r.onSubmit], t.id).toEqual([t.bubbleText, t.submitText]);
+    }
+  });
+
+  it("touches only the original themes whose designed pair failed the rule", () => {
+    for (const t of ORIGINAL_THEMES) {
+      const r = rolesFor("light", normalizeSettings(applyTheme(DEFAULT_SETTINGS, t)));
       const changed = [];
       if (r.onTint !== t.bubbleText) changed.push("bubbleText");
       if (r.onSubmit !== t.submitText) changed.push("submitText");
       expect(changed, t.id).toEqual(ADJUSTED[t.id] ?? []);
-      expect(rolesFor("dark", themed(t.id)).onTint, `${t.id} dark`).toBe(r.onTint); // same in both modes
+      expect(rolesFor("dark", normalizeSettings(applyTheme(DEFAULT_SETTINGS, t))).onTint, `${t.id} dark`).toBe(r.onTint); // same in both modes
     }
   });
 
   it("makes every theme meet the rule, in both modes and in more-contrast mode", () => {
-    for (const t of THEMES) for (const mode of ["light", "dark"]) {
+    for (const t of [...THEMES, ...ORIGINAL_THEMES]) for (const mode of ["light", "dark"]) {
       const r = rolesFor(mode, themed(t.id));
       expect(contrastRatio(r.onTint, r.tint), `${t.id} ${mode} bubble`).toBeGreaterThanOrEqual(4.5);
       expect(contrastRatio(r.onSubmit, r.submit), `${t.id} ${mode} send`).toBeGreaterThanOrEqual(3);
