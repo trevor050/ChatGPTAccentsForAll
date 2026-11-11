@@ -25,14 +25,23 @@ const page = ctx.pages()[0] || await ctx.newPage();
 await page.goto("https://chatgpt.com/", { waitUntil: "domcontentloaded", timeout: 60_000 });
 await page.waitForTimeout(6000);
 await page.keyboard.press("Escape");
-const box = page.locator('[contenteditable="true"], textarea').first();
+// ChatGPT also renders a hidden mobile <textarea>; always use the visible composer.
+const box = page.locator('[contenteditable="true"]:visible, textarea:visible').first();
 await box.click();
-await box.pressSequentially("In two short sentences: why do people care so much about accent colors in apps?");
+// ChatGPT restores an unsent draft from earlier visits; clear it so it cannot leak into the shots.
+await box.fill("");
+const PROMPT = "In two short sentences: why do people care so much about accent colors in apps?";
+await box.pressSequentially(PROMPT);
 await page.keyboard.press("Enter");
 await page.waitForTimeout(18_000);
+const sent = await page.evaluate((m) => [...document.querySelectorAll("p, span, div")].some((e) => !e.childElementCount && e.textContent.trim() === m), PROMPT);
+if (!sent) throw new Error("the sent prompt does not match exactly; a restored draft probably leaked into it");
 await page.keyboard.press("Escape");
 await box.click();
+await box.fill("");
 await box.pressSequentially("Make it pop");
+const draft = (await box.evaluate((e) => e.value ?? e.innerText)).trim();
+if (draft !== "Make it pop") throw new Error(`unexpected composer text in screenshots: ${JSON.stringify(draft)}`);
 
 const popup = await ctx.newPage();
 await popup.setViewportSize({ width: 380, height: 600 });
