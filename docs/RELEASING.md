@@ -9,7 +9,7 @@ The Chrome Web Store listing is live (`eojjhpainjcepfniefegkdjjemhigmgh`). Firef
 
 ## Chrome Web Store (update)
 1. Developer Dashboard -> the item -> Package -> Upload new package -> the chrome zip.
-2. Store listing: paste the quoted text from `CHANGELOG.md` into the description's "What's new" part; replace screenshots with `readme-imgs/crimson-light.png`, `ocean-dark.png`, `synthwave-dark.png`, `mocha-light.png` resized to 1280x800 (`sips -z 800 1280 file.png --out store-file.png`). Icon: `src/icons/icon-128.png`.
+2. Store listing: paste the quoted text from `CHANGELOG.md` into the description's "What's new" part; replace screenshots with `readme-imgs/crimson-light.png`, `ocean-dark.png`, `synthwave-dark.png`, `mocha-dark.png` resized to 1280x800 (`sips -z 800 1280 file.png --out store-file.png`). Icon: `src/icons/icon-128.png` (96 px of artwork inside 16 px of transparent padding, as the store asks). The PNGs are generated from `assets/icon/*.svg` by `node scripts/icons.mjs`; edit the SVGs, never the PNGs.
 3. Privacy tab: single purpose "Change the colors of the ChatGPT website". Permission justification: `storage` saves color settings; host access to chatgpt.com injects the stylesheet. Remote code: No. Data usage: collects nothing. Privacy policy URL: `https://github.com/trevor050/ChatGPTAccentsForAll/blob/main/PRIVACY.md`.
 4. Submit for review.
 
