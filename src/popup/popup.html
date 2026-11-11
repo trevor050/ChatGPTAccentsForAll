@@ -2,66 +2,100 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <title>ChatGPT Accents</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <header class="top">
-      <h1>ChatGPT Accents</h1>
+    <div class="header">
+      <div id="segment" class="segment" role="tablist" aria-label="Mode" data-active="basic">
+        <button id="seg-basic" class="seg-btn active" role="tab" type="button" aria-selected="true" aria-controls="basic" tabindex="0">Basic</button>
+        <button id="seg-advanced" class="seg-btn" role="tab" type="button" aria-selected="false" aria-controls="advanced" tabindex="-1">Advanced</button>
+      </div>
       <label class="switch" title="Turn colors on or off">
         <input id="enabled" type="checkbox" role="switch" aria-label="Apply colors on ChatGPT" />
         <span class="track"><span class="knob"></span></span>
       </label>
-    </header>
+    </div>
 
-    <section id="preview" class="preview" aria-label="Preview">
-      <div class="bubble">make it pop</div>
-      <div class="reply">Sure. Here's a <span class="link">link</span> in your accent.</div>
-      <div class="composer">
-        <span class="placeholder">Ask anything</span>
-        <span class="send" aria-hidden="true">
-          <svg viewBox="0 0 20 20" width="14" height="14"><path d="M10 15V5M5.5 9.5 10 5l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
+    <p id="status" class="status" role="status" hidden></p>
+
+    <div id="stack" class="stack">
+      <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
+        <div id="themeGrid" class="grid" role="radiogroup" aria-label="Theme"></div>
       </div>
-    </section>
 
-    <section aria-label="Presets">
-      <div id="swatches" class="swatches" role="list"></div>
-    </section>
+      <div id="advanced" class="section" role="tabpanel" aria-labelledby="seg-advanced" inert>
+        <div class="settings-grid">
+          <div class="preview-group">
+            <div class="group-head">
+              <h3>Live preview</h3>
+              <div class="mini-seg" role="group" aria-label="Preview mode">
+                <button id="pv-light" type="button" aria-pressed="false">Light</button>
+                <button id="pv-dark" type="button" aria-pressed="false">Dark</button>
+              </div>
+            </div>
+            <div id="preview" class="preview-card">
+              <div class="chat">
+                <div class="msg assistant">Assistant: Here’s how your theme feels. Links and accents use your <span class="link">accent color</span>. This block matches app surfaces.</div>
+                <div class="msg user">You: This is the user bubble. Make sure the text is readable on your color.</div>
+                <div class="composer">
+                  <button class="secondary" type="button" tabindex="-1" aria-hidden="true">Secondary</button>
+                  <button class="primary" type="button" tabindex="-1" aria-hidden="true">Send</button>
+                </div>
+              </div>
+            </div>
+            <div id="surfaceNote" class="note"></div>
+          </div>
 
-    <section class="editor" aria-label="Custom color">
-      <div class="mode-row">
-        <div class="tabs" role="tablist" aria-label="Which mode to edit">
-          <button id="tab-light" role="tab" aria-selected="true" data-mode="light">Light mode</button>
-          <button id="tab-dark" role="tab" aria-selected="false" data-mode="dark">Dark mode</button>
+          <div class="setting-group gridish">
+            <h3>Core palette</h3>
+            <div class="color-row"><label for="accent">Accent</label><div class="pair"><input id="accent" type="color" value="#66b5ff" /><input id="accentHex" class="hex" value="#66b5ff" aria-label="Accent hex" spellcheck="false" maxlength="7" /></div></div>
+            <div class="color-row"><label for="bubbleBg">User bubble</label><div class="pair"><input id="bubbleBg" type="color" value="#003f7a" /><input id="bubbleBgHex" class="hex" value="#003f7a" aria-label="User bubble hex" spellcheck="false" maxlength="7" /></div></div>
+            <div class="color-row"><label for="bubbleText">User text</label><div class="pair"><input id="bubbleText" type="color" value="#f5faff" /><input id="bubbleTextHex" class="hex" value="#f5faff" aria-label="User text hex" spellcheck="false" maxlength="7" /></div></div>
+            <div class="color-row"><label for="submitBg">Submit button</label><div class="pair"><input id="submitBg" type="color" value="#0169cc" /><input id="submitBgHex" class="hex" value="#0169cc" aria-label="Submit button hex" spellcheck="false" maxlength="7" /></div></div>
+            <div class="color-row"><label for="submitText">Submit text</label><div class="pair"><input id="submitText" type="color" value="#ffffff" /><input id="submitTextHex" class="hex" value="#ffffff" aria-label="Submit text hex" spellcheck="false" maxlength="7" /></div></div>
+          </div>
+
+          <div class="setting-group">
+            <h3>Surfaces</h3>
+            <div class="radio-seg" role="radiogroup" aria-label="Surface mode">
+              <div><input type="radio" id="surface-default" name="surfaceMode" value="default" checked /><label for="surface-default">Default</label></div>
+              <div><input type="radio" id="surface-dark" name="surfaceMode" value="dark" /><label for="surface-dark">Dark</label></div>
+              <div><input type="radio" id="surface-light" name="surfaceMode" value="light" /><label for="surface-light">Light</label></div>
+              <div><input type="radio" id="surface-custom" name="surfaceMode" value="custom" /><label for="surface-custom">Custom</label></div>
+            </div>
+            <div id="customSurfaceRow" class="color-row hidden">
+              <label for="surfaceColor">Base surface</label>
+              <div class="pair"><input id="surfaceColor" type="color" value="#0f0f10" /><input id="surfaceColorHex" class="hex" value="#0f0f10" aria-label="Base surface hex" spellcheck="false" maxlength="7" /></div>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <h3>Actions</h3>
+            <div class="actions">
+              <button id="save" class="btn primary" type="button">Apply</button>
+              <button id="reset" class="btn" type="button">Reset</button>
+              <button id="random" class="btn" type="button">Surprise me</button>
+              <span id="applied" class="applied" role="status"></span>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <h3>Saved themes</h3>
+            <div class="color-row">
+              <label for="saveName">Name</label>
+              <div class="pair save-pair">
+                <input id="saveName" class="hex name" placeholder="My theme" maxlength="32" />
+                <button id="saveThemeBtn" class="btn" type="button">Save current</button>
+              </div>
+            </div>
+            <div id="savedList" class="saved-list"></div>
+          </div>
         </div>
-        <label id="auto-row" class="check" hidden>
-          <input id="auto-dark" type="checkbox" /> Auto
-        </label>
       </div>
-
-      <div id="pad" class="pad" tabindex="0" role="slider" aria-label="Saturation and brightness" aria-valuetext="">
-        <div id="pad-thumb" class="pad-thumb"></div>
-      </div>
-      <input id="hue" class="hue" type="range" min="0" max="359" step="1" aria-label="Hue" />
-
-      <div class="hex-row">
-        <label class="hex">
-          <span class="chip" id="chip"></span>
-          <input id="hex" type="text" spellcheck="false" maxlength="7" aria-label="Hex color" />
-        </label>
-        <p id="contrast" class="contrast"></p>
-      </div>
-    </section>
-
-    <section class="tint">
-      <label for="tint">Tint backgrounds</label>
-      <input id="tint" type="range" min="0" max="100" step="1" />
-      <output id="tint-value" for="tint"></output>
-    </section>
-
-    <p id="status" class="status" hidden></p>
+    </div>
 
     <script src="popup.js"></script>
   </body>

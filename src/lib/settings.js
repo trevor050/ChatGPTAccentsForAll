@@ -1,65 +1,87 @@
-// Settings shape, presets, validation and migration from the v1 (2025) storage format.
-import { hexToOklch, normalizeHex, parseColor, toHex } from "./color.js";
+// Settings shape, validation and migration from the 1.x and 2.0.0 storage formats.
+import { hexToOklch, normalizeHex, oklchToHex, parseColor, toHex } from "./color.js";
+import { THEMES, THEME_IDS, findTheme, themeById, themeLook } from "./themes.js";
 
-export const SETTINGS_VERSION = 2;
+export const SETTINGS_VERSION = 3;
 export const MAX_SAVED = 24;
 
+export const ROLE_KEYS = ["bubbleBg", "bubbleText", "submitBg", "submitText", "link"];
+export const SURFACE_KINDS = ["default", "dark", "light", "custom"];
+
 /**
- * v2 settings (chrome.storage.sync key "settings"):
+ * v3 settings (chrome.storage.sync key "settings"):
  *   enabled   apply colours at all
- *   light     accent hex used in light mode (null = never picked)
- *   dark      accent hex for dark mode, or null to derive it from `light`
- *   tint      background tint strength 0..100 (0 = ChatGPT's neutral greys)
- *   preset    id of the preset last applied, if unchanged since
+ *   theme     id of the named theme this is, "custom" for anything else, null if never chosen
+ *   light     the accent colour (links, accent text and icons; also the fill unless
+ *             `roles.submitBg` is set). "light" is a 2.0.0 name kept for compatibility.
+ *   dark      accent override for dark mode, or null to derive it from `light`
+ *   roles     explicit colours, each hex or null (null = derive from the accent):
+ *               bubbleBg / bubbleText   user message bubble
+ *               submitBg / submitText   send button and its icon
+ *               link                    optional separate colour for links and accent text
+ *   surface   page background choice: { kind: default|dark|light|custom, color }
+ *             (`color` is only used by "custom"; see theme.js surfaceSpec)
  *   updatedAt ms timestamp, newest write wins between the live and synced copies
  * Saved favourites live under their own key ("saved") so editing colours never
- * rewrites the whole list.
+ * rewrites the whole list; each holds the same colour fields plus id and name.
  */
+const EMPTY_ROLES = Object.freeze(Object.fromEntries(ROLE_KEYS.map((k) => [k, null])));
+const NO_SURFACE = Object.freeze({ kind: "default", color: null });
+
 export const DEFAULT_SETTINGS = Object.freeze({
   v: SETTINGS_VERSION,
   enabled: false,
+  theme: null,
   light: null,
   dark: null,
-  tint: 0,
-  preset: null,
+  roles: EMPTY_ROLES,
+  surface: NO_SURFACE,
   updatedAt: 0,
 });
-
-export const PRESETS = [
-  { id: "black", name: "Black", light: "#0d0d0d", dark: null, tint: 0 },
-  { id: "crimson", name: "Crimson", light: "#e11d48", dark: null, tint: 0 },
-  { id: "orange", name: "Orange", light: "#ea580c", dark: "#f97316", tint: 0 },
-  { id: "saffron", name: "Saffron", light: "#c27c0e", dark: "#eab308", tint: 0 },
-  { id: "lime", name: "Lime", light: "#65a30d", dark: "#84cc16", tint: 0 },
-  { id: "emerald", name: "Emerald", light: "#059669", dark: "#10b981", tint: 0 },
-  { id: "teal", name: "Teal", light: "#0d9488", dark: "#14b8a6", tint: 0 },
-  { id: "cobalt", name: "Cobalt", light: "#2563eb", dark: "#3b82f6", tint: 0 },
-  { id: "grape", name: "Grape", light: "#7c3aed", dark: "#a78bfa", tint: 0 },
-  { id: "magenta", name: "Magenta", light: "#c026d3", dark: "#d946ef", tint: 0 },
-  { id: "ocean", name: "Ocean", light: "#0e7490", dark: "#2dd4bf", tint: 70 },
-  { id: "forest", name: "Forest", light: "#15803d", dark: "#22c55e", tint: 55 },
-  { id: "mocha", name: "Mocha", light: "#8a5a3c", dark: "#d6b28d", tint: 60 },
-  { id: "midnight", name: "Midnight", light: "#1d4ed8", dark: "#60a5fa", tint: 65 },
-  { id: "void", name: "Void", light: "#7e22ce", dark: "#a855f7", tint: 70 },
-  { id: "synthwave", name: "Synthwave", light: "#db2777", dark: "#ff0080", tint: 80 },
-];
 
 const clampInt = (v, lo, hi, fallback) => {
   const n = Math.round(Number(v));
   return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : fallback;
 };
 
-/** Coerce anything read from storage into a valid v2 settings object. */
+const normalizeRoles = (raw) => {
+  const r = raw && typeof raw === "object" ? raw : {};
+  return Object.fromEntries(ROLE_KEYS.map((k) => [k, normalizeHex(r[k] ?? "")]));
+};
+
+const DARK_PAGE_L = hexToOklch("#212121").L;
+
+/** 2.0.0 stored "background tint 0..100" with the accent's hue; express it as a surface. */
+function surfaceFromTint(tint, accentHex) {
+  const hue = hexToOklch(accentHex ?? "")?.H;
+  const t = clampInt(tint, 0, 100, 0);
+  if (hue == null || t < 5) return { ...NO_SURFACE };
+  return { kind: "custom", color: oklchToHex({ L: DARK_PAGE_L, C: (t / 100) * 0.045, H: hue }) };
+}
+
+function normalizeSurface(raw) {
+  if (!raw || typeof raw !== "object" || !SURFACE_KINDS.includes(raw.kind)) return null;
+  if (raw.kind === "custom") {
+    const color = normalizeHex(raw.color ?? "");
+    return color ? { kind: "custom", color } : { ...NO_SURFACE };
+  }
+  return { kind: raw.kind, color: null };
+}
+
+/** Coerce anything read from storage into a valid v3 settings object. */
 export function normalizeSettings(raw) {
   const s = raw && typeof raw === "object" ? raw : {};
   const light = normalizeHex(s.light ?? "");
+  const surface = normalizeSurface(s.surface) ?? (s.tint != null ? surfaceFromTint(s.tint, light) : { ...NO_SURFACE });
+  const theme = s.theme === "custom" || THEME_IDS.has(s.theme) ? s.theme : null;
   return {
     v: SETTINGS_VERSION,
     enabled: Boolean(s.enabled) && Boolean(light),
+    theme,
     light,
     dark: normalizeHex(s.dark ?? ""),
-    tint: clampInt(s.tint, 0, 100, 0),
-    preset: typeof s.preset === "string" && PRESETS.some((p) => p.id === s.preset) ? s.preset : null,
+    roles: normalizeRoles(s.roles),
+    surface,
     updatedAt: Number.isFinite(s.updatedAt) ? s.updatedAt : 0,
   };
 }
@@ -75,61 +97,120 @@ export function normalizeSaved(raw) {
       name: String(item.name ?? "").trim().slice(0, 40) || light,
       light,
       dark: normalizeHex(item.dark ?? ""),
-      tint: clampInt(item.tint, 0, 100, 0),
+      roles: normalizeRoles(item.roles),
+      surface: normalizeSurface(item.surface) ?? (item.tint != null ? surfaceFromTint(item.tint, light) : { ...NO_SURFACE }),
     });
     if (out.length >= MAX_SAVED) break;
   }
   return out;
 }
 
-export function applyPreset(settings, preset) {
-  return { ...settings, enabled: true, light: preset.light, dark: preset.dark, tint: preset.tint, preset: preset.id };
+/** Settings after choosing a named theme (or a saved one: anything with a look). */
+export function applyLook(settings, look, theme = findTheme(look)?.id ?? "custom") {
+  return {
+    ...settings,
+    enabled: true,
+    theme,
+    light: look.light,
+    dark: look.dark ?? null,
+    roles: { ...EMPTY_ROLES, ...look.roles },
+    surface: look.surface ? { ...look.surface } : { ...NO_SURFACE },
+  };
+}
+
+export const applyTheme = (settings, theme) => applyLook(settings, themeLook(theme), theme.id);
+
+// ---------------------------------------------------------------------------
+// Migration from 2.0.0 (single accent per mode + background tint)
+// ---------------------------------------------------------------------------
+
+// 2.0.0 preset ids that are named differently now.
+const V2_THEME_IDS = { black: "black_pro" };
+
+function upgradeV2(raw) {
+  const id = V2_THEME_IDS[raw.preset] ?? raw.preset;
+  const theme = themeById(id);
+  // A preset that was still selected means "that named theme": same name, the
+  // colours the 1.x popup always gave it.
+  if (theme) return { ...applyTheme({}, theme), enabled: Boolean(raw.enabled), updatedAt: raw.updatedAt };
+  // Anything else was a hand-picked colour: keep it (accent per mode, tint as a surface).
+  return { ...raw, theme: raw.light ? "custom" : null };
 }
 
 // ---------------------------------------------------------------------------
-// Migration from v1 (versions 1.x, Aug 2025). v1 stored raw CSS variables:
-//   themeVars:   { "--interactive-bg-accent-default": "#hex", "--bg-primary": "#hex", ... }
+// Migration from 1.x (versions up to 1.1.0, Aug 2025). The old popup stored raw CSS variables:
+//   themeVars:   { "--interactive-bg-accent-default": "#hex", "--theme-user-msg-bg": "#hex", ... }
 //   savedThemes: [{ id, name, vars: { ...same shape... } }]
-// v1 tokens no longer exist on chatgpt.com, so we keep what the user chose
-// (their accent, and roughly their background colour) in the v2 model.
+// Each colour is one of the five roles a theme has now; a theme the user picked by
+// name comes back as that theme.
 // ---------------------------------------------------------------------------
 
-const V1_ACCENT_KEYS = ["--interactive-bg-accent-default", "--theme-submit-btn-bg", "--composer-blue-bg"];
+const V1_ACCENT_KEYS = ["--interactive-bg-accent-default", "--composer-blue-bg", "--theme-submit-btn-bg"];
 const V1_SURFACE_KEYS = ["--bg-primary", "--main-surface-primary"];
 
 const hexOf = (value) => {
   const c = parseColor(String(value ?? ""));
   return c && c.a > 0 ? toHex({ ...c, a: 1 }) : null;
 };
+const firstHex = (vars, keys) => keys.map((k) => hexOf(vars[k])).find(Boolean) ?? null;
 
-/** v1 themeVars -> { light, tint } or null if it held no accent. */
+/** The 1.x "Surfaces" choice, recovered from the variables it wrote. */
+function v1Surface(vars) {
+  const base = firstHex(vars, V1_SURFACE_KEYS);
+  if (!base) return { ...NO_SURFACE };
+  const second = hexOf(vars["--bg-secondary"]);
+  if (base === "#0f0f10" && second === "#141416") return { kind: "dark", color: null };
+  if (base === "#ffffff" && second === "#f3f3f3") return { kind: "light", color: null };
+  return { kind: "custom", color: base };
+}
+
+/** The named theme a set of 1.x variables was written by. Mirrors the 1.x popup's own match. */
+function v1Theme(vars, accent) {
+  const bubbleBg = hexOf(vars["--theme-user-msg-bg"]);
+  const submitBg = hexOf(vars["--theme-submit-btn-bg"]);
+  const base = firstHex(vars, V1_SURFACE_KEYS);
+  return THEMES.find((t) => t.accent === accent && t.bubbleBg === bubbleBg && t.submitBg === submitBg && (t.surface ?? null) === base) || null;
+}
+
+/** v1 themeVars -> the look they described ({ light, dark, roles, surface }), or null if no accent. */
 export function fromV1Vars(vars) {
   if (!vars || typeof vars !== "object") return null;
-  const light = V1_ACCENT_KEYS.map((k) => hexOf(vars[k])).find(Boolean);
+  const light = firstHex(vars, V1_ACCENT_KEYS);
   if (!light) return null;
-  // v1 "background" themes painted a coloured page; approximate with a tint whose
-  // strength follows how colourful that background was.
-  const surface = V1_SURFACE_KEYS.map((k) => hexOf(vars[k])).find(Boolean);
-  const C = surface ? hexToOklch(surface).C : 0;
-  const tint = C < 0.008 ? 0 : clampInt(30 + C * 1500, 30, 100, 0);
-  return { light, tint };
+  const named = v1Theme(vars, light);
+  if (named) return { ...themeLook(named), theme: named.id };
+  return {
+    light,
+    dark: null,
+    roles: {
+      bubbleBg: hexOf(vars["--theme-user-msg-bg"]),
+      bubbleText: hexOf(vars["--theme-user-msg-text"]),
+      submitBg: hexOf(vars["--theme-submit-btn-bg"]),
+      submitText: hexOf(vars["--theme-submit-btn-text"]),
+      link: hexOf(vars["--link"]),
+    },
+    surface: v1Surface(vars),
+    theme: "custom",
+  };
 }
 
 /**
  * Given everything in sync storage, return { settings, saved, migrated, removeKeys }.
- * Idempotent: once "settings" exists, v1 keys are only cleaned up, never re-read.
+ * Idempotent: once v3 "settings" exist, older keys are only cleaned up, never re-read.
  */
 export function migrate(stored) {
   const data = stored && typeof stored === "object" ? stored : {};
   const removeKeys = ["themeVars", "savedThemes"].filter((k) => k in data);
   if (data.settings) {
-    return { settings: normalizeSettings(data.settings), saved: normalizeSaved(data.saved), migrated: false, removeKeys };
+    const upgrade = Number(data.settings.v) < SETTINGS_VERSION;
+    const settings = normalizeSettings(upgrade ? upgradeV2(data.settings) : data.settings);
+    return { settings, saved: normalizeSaved(data.saved), migrated: upgrade, removeKeys };
   }
   if (!removeKeys.length) {
     return { settings: { ...DEFAULT_SETTINGS }, saved: normalizeSaved(data.saved), migrated: false, removeKeys };
   }
-  const current = fromV1Vars(data.themeVars);
-  const settings = normalizeSettings(current ? { ...current, enabled: true, updatedAt: Date.now() } : DEFAULT_SETTINGS);
+  const look = fromV1Vars(data.themeVars);
+  const settings = normalizeSettings(look ? { ...look, enabled: true, updatedAt: Date.now() } : DEFAULT_SETTINGS);
   const saved = normalizeSaved(
     (Array.isArray(data.savedThemes) ? data.savedThemes : []).map((t, i) => {
       const v = fromV1Vars(t?.vars);

@@ -30,6 +30,8 @@ export const TEXT_CONTRAST = 4.5;
 export const TEXT_CONTRAST_MORE = 7;
 /** Non-text UI (buttons) against the page, WCAG 1.4.11. Only used for auto-derived colours. */
 export const UI_CONTRAST = 3;
+/** Same, when the OS asks for more contrast (`prefers-contrast: more`). */
+export const UI_CONTRAST_MORE = 4.5;
 
 const ACHROMATIC = 0.025;
 const isAchromatic = (lch) => lch.C < ACHROMATIC;
@@ -91,16 +93,22 @@ function withAlpha(hex, a) {
  * in dark mode) take the full tint; greys on the "text" side stay nearly neutral.
  * The extremes have no room for chroma, so pure white dips and pure black lifts
  * a little (still far from the text colours).
+ *
+ * `depth` (-1..1) moves surface-side greys towards the page's extreme: positive
+ * darkens in dark mode and brightens in light mode (both only ever *increase*
+ * contrast with text), negative lightens dark surfaces a little. Text-side greys
+ * never move.
  */
-export function tintNeutral(hex, hue, strength, mode = "light") {
+export function tintNeutral(hex, hue, strength, mode = "light", depth = 0) {
   const c = parseColor(hex);
-  if (!c || strength <= 0) return hex;
+  if (!c || (strength <= 0 && !depth)) return hex;
   const lch = hexToOklch(hex);
-  const s = Math.min(100, strength) / 100;
+  const s = Math.min(100, Math.max(0, strength)) / 100;
+  const isSurfaceSide = mode === "light" ? lch.L >= 0.5 : lch.L < 0.5;
   let L = lch.L;
+  if (depth && isSurfaceSide) L = mode === "light" ? 1 - (1 - L) * (1 - depth) : L * (1 - depth);
   if (mode === "light" && L > 0.94) L -= s * 0.03 * ((L - 0.94) / 0.06 + 0.4);
   if (mode === "dark" && L < 0.2) L += s * 0.2 * (1 - L / 0.2);
-  const isSurfaceSide = mode === "light" ? lch.L >= 0.5 : lch.L < 0.5;
   const C = s * (isSurfaceSide ? 0.045 : 0.012);
   return toHex({ ...parseColor(oklchToHex({ L, C, H: hue })), a: c.a });
 }
@@ -117,27 +125,98 @@ export function accentSurface(refHex, fillHex, tint = 0, refFillHex = REFERENCE.
   return withAlpha(oklchToHex({ ...lch, C: Math.max(lch.C, (Math.min(100, tint) / 100) * 0.07) }), alpha);
 }
 
-/** Hue used for background tinting: the light accent's hue. */
-export function tintHue(settings) {
-  return hexToOklch(settings.light)?.H ?? 0;
+// ---------------------------------------------------------------------------
+// Page surfaces ("Default / Dark / Light / Custom")
+// ---------------------------------------------------------------------------
+
+/** Base colours behind the "Dark" and "Light" surface choices (as in the 1.x popup). */
+export const SURFACE_COLORS = { dark: "#0f0f10", light: "#ffffff" };
+const DEFAULT_DARK_L = hexToOklch(REFERENCE.dark.surface).L;
+const CHROMA_AT_FULL_TINT = 0.045;
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+/**
+ * What a surface choice means for ChatGPT's neutral palette, or null for "Default".
+ *
+ * The page is never forced dark in light mode (or the reverse): dark text on a
+ * forced-dark page was unreadable in 1.x. Instead the chosen colour contributes
+ *   - its hue and colourfulness to BOTH modes, as a tint that keeps every
+ *     lightness (so text contrast is unchanged), and
+ *   - its lightness only to the mode it belongs to: a dark colour deepens (or lifts)
+ *     dark mode's greys, a near-white colour brightens light mode's greys.
+ * Returns { hue, strength, darkDepth, lightDepth }.
+ */
+export function surfaceSpec(settings) {
+  const surface = settings?.surface;
+  if (!surface || surface.kind === "default") return null;
+  const color = surface.kind === "custom" ? surface.color : SURFACE_COLORS[surface.kind];
+  const lch = color && hexToOklch(color);
+  if (!lch) return null;
+  const strength = lch.C < 0.004 ? 0 : Math.min(100, (lch.C / CHROMA_AT_FULL_TINT) * 100);
+  return {
+    hue: lch.H,
+    strength,
+    darkDepth: lch.L < 0.5 ? clamp(1 - lch.L / DEFAULT_DARK_L, -0.3, 0.85) : 0,
+    lightDepth: lch.L >= 0.5 ? clamp((lch.L - 0.95) / 0.05, 0, 1) * 0.5 : 0,
+  };
+}
+
+/** Tint one neutral colour (any role) the way the user's surface choice asks. */
+export function applySurface(hex, mode, spec) {
+  if (!spec) return hex;
+  return tintNeutral(hex, spec.hue, spec.strength, mode, mode === "dark" ? spec.darkDepth : spec.lightDepth);
+}
+
+/**
+ * Safety net for a chosen text/background pair: returned unchanged when it already
+ * reaches `min`. Otherwise a coloured text keeps its hue and moves only as far as
+ * it must; a grey or white one (no hue to keep) becomes whichever of white, near-black
+ * or black reads best, so a failing white label turns dark instead of a muddy grey.
+ */
+export function readable(text, bg, min) {
+  if (contrastRatio(text, bg) >= min) return text;
+  if ((hexToOklch(text)?.C ?? 0) < 0.02) {
+    const alt = onColor(bg);
+    if (contrastRatio(alt, bg) >= min) return alt;
+  }
+  return ensureContrast(text, [bg], min);
 }
 
 /**
  * Concrete role colours for one mode. Used for the popup preview, for legacy
  * named tokens, and as contrast backdrops when recolouring discovered tokens.
+ *
+ * Every role can be chosen explicitly through `settings.roles`; any role left
+ * null is derived from the accent. Explicit pairs are only touched when they would
+ * be unreadable (body text below `minText`, the send-button glyph below the
+ * non-text UI minimum), so a theme renders as designed whenever it already passes.
+ *
+ *   fill      accent colour (what accent text, links and icons are derived from)
+ *   submit    background of the accent-filled controls, the send button
+ *   onSubmit  its icon/label colour
+ *   tint      user bubble background      onTint  user bubble text
+ *   text      accent-coloured text on the page (links)
+ *   surface   page background
  */
 export function rolesFor(mode, settings, minText = TEXT_CONTRAST) {
   const ref = REFERENCE[mode];
+  const r = settings.roles || {};
   const fill = resolveAccents(settings)[mode];
-  const hue = tintHue(settings);
-  const surface = tintNeutral(ref.surface, hue, settings.tint, mode);
-  const tint = accentSurface(ref.tint, fill, settings.tint);
-  return {
-    fill,
-    onFill: onColor(fill),
-    surface,
-    tint,
-    text: ensureContrast(retint(ref.text, fill), [surface, tint], minText),
-    onTint: ensureContrast(retint(ref.onTint, fill), [tint], minText),
-  };
+  const spec = surfaceSpec(settings);
+  const surface = applySurface(ref.surface, mode, spec);
+  const strength = spec?.strength ?? 0;
+  const minUi = minText > TEXT_CONTRAST ? UI_CONTRAST_MORE : UI_CONTRAST;
+
+  const submit = r.submitBg || fill;
+  const onSubmit = r.submitText ? readable(r.submitText, submit, minUi) : onColor(submit);
+
+  const explicitBubble = Boolean(r.bubbleBg);
+  const tint = r.bubbleBg || accentSurface(ref.tint, fill, strength);
+  const onTint = readable(r.bubbleText || (explicitBubble ? onColor(tint) : retint(ref.onTint, fill)), tint, minText);
+
+  const linkBase = r.link || fill;
+  // Accent text lives on the page; it only also has to work on the bubble when
+  // the bubble itself is derived from the accent.
+  const text = ensureContrast(retint(ref.text, linkBase), explicitBubble ? [surface] : [surface, tint], minText);
+  return { fill, submit, onSubmit, onFill: onSubmit, surface, tint, onTint, text, explicitBubble };
 }

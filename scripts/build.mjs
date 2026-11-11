@@ -37,6 +37,7 @@ for (const [name, transform] of Object.entries(targets)) {
   await fs.writeFile(path.join(out, "manifest.json"), JSON.stringify(transform(manifest), null, 2) + "\n");
   await fs.cp(path.join(src, "icons"), path.join(out, "icons"), { recursive: true });
   for (const file of ["popup.html", "popup.css"]) await fs.cp(path.join(src, "popup", file), path.join(out, file));
+  await fs.cp(path.join(src, "popup/fonts"), path.join(out, "fonts"), { recursive: true });
 
   const options = {
     entryPoints: { content: path.join(src, "content/index.js"), popup: path.join(src, "popup/popup.js") },

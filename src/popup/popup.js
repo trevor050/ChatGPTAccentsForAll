@@ -1,20 +1,35 @@
-import { contrastRatio, hexToHsv, hsvToHex, normalizeHex } from "../lib/color.js";
-import { applyPreset, DEFAULT_SETTINGS, MAX_SAVED, PRESETS } from "../lib/settings.js";
+import { normalizeHex } from "../lib/color.js";
+import { MAX_SAVED, applyLook, applyTheme } from "../lib/settings.js";
 import { loadState, readLocal, writeLive, writeSaved, writeSettings } from "../lib/storage.js";
-import { REFERENCE, deriveDarkAccent, resolveAccents, rolesFor, tintHue, tintNeutral } from "../lib/theme.js";
+import { applySurface, rolesFor, surfaceSpec } from "../lib/theme.js";
+import { DEFAULT_THEME, THEMES, backgroundTone, findTheme, themeLook } from "../lib/themes.js";
+import { DRAFT_DEFAULTS, draftFromSettings, lookFromDraft, nextGridIndex, nextTabIndex, previewSettings, surfaceNote } from "./model.js";
 
 const $ = (id) => document.getElementById(id);
+const PALETTE = [
+  ["accent", "accent"],
+  ["bubbleBg", "bubbleBg"],
+  ["bubbleText", "bubbleText"],
+  ["submitBg", "submitBg"],
+  ["submitText", "submitText"],
+  ["surfaceColor", "surfaceColor"],
+];
 const PREVIEW_NEUTRALS = {
-  light: { fg: "#0d0d0d", muted: "#5d5d5d", line: "#0000001a" },
-  dark: { fg: "#ffffff", muted: "#afafaf", line: "#ffffff26" },
+  light: { fg: "#0d0d0d", line: "#0000001f" },
+  dark: { fg: "#ffffff", line: "#ffffff26" },
 };
+const darkScheme = () => Boolean(globalThis.matchMedia?.("(prefers-color-scheme: dark)").matches);
 
 const state = {
-  settings: { ...DEFAULT_SETTINGS },
+  settings: null,
   saved: [],
-  mode: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
-  hsv: { h: 220, s: 0.78, v: 0.94 },
+  draft: { ...DRAFT_DEFAULTS },
+  previewMode: darkScheme() ? "dark" : "light",
+  tab: "basic",
 };
+
+// Firefox closes the popup when a native colour picker opens, so there the hex field is the control.
+if (/Firefox\//.test(navigator.userAgent)) document.documentElement.dataset.nativePicker = "off";
 
 // ---------------------------------------------------------------------------
 // Persistence: every change repaints open ChatGPT tabs through storage.local
@@ -22,8 +37,8 @@ const state = {
 // ---------------------------------------------------------------------------
 let syncTimer = 0, liveFrame = 0, syncPending = false;
 
-function commit(patch) {
-  state.settings = { ...state.settings, ...patch, updatedAt: Date.now() };
+function commit(next) {
+  state.settings = { ...state.settings, ...next, updatedAt: Date.now() };
   cancelAnimationFrame(liveFrame);
   liveFrame = requestAnimationFrame(() => writeLive(state.settings));
   syncPending = true;
@@ -43,233 +58,325 @@ addEventListener("pagehide", flushSync);
 document.addEventListener("visibilitychange", () => { if (document.hidden) flushSync(); });
 
 // ---------------------------------------------------------------------------
-// Colour being edited
+// Basic: the theme grid (a radio group with one tab stop and arrow-key movement)
 // ---------------------------------------------------------------------------
-const effectiveLight = () => state.settings.light || REFERENCE.fill;
-const effectiveSettings = () => ({ ...state.settings, light: effectiveLight() });
-const currentHex = () => resolveAccents(effectiveSettings())[state.mode];
+const CARDS = [DEFAULT_THEME, ...THEMES];
+const cardEls = () => [...$("themeGrid").querySelectorAll(".theme-card")];
 
-function setColor(hex, { fromPicker = false } = {}) {
-  const patch = { enabled: true, preset: null };
-  if (state.mode === "light") patch.light = hex;
-  else {
-    patch.dark = hex;
-    if (!state.settings.light) patch.light = effectiveLight();
-  }
-  if (!fromPicker) state.hsv = hexToHsv(hex);
-  commit(patch);
-}
+function buildGrid() {
+  const grid = $("themeGrid");
+  for (const theme of CARDS) {
+    const isDefault = theme === DEFAULT_THEME;
+    const card = document.createElement("button");
+    card.className = "theme-card";
+    card.type = "button";
+    card.setAttribute("role", "radio");
+    card.setAttribute("aria-checked", "false");
+    card.tabIndex = -1;
+    card.dataset.id = theme.id;
 
-// ---------------------------------------------------------------------------
-// Rendering
-// ---------------------------------------------------------------------------
-function renderPreview() {
-  const s = effectiveSettings();
-  const roles = rolesFor(state.mode, s);
-  const n = PREVIEW_NEUTRALS[state.mode];
-  const hue = tintHue(s);
-  const vars = {
-    "--p-surface": roles.surface,
-    "--p-fg": tintNeutral(n.fg, hue, s.tint, state.mode),
-    "--p-muted": tintNeutral(n.muted, hue, s.tint, state.mode),
-    "--p-line": n.line,
-    "--p-tint": roles.tint,
-    "--p-on-tint": roles.onTint,
-    "--p-text": roles.text,
-    "--p-fill": roles.fill,
-    "--p-on-fill": roles.onFill,
-  };
-  const preview = $("preview");
-  for (const [k, v] of Object.entries(vars)) preview.style.setProperty(k, v);
-  document.documentElement.style.setProperty("--fill", roles.fill);
-  document.documentElement.style.setProperty("--on-fill", roles.onFill);
+    const row = document.createElement("div");
+    row.className = "theme-row";
+    const title = document.createElement("div");
+    title.className = "theme-title";
 
-  const button = contrastRatio(roles.onFill, roles.fill).toFixed(1);
-  const text = contrastRatio(roles.text, roles.surface).toFixed(1);
-  $("contrast").textContent = `Button text ${button}:1 · links ${text}:1`;
-  $("contrast").title = "Text colors are adjusted automatically to stay at or above 4.5:1 (WCAG AA).";
-}
+    const dot = document.createElement("div");
+    dot.className = "dot";
+    dot.style.background = isDefault ? "#bdbdbd" : theme.accent;
+    const name = document.createElement("span");
+    name.textContent = theme.name;
+    title.append(dot, name);
 
-function renderPicker() {
-  const { h, s, v } = state.hsv;
-  const pad = $("pad");
-  pad.style.setProperty("--hue", Math.round(h));
-  $("pad-thumb").style.left = `${s * 100}%`;
-  $("pad-thumb").style.top = `${(1 - v) * 100}%`;
-  $("pad-thumb").style.background = currentHex();
-  pad.setAttribute("aria-valuetext", `saturation ${Math.round(s * 100)}%, brightness ${Math.round(v * 100)}%`);
-  $("hue").value = Math.round(h);
-  if (document.activeElement !== $("hex")) $("hex").value = currentHex().toUpperCase();
-}
+    if (theme.badge) title.append(badge(theme.badge, theme.badge === "plus" ? "Plus" : "Pro"));
+    const tone = isDefault ? null : backgroundTone(theme);
+    if (tone) title.append(badge(tone === "light" ? "bg-light" : "bg-dark", `Background: ${tone === "light" ? "Light" : "Dark"}`));
 
-function renderSwatches() {
-  const list = $("swatches");
-  const buttons = [...list.querySelectorAll("button")];
-  const focusedIndex = buttons.indexOf(document.activeElement);
-  const focusedId = buttons[focusedIndex]?.dataset.swatchId;
-  list.textContent = "";
-  const s = state.settings;
-  const matches = (item) => s.enabled && s.light === item.light && (s.dark || null) === (item.dark || null) && s.tint === item.tint;
-
-  const make = (item, { removable = false } = {}) => {
-    const wrap = document.createElement("div");
-    wrap.role = "listitem";
-    const b = document.createElement("button");
-    b.type = "button";
-    b.dataset.swatchId = item.id;
-    b.className = "swatch" + (item.tint ? " tinted" : "");
-    b.title = item.name;
-    b.setAttribute("aria-label", item.name);
-    b.setAttribute("aria-pressed", String(matches(item)));
-    const dark = state.mode === "dark";
-    b.style.setProperty("--sw", dark ? item.dark || deriveDarkAccent(item.light) : item.light);
-    if (item.tint) b.style.setProperty("--sw-bg", tintNeutral(dark ? "#212121" : "#f3f3f3", tintHue(item), Math.max(60, item.tint), state.mode));
-    b.addEventListener("click", () => {
-      const next = item.id && PRESETS.includes(item) ? applyPreset(state.settings, item)
-        : { ...state.settings, enabled: true, light: item.light, dark: item.dark, tint: item.tint, preset: null };
-      state.hsv = hexToHsv(resolveAccents(next)[state.mode]);
-      commit(next);
-    });
-    if (removable) {
-      const x = document.createElement("span");
-      x.className = "remove";
-      x.textContent = "×";
-      x.title = `Remove ${item.name}`;
-      x.addEventListener("click", (e) => { e.stopPropagation(); removeSaved(item.id); });
-      b.addEventListener("keydown", (e) => { if (e.key === "Delete" || e.key === "Backspace") removeSaved(item.id); });
-      b.append(x);
+    // Accent, then the page background (or the bubble when the theme has none), then the send button.
+    const swatches = document.createElement("div");
+    swatches.className = "swatches";
+    swatches.setAttribute("aria-hidden", "true");
+    const colors = isDefault
+      ? Array(3).fill("linear-gradient(90deg,#c8c8c8,#e0e0e0)")
+      : [theme.accent, theme.surface || theme.bubbleBg, theme.submitBg];
+    for (const color of colors) {
+      const pill = document.createElement("div");
+      pill.className = "pill";
+      pill.style.background = color;
+      swatches.append(pill);
     }
-    wrap.append(b);
-    list.append(wrap);
-  };
 
-  for (const p of PRESETS) make(p);
-  for (const item of state.saved) make(item, { removable: true });
-
-  const isSaved = state.saved.some(matches);
-  if (s.enabled && s.light && !s.preset && !isSaved && state.saved.length < MAX_SAVED) {
-    const wrap = document.createElement("div");
-    wrap.role = "listitem";
-    const add = document.createElement("button");
-    add.type = "button";
-    add.dataset.swatchId = "save-current";
-    add.className = "add";
-    add.textContent = "+";
-    add.title = "Save these colors";
-    add.setAttribute("aria-label", "Save these colors");
-    add.addEventListener("click", saveCurrent);
-    wrap.append(add);
-    list.append(wrap);
+    const ring = document.createElement("div");
+    ring.className = "selected-ring";
+    ring.setAttribute("aria-hidden", "true");
+    row.append(title);
+    card.append(ring, row, swatches);
+    card.addEventListener("click", () => chooseTheme(theme));
+    grid.append(card);
   }
-  // Rendering replaces the buttons, including the one activated with Space.
-  // Keep the keyboard position; after removal, use its nearest surviving peer.
-  if (focusedIndex >= 0) {
-    const next = [...list.querySelectorAll("button")];
-    (next.find((b) => b.dataset.swatchId === focusedId) || next[Math.min(focusedIndex, next.length - 1)])?.focus({ preventScroll: true });
-  }
-}
-
-function render() {
-  const s = state.settings;
-  $("enabled").checked = s.enabled;
-  document.body.classList.toggle("off", !s.enabled);
-  for (const mode of ["light", "dark"]) $(`tab-${mode}`).setAttribute("aria-selected", String(state.mode === mode));
-  $("auto-row").hidden = state.mode !== "dark";
-  $("auto-dark").checked = !s.dark;
-  $("tint").value = s.tint;
-  $("tint-value").textContent = s.tint;
-  renderPreview();
-  renderPicker();
-  renderSwatches();
-}
-
-// ---------------------------------------------------------------------------
-// Saved favourites
-// ---------------------------------------------------------------------------
-function saveCurrent() {
-  const s = state.settings;
-  const item = { id: `s_${Date.now().toString(36)}`, name: s.light.toUpperCase(), light: s.light, dark: s.dark, tint: s.tint };
-  state.saved = [...state.saved, item].slice(0, MAX_SAVED);
-  writeSaved(state.saved);
-  render();
-}
-
-function removeSaved(id) {
-  state.saved = state.saved.filter((t) => t.id !== id);
-  writeSaved(state.saved);
-  render();
-}
-
-// ---------------------------------------------------------------------------
-// Picker interactions
-// ---------------------------------------------------------------------------
-function padPick(e) {
-  const r = $("pad").getBoundingClientRect();
-  const s = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
-  const v = Math.min(1, Math.max(0, 1 - (e.clientY - r.top) / r.height));
-  state.hsv = { ...state.hsv, s, v };
-  setColor(hsvToHex(state.hsv), { fromPicker: true });
-}
-
-$("pad").addEventListener("pointerdown", (e) => {
-  $("pad").setPointerCapture(e.pointerId);
-  padPick(e);
-  const move = (ev) => padPick(ev);
-  const up = () => { $("pad").removeEventListener("pointermove", move); $("pad").removeEventListener("pointerup", up); };
-  $("pad").addEventListener("pointermove", move);
-  $("pad").addEventListener("pointerup", up);
-});
-
-$("pad").addEventListener("keydown", (e) => {
-  const step = e.shiftKey ? 0.1 : 0.02;
-  const d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] }[e.key];
-  if (!d) return;
-  e.preventDefault();
-  const clamp = (x) => Math.min(1, Math.max(0, x));
-  state.hsv = { ...state.hsv, s: clamp(state.hsv.s + d[0]), v: clamp(state.hsv.v + d[1]) };
-  setColor(hsvToHex(state.hsv), { fromPicker: true });
-});
-
-$("hue").addEventListener("input", (e) => {
-  state.hsv = { ...state.hsv, h: Number(e.target.value) };
-  // Picking a hue on a grey would do nothing visible; give it some colour.
-  if (state.hsv.s < 0.05) state.hsv = { ...state.hsv, s: 0.75, v: Math.max(state.hsv.v, 0.6) };
-  setColor(hsvToHex(state.hsv), { fromPicker: true });
-});
-
-$("hex").addEventListener("input", (e) => {
-  const hex = normalizeHex(e.target.value);
-  if (hex && e.target.value.replace("#", "").length >= 6) setColor(hex);
-});
-$("hex").addEventListener("change", (e) => {
-  const hex = normalizeHex(e.target.value);
-  if (hex) setColor(hex);
-  else e.target.value = currentHex().toUpperCase();
-});
-
-for (const mode of ["light", "dark"]) {
-  $(`tab-${mode}`).addEventListener("click", () => {
-    state.mode = mode;
-    state.hsv = hexToHsv(currentHex());
-    render();
+  grid.addEventListener("keydown", (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const cards = cardEls();
+    const from = cards.indexOf(document.activeElement);
+    if (from < 0) return;
+    const to = nextGridIndex(e.key, from, cards.length);
+    if (to == null) return;
+    e.preventDefault();
+    if (to === from) return;
+    cards[to].focus();
+    cards[to].click(); // like any radio group, selection follows focus
   });
 }
-document.querySelector(".tabs").addEventListener("keydown", (e) => {
-  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-  const next = state.mode === "light" ? "dark" : "light";
-  $(`tab-${next}`).click();
-  $(`tab-${next}`).focus();
+
+function badge(cls, text) {
+  const el = document.createElement("span");
+  el.className = `badge ${cls}`;
+  el.textContent = text;
+  return el;
+}
+
+/** Which card is selected: Default while off, the named theme when the colours are exactly its own. */
+function currentThemeId() {
+  const s = state.settings;
+  if (!s.enabled || !s.light) return DEFAULT_THEME.id;
+  return findTheme(s)?.id ?? null;
+}
+
+function renderGrid() {
+  const cur = currentThemeId();
+  const cards = cardEls();
+  const stop = cards.find((c) => c.dataset.id === cur) || cards[0];
+  for (const card of cards) {
+    card.setAttribute("aria-checked", String(card.dataset.id === cur));
+    card.tabIndex = card === stop ? 0 : -1;
+  }
+}
+
+function chooseTheme(theme) {
+  if (theme === DEFAULT_THEME) {
+    commit({ enabled: false });
+  } else {
+    commit(applyTheme(state.settings, theme));
+    state.draft = draftFromSettings(state.settings, state.previewMode);
+    writeDraftToInputs();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Tabs
+// ---------------------------------------------------------------------------
+const TABS = ["basic", "advanced"];
+
+function setTab(which, { focus = false } = {}) {
+  state.tab = which;
+  for (const t of TABS) {
+    const on = t === which;
+    const btn = $(`seg-${t}`);
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-selected", String(on));
+    btn.tabIndex = on ? 0 : -1;
+    $(t).classList.toggle("active", on);
+    $(t).toggleAttribute("inert", !on);
+  }
+  $("segment").dataset.active = which;
+  if (focus) $(`seg-${which}`).focus();
+  updateStackHeight();
+}
+for (const t of TABS) $(`seg-${t}`).addEventListener("click", () => setTab(t));
+$("segment").addEventListener("keydown", (e) => {
+  const to = nextTabIndex(e.key, TABS.indexOf(state.tab), TABS.length);
+  if (to == null) return;
+  e.preventDefault();
+  setTab(TABS[to], { focus: true });
 });
 
-$("auto-dark").addEventListener("change", (e) => {
-  const patch = { dark: e.target.checked ? null : currentHex(), preset: null };
-  commit(patch);
-  state.hsv = hexToHsv(currentHex());
-  render();
+// The stack is as tall as the active section (it fades between them); resizing is animated.
+const PAD = 8; // room around sections so card shadows and the selection glow aren't clipped
+let measured = false;
+function updateStackHeight() {
+  const stack = $("stack");
+  const content = $(state.tab).firstElementChild;
+  const height = Math.ceil(content.getBoundingClientRect().height);
+  if (!height) return;
+  if (!measured) stack.classList.add("measuring");
+  stack.style.height = `${height + PAD * 2}px`;
+  if (!measured) {
+    measured = true;
+    requestAnimationFrame(() => stack.classList.remove("measuring"));
+  }
+}
+if (typeof ResizeObserver === "function") {
+  const ro = new ResizeObserver(updateStackHeight);
+  ro.observe($("themeGrid"));
+  ro.observe(document.querySelector(".settings-grid"));
+}
+
+// ---------------------------------------------------------------------------
+// Advanced: palette, surfaces, preview
+// ---------------------------------------------------------------------------
+function writeDraftToInputs() {
+  for (const [id, key] of PALETTE) {
+    const value = state.draft[key];
+    $(id).value = value;
+    $(`${id}Hex`).value = value;
+    $(`${id}Hex`).removeAttribute("aria-invalid");
+  }
+  const radio = $(`surface-${state.draft.surfaceKind}`);
+  if (radio) radio.checked = true;
+  $("customSurfaceRow").classList.toggle("hidden", state.draft.surfaceKind !== "custom");
+  renderPreview();
+}
+
+function setDraft(patch) {
+  state.draft = { ...state.draft, ...patch };
+  $("customSurfaceRow").classList.toggle("hidden", state.draft.surfaceKind !== "custom");
+  renderPreview();
+}
+
+function wirePair(id, key) {
+  const color = $(id), hex = $(`${id}Hex`);
+  const patchFor = (value) => (key === "accent" ? { accent: value, link: null } : { [key]: value });
+  color.addEventListener("input", () => { hex.value = color.value; hex.removeAttribute("aria-invalid"); setDraft(patchFor(color.value)); });
+  // Accept a colour as soon as it is six digits; "#abc" is expanded when the field is left.
+  hex.addEventListener("input", () => {
+    const v = normalizeHex(hex.value);
+    hex.setAttribute("aria-invalid", String(!v && hex.value.trim() !== ""));
+    if (v && hex.value.replace("#", "").length === 6) { color.value = v; setDraft(patchFor(v)); }
+  });
+  hex.addEventListener("change", () => {
+    const v = normalizeHex(hex.value);
+    if (v) { hex.value = v; color.value = v; setDraft(patchFor(v)); } else hex.value = color.value;
+    hex.removeAttribute("aria-invalid");
+  });
+}
+for (const [id, key] of PALETTE) wirePair(id, key);
+for (const radio of document.querySelectorAll('input[name="surfaceMode"]')) {
+  radio.addEventListener("change", () => { if (radio.checked) setDraft({ surfaceKind: radio.value }); });
+}
+
+function renderPreview() {
+  const mode = state.previewMode;
+  const s = previewSettings(state.draft);
+  const roles = rolesFor(mode, s);
+  const spec = surfaceSpec(s);
+  const n = PREVIEW_NEUTRALS[mode];
+  const fg = applySurface(n.fg, mode, spec);
+  const vars = {
+    "--p-surface": roles.surface,
+    "--p-fg": fg,
+    "--p-assist": `color-mix(in oklab, ${fg} 6%, transparent)`,
+    "--p-line": n.line,
+    "--p-bubble": roles.tint,
+    "--p-on-bubble": roles.onTint,
+    "--p-text": roles.text,
+    "--p-submit": roles.submit,
+    "--p-on-submit": roles.onSubmit,
+  };
+  for (const [k, v] of Object.entries(vars)) $("preview").style.setProperty(k, v);
+  $("surfaceNote").textContent = surfaceNote(state.draft);
+  for (const m of ["light", "dark"]) $(`pv-${m}`).setAttribute("aria-pressed", String(m === mode));
+}
+for (const m of ["light", "dark"]) {
+  $(`pv-${m}`).addEventListener("click", () => { state.previewMode = m; renderPreview(); });
+}
+
+// Actions
+let appliedTimer = 0;
+function say(text) {
+  $("applied").textContent = text;
+  clearTimeout(appliedTimer);
+  appliedTimer = setTimeout(() => { $("applied").textContent = ""; }, 2000);
+}
+
+$("save").addEventListener("click", () => {
+  commit(applyLook(state.settings, lookFromDraft(state.draft)));
+  say("Applied");
 });
 
-$("tint").addEventListener("input", (e) => commit({ tint: Number(e.target.value), enabled: true, light: effectiveLight(), preset: null }));
-$("enabled").addEventListener("change", (e) => commit({ enabled: e.target.checked, light: effectiveLight() }));
+$("reset").addEventListener("click", () => {
+  commit({ enabled: false });
+  state.draft = { ...DRAFT_DEFAULTS };
+  writeDraftToInputs();
+  say("Back to ChatGPT's colors");
+});
+
+$("random").addEventListener("click", () => {
+  const pick = THEMES[Math.floor(Math.random() * THEMES.length)];
+  state.draft = draftFromSettings({ ...themeLook(pick), enabled: true }, state.previewMode);
+  writeDraftToInputs();
+});
+
+// Saved themes
+const uid = () => `s${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
+
+function saveCurrent() {
+  const look = lookFromDraft(state.draft);
+  if (!look.light || state.saved.length >= MAX_SAVED) return;
+  const base = $("saveName").value.trim().slice(0, 32) || "My theme";
+  const names = new Set(state.saved.map((t) => t.name));
+  let name = base;
+  for (let i = 2; names.has(name); i++) name = `${base} (${i})`;
+  state.saved = [...state.saved, { id: uid(), name, ...look }];
+  writeSaved(state.saved);
+  $("saveName").value = "";
+  renderSaved();
+}
+$("saveThemeBtn").addEventListener("click", saveCurrent);
+$("saveName").addEventListener("keydown", (e) => { if (e.key === "Enter") saveCurrent(); });
+
+function renderSaved() {
+  const list = $("savedList");
+  list.textContent = "";
+  if (!state.saved.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "No saved themes yet";
+    list.append(empty);
+    return;
+  }
+  for (const item of state.saved) {
+    const row = document.createElement("div");
+    row.className = "saved-row";
+    const name = document.createElement("div");
+    name.className = "name";
+    name.textContent = item.name;
+    name.title = item.name;
+    const apply = document.createElement("button");
+    apply.type = "button";
+    apply.className = "btn";
+    apply.textContent = "Apply";
+    apply.setAttribute("aria-label", `Apply ${item.name}`);
+    apply.addEventListener("click", () => {
+      commit(applyLook(state.settings, item));
+      state.draft = draftFromSettings(state.settings, state.previewMode);
+      writeDraftToInputs();
+    });
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "btn";
+    del.textContent = "Delete";
+    del.setAttribute("aria-label", `Delete ${item.name}`);
+    del.addEventListener("click", () => {
+      state.saved = state.saved.filter((t) => t.id !== item.id);
+      writeSaved(state.saved);
+      renderSaved();
+    });
+    row.append(name, apply, del);
+    list.append(row);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// The on/off switch and the rest of the render
+// ---------------------------------------------------------------------------
+$("enabled").addEventListener("change", (e) => {
+  if (e.target.checked && !state.settings.light) commit(applyLook(state.settings, lookFromDraft(state.draft)));
+  else commit({ enabled: e.target.checked });
+});
+
+function render() {
+  $("enabled").checked = state.settings.enabled;
+  renderGrid();
+}
 
 // ---------------------------------------------------------------------------
 // Startup
@@ -278,13 +385,19 @@ async function init() {
   const [{ settings, saved }, { status }] = await Promise.all([loadState(), readLocal(["status"])]);
   state.settings = settings;
   state.saved = saved;
-  state.hsv = hexToHsv(currentHex());
+  state.draft = draftFromSettings(settings, state.previewMode);
+  buildGrid();
+  writeDraftToInputs();
+  renderSaved();
   render();
+  setTab("basic");
   // Only speak up when the last ChatGPT page load found nothing to recolour.
   if (status && !status.ok && settings.enabled) {
     $("status").hidden = false;
-    $("status").textContent = "ChatGPT changed its styles and the extension couldn't find its color tokens on the last page load, so colors are paused. Check for an update.";
+    $("status").textContent = "ChatGPT changed its styles, so colors are paused until the extension is updated.";
+    updateStackHeight();
   }
+  document.body.dataset.ready = "true";
 }
 
 init();
