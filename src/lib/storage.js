@@ -5,7 +5,7 @@
 //   sync.saved     saved favourites
 //   local.live     copy of settings written on every popup change, so open
 //                  ChatGPT tabs repaint instantly without hitting sync quotas
-//   local.tokens   last token discovery, applied at document_start (no flash)
+//   local.tokens   last token discovery; validated against current CSS before applying
 //   local.status   what the last ChatGPT tab found, shown in the popup if broken
 import { migrate, normalizeSettings } from "./settings.js";
 

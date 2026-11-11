@@ -29,7 +29,7 @@ MV3 browser extension: recolors chatgpt.com's accent (any color, separate light/
 
 ## Hazards
 - Only logged-out chatgpt.com has been verified (no account available). Logged-in UI may use extra groups.
-- Content script must never throw into the page; everything is try/catch'd and degrades to no styling.
+- Content script must never throw into the page; everything is try/catch'd and degrades to no styling. Cached tokens are candidates only: validate current CSS before rendering; a null discovery must clear tokens, remove overrides and write failed status even with zero rules.
 - storage.sync quotas: popup writes `local.live` per change (instant repaint) and debounces `sync.settings` (400 ms, flushed on pagehide). Content picks the newer by `updatedAt`.
 - Native `<input type=color>` closes Firefox popups; hence the custom HSV picker.
 - `npm` 11 warns about blocked install scripts; esbuild still works through its optional platform package.

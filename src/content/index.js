@@ -1,7 +1,7 @@
 // Content script for chatgpt.com. Runs at document_start.
 //
-// 1. Paint immediately from the token map cached by the previous visit.
-// 2. Once ChatGPT's stylesheets load, rediscover tokens from the live CSS and
+// 1. Validate the previous token map against this page's loaded stylesheets.
+// 2. As ChatGPT's stylesheets load, rediscover tokens from the live CSS and
 //    repaint if anything moved (ChatGPT ships hashed StyleX variable names).
 // 3. Repaint whenever settings change (popup edits arrive via storage.local).
 // Every step is wrapped so a ChatGPT redesign degrades to "no colours", never
@@ -81,13 +81,13 @@ function rediscover() {
   try {
     const { rules, sawLegacy } = readRules();
     const found = discoverTokens(rules);
-    const changed = (found && !sameDiscovery(found, tokens)) || sawLegacy !== legacy;
-    if (found) tokens = found;
+    const changed = !sameDiscovery(found, tokens);
+    // A cached map is only a candidate. Never keep styling a new site version
+    // with yesterday's tokens when its current CSS no longer matches.
+    tokens = found;
     legacy = sawLegacy;
-    if (changed) {
-      render();
-      if (found) writeLocal({ tokens: found });
-    }
+    render();
+    if (changed) writeLocal({ tokens: found });
     const status = {
       ok: Boolean(tokens) || legacy,
       accentTokens: tokens ? Object.keys(tokens.accent).length : 0,
@@ -97,7 +97,7 @@ function rediscover() {
       build: document.documentElement.dataset.build || null,
     };
     const key = JSON.stringify(status);
-    if (key !== lastStatus && rules.length) {
+    if (key !== lastStatus) {
       lastStatus = key;
       writeLocal({ status: { ...status, at: Date.now() } });
     }
@@ -116,15 +116,18 @@ async function start() {
   const [{ settings: s }, cached] = await Promise.all([loadState(), readLocal(["tokens"])]);
   settings = s;
   tokens = cached.tokens || null;
-  render();
+  // Reading extension storage is asynchronous, so styles may already be ready.
+  // Validate now rather than optimistically applying a potentially stale cache.
+  rediscover();
 
   // Stylesheet <link>s fire "load" (non-bubbling, so listen in capture phase).
+  // Validate in this event, before rendering, instead of painting the site's
+  // default accent for a debounce interval after a new stylesheet arrives.
   document.addEventListener("load", (e) => {
-    if (e.target?.tagName === "LINK" || e.target?.tagName === "STYLE") scheduleRediscover();
+    if (e.target?.tagName === "LINK" || e.target?.tagName === "STYLE") rediscover();
   }, true);
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => scheduleRediscover(0), { once: true });
-  else scheduleRediscover(0);
-  window.addEventListener("load", () => { scheduleRediscover(0); setTimeout(render, 3000); }, { once: true });
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", rediscover, { once: true });
+  window.addEventListener("load", () => { rediscover(); setTimeout(render, 3000); }, { once: true });
   // SPA navigations can load route stylesheets and occasionally rebuild <head>.
   document.addEventListener("visibilitychange", () => { if (!document.hidden) { render(); scheduleRediscover(); } });
 
