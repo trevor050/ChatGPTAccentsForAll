@@ -83,6 +83,19 @@ export function retint(refHex, userFillHex, refFillHex = REFERENCE.fill) {
   return withAlpha(out, alpha);
 }
 
+/**
+ * Move a variant of a reference colour (a hover or pressed shade, a translucent
+ * focus ring) onto a new base colour: the same lightness and chroma offsets from
+ * the new base as the variant had from the old one, and the variant's alpha.
+ */
+export function shiftLike(variantHex, refBaseHex, targetHex) {
+  const v = hexToOklch(variantHex), base = hexToOklch(refBaseHex), t = hexToOklch(targetHex);
+  if (!v || !base || !t) return targetHex;
+  const L = Math.min(1, Math.max(0, t.L + (v.L - base.L)));
+  const C = base.C > 0.01 ? Math.min(0.37, t.C * (v.C / base.C)) : t.C;
+  return withAlpha(oklchToHex({ L, C, H: t.H }), parseColor(variantHex).a);
+}
+
 function withAlpha(hex, a) {
   if (a >= 1) return hex.slice(0, 7);
   const c = parseColor(hex);
@@ -206,14 +219,15 @@ export function readable(text, bg, min) {
  *   onSubmit  its icon/label colour
  *   tint      user bubble background      onTint  user bubble text
  *   text      accent-coloured text on the page (links)
- *   surface   page background
+ *   surface   page background (ChatGPT's reference one unless `page.surface` is given)
  */
-export function rolesFor(mode, settings, minText = TEXT_CONTRAST) {
+export function rolesFor(mode, settings, minText = TEXT_CONTRAST, page = {}) {
   const ref = REFERENCE[mode];
   const r = settings.roles || {};
   const fill = resolveAccents(settings)[mode];
   const spec = surfaceSpec(settings);
-  const surface = applySurface(ref.surface, mode, spec);
+  // `page.surface`: the actual page background when the shell declares one (signed-in ChatGPT).
+  const surface = applySurface(page.surface || ref.surface, mode, spec);
   const strength = spec?.strength ?? 0;
   const minUi = minText > TEXT_CONTRAST ? UI_CONTRAST_MORE : UI_CONTRAST;
 
