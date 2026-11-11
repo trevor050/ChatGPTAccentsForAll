@@ -33,6 +33,9 @@ export const UI_CONTRAST = 3;
 /** Same, when the OS asks for more contrast (`prefers-contrast: more`). */
 export const UI_CONTRAST_MORE = 4.5;
 
+const DEFAULT_DARK_L = hexToOklch(REFERENCE.dark.surface).L;
+/** With `reshape`, ChatGPT's pure-black dark greys land this fraction of the way to the theme's own surface. */
+const RESHAPE_FLOOR = 0.88;
 const ACHROMATIC = 0.025;
 const isAchromatic = (lch) => lch.C < ACHROMATIC;
 
@@ -98,17 +101,24 @@ function withAlpha(hex, a) {
  * darkens in dark mode and brightens in light mode (both only ever *increase*
  * contrast with text), negative lightens dark surfaces a little. Text-side greys
  * never move.
+ *
+ * `reshape` (dark mode) goes one step further for a theme that has its own dark
+ * background: opaque dark greys are mapped onto that background's lightness
+ * (ChatGPT's #212121 becomes the theme's colour, its pure-black page a little
+ * below it), keeping their order, so a warm brown theme isn't a black page with a hint of brown.
  */
-export function tintNeutral(hex, hue, strength, mode = "light", depth = 0) {
+export function tintNeutral(hex, hue, strength, mode = "light", depth = 0, reshape = false) {
   const c = parseColor(hex);
   if (!c || (strength <= 0 && !depth)) return hex;
   const lch = hexToOklch(hex);
   const s = Math.min(100, Math.max(0, strength)) / 100;
   const isSurfaceSide = mode === "light" ? lch.L >= 0.5 : lch.L < 0.5;
   let L = lch.L;
-  if (depth && isSurfaceSide) L = mode === "light" ? 1 - (1 - L) * (1 - depth) : L * (1 - depth);
+  const reshaped = reshape && mode === "dark" && isSurfaceSide && c.a >= 1;
+  if (reshaped) L = DEFAULT_DARK_L * (1 - depth) * (RESHAPE_FLOOR + (1 - RESHAPE_FLOOR) * (L / DEFAULT_DARK_L));
+  else if (depth && isSurfaceSide) L = mode === "light" ? 1 - (1 - L) * (1 - depth) : L * (1 - depth);
   if (mode === "light" && L > 0.94) L -= s * 0.03 * ((L - 0.94) / 0.06 + 0.4);
-  if (mode === "dark" && L < 0.2) L += s * 0.2 * (1 - L / 0.2);
+  if (mode === "dark" && L < 0.2 && !reshaped) L += s * 0.2 * (1 - L / 0.2);
   const C = s * (isSurfaceSide ? 0.045 : 0.012);
   return toHex({ ...parseColor(oklchToHex({ L, C, H: hue })), a: c.a });
 }
@@ -131,7 +141,6 @@ export function accentSurface(refHex, fillHex, tint = 0, refFillHex = REFERENCE.
 
 /** Base colours behind the "Dark" and "Light" surface choices (as in the 1.x popup). */
 export const SURFACE_COLORS = { dark: "#0f0f10", light: "#ffffff" };
-const DEFAULT_DARK_L = hexToOklch(REFERENCE.dark.surface).L;
 const CHROMA_AT_FULL_TINT = 0.045;
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
@@ -144,7 +153,7 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
  *     lightness (so text contrast is unchanged), and
  *   - its lightness only to the mode it belongs to: a dark colour deepens (or lifts)
  *     dark mode's greys, a near-white colour brightens light mode's greys.
- * Returns { hue, strength, darkDepth, lightDepth }.
+ * Returns { hue, strength, darkDepth, lightDepth, reshapeDark }.
  */
 export function surfaceSpec(settings) {
   const surface = settings?.surface;
@@ -157,6 +166,7 @@ export function surfaceSpec(settings) {
     hue: lch.H,
     strength,
     darkDepth: lch.L < 0.5 ? clamp(1 - lch.L / DEFAULT_DARK_L, -0.3, 0.85) : 0,
+    reshapeDark: lch.L < 0.5,
     lightDepth: lch.L >= 0.5 ? clamp((lch.L - 0.95) / 0.05, 0, 1) * 0.5 : 0,
   };
 }
@@ -164,7 +174,7 @@ export function surfaceSpec(settings) {
 /** Tint one neutral colour (any role) the way the user's surface choice asks. */
 export function applySurface(hex, mode, spec) {
   if (!spec) return hex;
-  return tintNeutral(hex, spec.hue, spec.strength, mode, mode === "dark" ? spec.darkDepth : spec.lightDepth);
+  return tintNeutral(hex, spec.hue, spec.strength, mode, mode === "dark" ? spec.darkDepth : spec.lightDepth, spec.reshapeDark);
 }
 
 /**

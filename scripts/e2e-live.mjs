@@ -32,7 +32,7 @@ try {
 
   const popup = await ctx.newPage();
   await popup.goto(`chrome-extension://${extId}/popup.html`);
-  await popup.waitForSelector("#swatches .swatch");
+  await popup.waitForSelector(".theme-card");
 
   const status = await popup.evaluate(() => new Promise((r) => chrome.storage.local.get(["status", "tokens"], r)));
   check("discovery found accent tokens", status.status?.accentTokens > 5, JSON.stringify(status.status));
@@ -43,21 +43,28 @@ try {
   const read = (name) => page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
   const before = await read(fillVar);
 
-  // Type a custom colour into the popup.
-  await popup.fill("#hex", "#e11d48");
-  await popup.locator("#hex").dispatchEvent("change");
+  // Click a named theme: its send-button colour becomes the page's accent fill.
+  await popup.locator('.theme-card[data-id="crimson"]').click();
   await page.waitForTimeout(800);
   const after = await read(fillVar);
-  check("custom hex recolours the live page", /e11d48/i.test(after), `${before} -> ${after}`);
+  check("clicking a theme recolours the live page", /b91c1c/i.test(after), `${before} -> ${after}`);
 
   // Reload the ChatGPT tab: colour must persist (and be painted from cache at document_start).
   await page.reload({ waitUntil: "domcontentloaded" });
   const early = await read(fillVar).catch(() => "");
   await page.waitForTimeout(3000);
-  check("colour persists across reload", /e11d48/i.test(await read(fillVar)), `at DOMContentLoaded: "${early}"`);
+  check("colour persists across reload", /b91c1c/i.test(await read(fillVar)), `at DOMContentLoaded: "${early}"`);
+
+  // Advanced: make a custom theme, apply it.
+  await popup.click("#seg-advanced");
+  await popup.fill("#submitBgHex", "#7c3aed");
+  await popup.click("#save");
+  await page.waitForTimeout(800);
+  check("Advanced Apply recolours the live page", /7c3aed/i.test(await read(fillVar)), await read(fillVar));
+  await popup.click("#seg-basic");
 
   const stored = await popup.evaluate(() => new Promise((r) => chrome.storage.sync.get(["settings"], r)));
-  check("settings saved to storage.sync", stored.settings?.light === "#e11d48", JSON.stringify(stored.settings));
+  check("settings saved to storage.sync", stored.settings?.theme === "custom" && stored.settings?.roles?.submitBg === "#7c3aed", JSON.stringify(stored.settings));
 
   // Turning it off restores ChatGPT's own value.
   await popup.click(".switch");

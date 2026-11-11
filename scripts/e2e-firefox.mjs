@@ -51,12 +51,15 @@ try {
   const t = status.tokens;
   const fillVar = Object.entries(t.accent).find(([, v]) => v.kind === "color" && v.light === t.referenceFill && v.dark === t.referenceFill)?.[0];
 
-  // The popup opens on the tab matching the OS theme; edit the light accent explicitly.
-  await driver.findElement(By.id("tab-light")).click();
-  const hex = await driver.findElement(By.id("hex"));
+  // Advanced tab: type the send-button colour into its hex field (Firefox closes the popup for
+  // the native picker, so the field is the control there), then Apply.
+  await driver.findElement(By.id("seg-advanced")).click();
+  await sleep(400);
+  const hex = await driver.findElement(By.id("submitBgHex"));
   await hex.click();
   await driver.executeScript("arguments[0].select();", hex); // select all, then type over it
   await hex.sendKeys("#7c3aed");
+  await driver.findElement(By.id("save")).click();
   await sleep(1200);
   if (shots) fs.writeFileSync(path.join(shots, "firefox-popup.png"), await driver.takeScreenshot(), "base64");
   const popupHandle = await driver.getWindowHandle();
@@ -64,7 +67,7 @@ try {
   await driver.switchTo().window(chatHandle);
   const read = () => driver.executeScript(`return getComputedStyle(document.documentElement).getPropertyValue(${JSON.stringify(fillVar)}).trim();`);
   const isOurs = (v) => /^#7c3aed$|^light-dark\(#7c3aed,/i.test(v);
-  check("popup edit recolours the live page", isOurs(await read()), await read());
+  check("popup Apply recolours the live page", isOurs(await read()), await read());
   await driver.navigate().refresh();
   await sleep(6000);
   check("colour persists across reload", isOurs(await read()), await read());
@@ -72,7 +75,7 @@ try {
 
   await driver.switchTo().window(popupHandle);
   const stored = await driver.executeAsyncScript("const done = arguments[0]; chrome.storage.sync.get(['settings'], done);");
-  check("settings saved to storage.sync", stored.settings?.light === "#7c3aed", JSON.stringify(stored.settings));
+  check("settings saved to storage.sync", stored.settings?.roles?.submitBg === "#7c3aed", JSON.stringify(stored.settings));
 } finally {
   await driver.quit();
 }

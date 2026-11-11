@@ -202,6 +202,21 @@ describe("surfaces", () => {
     }
   });
 
+  it("a theme's own dark background reaches ChatGPT's pure-black page too", () => {
+    const BLACK_PAGE = "--xxsqvjy"; // #000 in dark mode on logged-out chatgpt.com
+    const mocha = pair(css(themed("mocha"))[BLACK_PAGE]);
+    const L = hexToOklch(mocha.dark).L;
+    expect(L).toBeGreaterThan(0.17); // the warm brown theme isn't a black page...
+    expect(L).toBeLessThan(hexToOklch("#221b18").L + 0.01); // ...and never lighter than its own background
+    expect(hexToOklch(mocha.light).L).toBeGreaterThan(0.95); // light mode: a tint only, still a light page
+    for (const t of THEMES) {
+      const d = css(themed(t.id));
+      const page = d[BLACK_PAGE] ? pair(d[BLACK_PAGE]).dark : "#000000";
+      const text = d[PAGE_TEXT] ? pair(d[PAGE_TEXT]).dark : discovery.neutrals[PAGE_TEXT].dark;
+      expect(contrastRatio(text, page), `${t.id} on the logged-out page`).toBeGreaterThan(10);
+    }
+  });
+
   it("depth only ever increases contrast with text", () => {
     const text = { light: "#0d0d0d", dark: "#ffffff" };
     for (const mode of ["light", "dark"]) {
