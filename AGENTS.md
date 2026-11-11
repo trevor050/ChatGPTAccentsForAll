@@ -11,7 +11,7 @@ MV3 browser extension: recolors chatgpt.com's accent (any color, separate light/
 - `npm run build | test | lint | zip` ; `npm run check` = all.
 - Live checks (headed browser, NOT CI; Cloudflare blocks headless): `node scripts/e2e-live.mjs`, `e2e-upgrade.mjs` (v1.1.0 -> current migration), `e2e-firefox.mjs` (needs `brew install geckodriver`, stock Firefox), `screenshots.mjs` (README images), `capture-fixture.mjs` (fresh CSS fixture). Headed Chromium + `--disable-blink-features=AutomationControlled` + no `--enable-automation` gets past Cloudflare on chatgpt.com.
 - Chromium unpacked extension id = sha256(realpath) first 32 hex mapped 0-f -> a-p (used by scripts to open popup.html).
-- Firefox via WebDriver: can't navigate to moz-extension://; scripts open it from chrome context (geckodriver `--allow-system-access`), fixed UUID via pref `extensions.webextensions.uuids`.
+- Firefox WebDriver: open extension pages from chrome context (`--allow-system-access`), using the runtime WebExtensionPolicy hostname. Install the local ZIP by `path`; Selenium's Base64 install left Windows Firefox referring to a deleted addon-test XPI (active addon, but empty popup and no content script). `ACCENTS_TEST_PROFILE` reuses a persistent test profile.
 
 ## How theming works (ChatGPT as of 2026-11-10)
 - ChatGPT uses StyleX: hashed var names (`--x1e4keym`), atomic classes. Built-in accent setting = theme class on `<html>` (blue `x13qp82k` default; ~10 variants) shaped `.X.X, .X.X:root { --a; --b; ... }`, defaults in `:root, .xsajpkq`.

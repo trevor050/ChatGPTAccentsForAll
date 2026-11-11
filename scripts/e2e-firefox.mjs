@@ -3,6 +3,7 @@
 // and checks chatgpt.com picks it up and keeps it across a reload.
 // Usage: npm run zip && node scripts/e2e-firefox.mjs [--shots dir]
 import { Builder, By } from "selenium-webdriver";
+import { Command } from "selenium-webdriver/lib/command.js";
 import firefox from "selenium-webdriver/firefox.js";
 import fs from "node:fs";
 import path from "node:path";
@@ -13,15 +14,19 @@ const xpi = path.join(root, `dist/chatgpt-accents-firefox-${version}.zip`);
 const shotsArg = process.argv.indexOf("--shots");
 const shots = shotsArg > 0 ? path.resolve(process.argv[shotsArg + 1]) : null;
 const ADDON_ID = "chatgpt-accents-for-all@trevor050.github.io";
-const UUID = "5e7b2a1c-0000-4000-8000-00000000c0de";
 // Let Selenium locate the installed Firefox on Windows/Linux. A macOS app
 // bundle path is not a valid fallback on either of those platforms.
 const binary = process.env.FIREFOX_BIN || (process.platform === "darwin" ? "/Applications/Firefox.app/Contents/MacOS/firefox" : null);
 
 const options = new firefox.Options()
-  .setPreference("extensions.webextensions.uuids", JSON.stringify({ [ADDON_ID]: UUID }))
   .windowSize({ width: 1280, height: 860 });
 if (binary) options.setBinary(binary);
+// Reuse an explicitly selected test profile without copying or deleting it.
+if (process.env.ACCENTS_TEST_PROFILE) {
+  const profile = path.resolve(process.env.ACCENTS_TEST_PROFILE);
+  fs.mkdirSync(profile, { recursive: true });
+  options.addArguments("-profile", profile);
+}
 // geckodriver must be told to allow chrome-context scripts (used to open the popup page).
 const service = new firefox.ServiceBuilder().addArguments("--allow-system-access");
 const driver = await new Builder().forBrowser("firefox").setFirefoxOptions(options).setFirefoxService(service).build();
@@ -30,7 +35,13 @@ const check = (name, ok, detail = "") => { results.push(ok); console.log(`${ok ?
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 try {
-  await driver.installAddon(xpi, true);
+  // This driver runs on this machine. Keep the original package as its backing
+  // file: Selenium's Base64 path can leave Windows Firefox pointing at an
+  // already-deleted addon-test-*.xpi, so none of the extension resources load.
+  await driver.execute(new Command("install addon").setParameter("path", xpi).setParameter("temporary", true));
+  await driver.setContext(firefox.Context.CHROME);
+  const uuid = await driver.executeScript("return WebExtensionPolicy.getByID(arguments[0]).mozExtensionHostname;", ADDON_ID);
+  await driver.setContext(firefox.Context.CONTENT);
   await driver.get("https://chatgpt.com/");
   await sleep(9000);
   const title = await driver.getTitle();
@@ -41,11 +52,13 @@ try {
   // as a tab from Firefox's privileged (chrome) context.
   const before = new Set(await driver.getAllWindowHandles());
   await driver.setContext(firefox.Context.CHROME);
-  await driver.executeScript(`gBrowser.selectedTab = gBrowser.addTab(arguments[0], { triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal() });`, `moz-extension://${UUID}/popup.html`);
+  await driver.executeScript(`gBrowser.selectedTab = gBrowser.addTab(arguments[0], { triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal() });`, `moz-extension://${uuid}/popup.html`);
   await driver.setContext(firefox.Context.CONTENT);
   await sleep(1000);
   const popupTab = (await driver.getAllWindowHandles()).find((h) => !before.has(h));
   await driver.switchTo().window(popupTab);
+  await driver.wait(() => driver.executeScript("return Boolean(document.title && document.body?.children.length);"), 10_000,
+    "Firefox did not load the extension resource document; inspect the browser console and package path.");
   const status = await driver.executeAsyncScript("const done = arguments[0]; chrome.storage.local.get(['status', 'tokens'], done);");
   check("discovery found accent tokens", status.status?.accentTokens > 5, JSON.stringify(status.status));
   const t = status.tokens;
