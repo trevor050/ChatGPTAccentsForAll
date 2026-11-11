@@ -5,6 +5,7 @@ MV3 browser extension: themes chatgpt.com (72 named themes from the 1.x popup, o
 ## Layout
 - `src/lib/` pure logic, unit tested: `color.js` (parse, OKLCH, WCAG, ensureContrast, HSV), `discover.js` (find tokens in CSS rules), `theme.js` (palette math, REFERENCE palette, `rolesFor`, `readable` safety net, surface spec/`tintNeutral`), `css.js` (build override stylesheet), `themes.js` (the 72 themes, original 1.x values), `settings.js` (v3 schema, 1.x and 2.0.0 migrations), `storage.js` (chrome.storage wrapper).
 - `src/content/index.js` content script (document_start). `src/popup/` popup UI (`popup.js` DOM, `model.js` DOM-free logic, `fonts/` bundled DM Sans + OFL). `src/manifest.json` base manifest; `scripts/build.mjs` writes per-browser manifests into `dist/chrome`, `dist/firefox` (esbuild IIFE bundles, unminified for store review).
+- Icon: source `assets/icon/icon.svg` (128 grid -> 48/64/96/128) plus hand-drawn `icon-32.svg`/`icon-16.svg` for the toolbar; `node scripts/icons.mjs` (Playwright Chromium) writes `src/icons/*.png`, which are committed. Swatch bubble, tail right, indigo ramp #a9aeff/#8288ff/#5f63e6; no rainbow, nothing resembling OpenAI marks.
 - `test/fixtures/chatgpt-*.json` captured chatgpt.com CSS rules (`:root` + theme-class rules with custom props).
 
 ## Commands (Node >= 22.12; `/opt/homebrew/bin/node` on Trevor's Mac, default shell node is 20)
