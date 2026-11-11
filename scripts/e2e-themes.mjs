@@ -42,6 +42,8 @@ try {
   await page.keyboard.press("Escape");
   const box = page.locator('[contenteditable="true"], textarea').first();
   await box.click();
+  // A persistent browser profile can restore a previous ChatGPT draft.
+  await box.fill("");
   await box.pressSequentially(MESSAGE);
   await page.keyboard.press("Enter");
   await page.waitForTimeout(16_000);
