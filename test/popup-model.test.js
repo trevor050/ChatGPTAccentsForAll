@@ -43,7 +43,7 @@ describe("advanced draft", () => {
     expect(draft.bubbleBg).toMatch(/^#[0-9a-f]{6}$/);
   });
   it("describes each surface choice", () => {
-    expect(surfaceNote({ surfaceKind: "default" })).toMatch(/default/i);
+    expect(surfaceNote({ surfaceKind: "default" })).toMatch(/ChatGPT's own page/);
     expect(surfaceNote({ surfaceKind: "dark" })).toMatch(/dark mode/i);
     expect(surfaceNote({ surfaceKind: "light" })).toMatch(/light mode/i);
     expect(surfaceNote({ surfaceKind: "custom", surfaceColor: "#0b1f26" })).toMatch(/Dark/);

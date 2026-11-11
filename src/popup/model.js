@@ -67,7 +67,7 @@ export function surfaceNote(draft) {
       ? "Custom background: Dark. Reshapes dark mode, lightly tints light mode."
       : "Custom background: Light. Reshapes light mode, lightly tints dark mode.";
   }
-  return "Using site default background";
+  return "ChatGPT's own page, in light and dark mode.";
 }
 
 /**

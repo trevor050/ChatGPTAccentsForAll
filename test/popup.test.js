@@ -5,7 +5,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { THEMES } from "../src/lib/themes.js";
+import { THEMES, THEME_GROUPS } from "../src/lib/themes.js";
+import { ORIGINAL_THEMES } from "../src/lib/themes-original.js";
 import { buildV1Vars, V1_PRESETS } from "./helpers/v1.js";
 
 const html = fs.readFileSync(path.resolve(import.meta.dirname, "../src/popup/popup.html"), "utf8");
@@ -41,95 +42,119 @@ async function openPopup(storage = fakeStorage()) {
   await import("../src/popup/popup.js");
   await vi.waitFor(() => expect(document.body.dataset.ready).toBe("true"));
   const $ = (id) => document.getElementById(id);
-  const cards = () => [...document.querySelectorAll(".theme-card")];
+  const cards = () => [...document.querySelectorAll(".theme")];
   const key = (el, k, init = {}) => el.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true, ...init }));
   const flush = () => window.dispatchEvent(new Event("pagehide")); // popups save on close
   const settledLive = () => vi.waitFor(() => expect(storage.data.local.live).toBeDefined());
-  return { $, cards, key, flush, storage, settledLive, byId: (id) => document.querySelector(`.theme-card[data-id="${id}"]`) };
+  return { $, cards, key, flush, storage, settledLive, byId: (id) => document.querySelector(`.theme[data-id="${id}"]`), tab: (id) => document.getElementById(`tab-${id}`), panel: (id) => document.getElementById(`panel-${id}`) };
 }
 
 const checked = (cards) => cards.filter((c) => c.getAttribute("aria-checked") === "true").map((c) => c.dataset.id);
 
-describe("theme grid", () => {
+describe("themes", () => {
   beforeEach(() => { document.body.innerHTML = ""; });
 
-  it("shows Default plus every original theme, as a radio group with one tab stop", async () => {
-    const { cards, $ } = await openPopup();
+  it("lists ChatGPT's own plus every theme, in its group, as radio groups with one tab stop each", async () => {
+    const { cards, tab, panel } = await openPopup();
     expect(cards()).toHaveLength(THEMES.length + 1);
-    expect(cards()[0].textContent).toContain("Default");
-    expect($("themeGrid").getAttribute("role")).toBe("radiogroup");
-    expect(cards().every((c) => c.getAttribute("role") === "radio")).toBe(true);
+    expect(cards()[0].textContent).toContain("ChatGPT's own");
+    for (const g of THEME_GROUPS) {
+      expect(tab(g.id).textContent).toBe(g.name);
+      const list = panel(g.id).querySelector("[role=radiogroup]");
+      const ids = [...list.querySelectorAll("[role=radio]")].map((b) => b.dataset.id);
+      expect(ids).toEqual([...(g.id === "classic" ? ["default"] : []), ...THEMES.filter((t) => t.group === g.id).map((t) => t.id)]);
+      expect([...list.querySelectorAll("[role=radio]")].filter((b) => b.tabIndex === 0)).toHaveLength(1);
+    }
+    expect(tab("saved")).toBeNull(); // only when there are saved themes
     expect(checked(cards())).toEqual(["default"]);
-    expect(cards().filter((c) => c.tabIndex === 0)).toHaveLength(1);
-    expect(cards()[0].tabIndex).toBe(0);
   });
 
-  it("names, badges and colours match the original cards", async () => {
+  it("opens on the group of the chosen theme and shows one group at a time", async () => {
+    const storage = fakeStorage({ sync: { settings: { v: 4, enabled: true, theme: "ocean", light: "#2dd4bf", roles: { bubbleBg: "#073642", bubbleText: "#e0fbfc", submitBg: "#0ea5a4", submitText: "#002b36", link: "#38bdf8" }, surface: { kind: "custom", color: "#0b1f26" }, updatedAt: 1 } } });
+    const { tab, panel } = await openPopup(storage);
+    expect(tab("dark").getAttribute("aria-selected")).toBe("true");
+    expect(panel("dark").hidden).toBe(false);
+    expect(panel("classic").hidden).toBe(true);
+  });
+
+  it("marks Purple and Black as the formerly paywalled ones", async () => {
     const { byId } = await openPopup();
-    const purple = byId("purple_plus");
-    expect(purple.querySelector(".badge.plus").textContent).toBe("Plus");
-    expect(byId("black_pro").querySelector(".badge.pro").textContent).toBe("Pro");
-    expect(byId("ocean").querySelector(".badge.bg-dark").textContent).toBe("Background: Dark");
-    expect(byId("pastel_sky").querySelector(".badge.bg-light").textContent).toBe("Background: Light");
-    expect(byId("blue").querySelectorAll(".pill")).toHaveLength(3);
-    expect(byId("blue").querySelector(".dot").style.background).toBe("rgb(29, 116, 255)");
-    // a theme with a background shows it as the middle pill, otherwise the bubble
-    expect(byId("ocean").querySelectorAll(".pill")[1].style.background).toBe("rgb(11, 31, 38)");
-    expect(byId("blue").querySelectorAll(".pill")[1].style.background).toBe("rgb(11, 58, 122)");
+    expect(byId("purple_plus").querySelector(".was").textContent).toBe("$20/mo free");
+    expect(byId("purple_plus").querySelector(".was s").textContent).toBe("$20/mo");
+    expect(byId("black_pro").querySelector(".was").textContent).toBe("$200/mo free");
+    expect(byId("black_pro").getAttribute("aria-label")).toMatch(/^Black, once a ChatGPT Pro color/);
+    expect(byId("blue").querySelector(".was")).toBeNull();
   });
 
-  it("arrow keys move through the grid and select as they go", async () => {
-    const { cards, key, flush, storage, $ } = await openPopup();
-    cards()[0].focus();
-    key(document.activeElement, "ArrowRight"); // Default -> Blue
-    expect(document.activeElement.dataset.id).toBe("blue");
-    expect(checked(cards())).toEqual(["blue"]);
-    expect($("enabled").checked).toBe(true);
-    expect(cards().find((c) => c.tabIndex === 0).dataset.id).toBe("blue"); // the tab stop follows selection
+  it("draws each theme as its colours in miniature", async () => {
+    const { byId } = await openPopup();
+    const ocean = byId("ocean").querySelector(".chip").style;
+    expect(ocean.getPropertyValue("--chip-page")).toBe("#0b1f26");
+    expect(ocean.getPropertyValue("--chip-bubble")).toBe("#073642");
+    expect(ocean.getPropertyValue("--chip-send")).toBe("#0ea5a4");
+    expect(ocean.getPropertyValue("--chip-accent")).toBe("#2dd4bf");
+    expect(byId("blue").querySelector(".chip").style.getPropertyValue("--chip-page")).toBe(""); // ChatGPT's page
+  });
 
-    key(document.activeElement, "ArrowDown"); // one row down in a 2-column grid: Yellow
-    expect(document.activeElement.dataset.id).toBe("yellow");
-    key(document.activeElement, "ArrowUp");
+  it("arrow keys move through a group's two columns and select as they go", async () => {
+    const { key, flush, storage, $, byId, panel } = await openPopup();
+    const items = () => [...panel("classic").querySelectorAll(".theme")];
+    byId("default").focus();
+    key(document.activeElement, "ArrowRight"); // ChatGPT's own -> Blue
     expect(document.activeElement.dataset.id).toBe("blue");
+    expect(checked(items())).toEqual(["blue"]);
+    expect($("enabled").checked).toBe(true);
+    expect(items().find((c) => c.tabIndex === 0).dataset.id).toBe("blue"); // the tab stop follows selection
+    key(document.activeElement, "ArrowDown"); // one row down: Teal
+    expect(document.activeElement.dataset.id).toBe("teal");
+    key(document.activeElement, "ArrowUp");
     key(document.activeElement, "ArrowLeft");
     expect(document.activeElement.dataset.id).toBe("default");
-    expect(checked(cards())).toEqual(["default"]);
     expect($("enabled").checked).toBe(false);
-
-    key(document.activeElement, "ArrowLeft"); // wraps to the last theme
-    expect(document.activeElement.dataset.id).toBe(THEMES.at(-1).id);
-    key(document.activeElement, "Home");
-    expect(document.activeElement.dataset.id).toBe("default");
     key(document.activeElement, "End");
-    expect(document.activeElement.dataset.id).toBe(THEMES.at(-1).id);
+    const last = THEMES.filter((t) => t.group === "classic").at(-1).id;
+    expect(document.activeElement.dataset.id).toBe(last);
     key(document.activeElement, "ArrowDown"); // bottom edge: stays
-    expect(document.activeElement.dataset.id).toBe(THEMES.at(-1).id);
-
+    expect(document.activeElement.dataset.id).toBe(last);
     flush();
-    await vi.waitFor(() => expect(storage.data.sync.settings.theme).toBe(THEMES.at(-1).id));
+    await vi.waitFor(() => expect(storage.data.sync.settings.theme).toBe(last));
   });
 
   it("ignores other keys and modified arrows", async () => {
-    const { cards, key } = await openPopup();
-    cards()[0].focus();
+    const { byId, key, cards } = await openPopup();
+    byId("default").focus();
     key(document.activeElement, "a");
     key(document.activeElement, "ArrowRight", { ctrlKey: true });
     expect(document.activeElement.dataset.id).toBe("default");
     expect(checked(cards())).toEqual(["default"]);
   });
 
-  it("choosing a theme writes all its roles, for the page and for sync", async () => {
-    const { byId, flush, storage, settledLive } = await openPopup();
-    byId("sunset").click();
-    await settledLive();
-    const live = storage.data.local.live;
-    expect(live).toMatchObject({ v: 3, enabled: true, theme: "sunset", light: "#fb7185" });
-    expect(live.roles).toMatchObject({ bubbleBg: "#7c2d12", bubbleText: "#fde2e4", submitBg: "#f97316", submitText: "#111111" });
-    flush();
-    await vi.waitFor(() => expect(storage.data.sync.settings.theme).toBe("sunset"));
+  it("group tabs follow the arrow keys", async () => {
+    const { tab, panel, key } = await openPopup();
+    tab("classic").focus();
+    key(tab("classic"), "ArrowRight");
+    expect(document.activeElement).toBe(tab("dark"));
+    expect(tab("dark").getAttribute("aria-selected")).toBe("true");
+    expect(tab("classic").tabIndex).toBe(-1);
+    expect(panel("dark").hidden).toBe(false);
+    key(tab("dark"), "End");
+    expect(tab("character").getAttribute("aria-selected")).toBe("true");
+    key(tab("character"), "ArrowRight"); // wraps
+    expect(tab("classic").getAttribute("aria-selected")).toBe("true");
   });
 
-  it("Default turns it off but remembers the colours for the switch", async () => {
+  it("choosing a theme writes all its roles, for the page and for sync", async () => {
+    const { byId, flush, storage, settledLive } = await openPopup();
+    byId("synthwave").click();
+    await settledLive();
+    const live = storage.data.local.live;
+    expect(live).toMatchObject({ v: 4, enabled: true, theme: "synthwave", light: "#ff0080" });
+    expect(live.roles).toMatchObject({ bubbleBg: "#1a0033", bubbleText: "#ff66cc", submitBg: "#cc0066", submitText: "#ffffff", link: "#00ffff" });
+    flush();
+    await vi.waitFor(() => expect(storage.data.sync.settings.theme).toBe("synthwave"));
+  });
+
+  it("ChatGPT's own turns it off but remembers the colours for the switch", async () => {
     const { byId, $, cards, flush, storage } = await openPopup();
     byId("mocha").click();
     byId("default").click();
@@ -150,31 +175,43 @@ describe("theme grid", () => {
     await vi.waitFor(() => expect(storage.data.sync.settings?.theme).toBe("forest"));
     const second = await openPopup(storage);
     expect(checked(second.cards())).toEqual(["forest"]);
-    expect(second.cards().find((c) => c.tabIndex === 0).dataset.id).toBe("forest");
+    expect(second.tab("dark").getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("Surprise me applies a different theme and shows its group", async () => {
+    const { $, cards, tab } = await openPopup();
+    $("random").click();
+    const [id] = checked(cards());
+    const theme = THEMES.find((t) => t.id === id);
+    expect(theme).toBeTruthy();
+    expect(tab(theme.group).getAttribute("aria-selected")).toBe("true");
   });
 });
 
-describe("tabs", () => {
-  it("arrow keys switch Basic and Advanced; the hidden panel is inert", async () => {
-    const { $, key } = await openPopup();
-    expect($("seg-basic").getAttribute("aria-selected")).toBe("true");
-    expect($("advanced").hasAttribute("inert")).toBe(true);
-    $("seg-basic").focus();
-    key($("seg-basic"), "ArrowRight");
-    expect(document.activeElement).toBe($("seg-advanced"));
-    expect($("seg-advanced").getAttribute("aria-selected")).toBe("true");
-    expect($("advanced").hasAttribute("inert")).toBe(false);
-    expect($("basic").hasAttribute("inert")).toBe(true);
-    expect($("seg-basic").tabIndex).toBe(-1);
-    key($("seg-advanced"), "Home");
-    expect($("seg-basic").getAttribute("aria-selected")).toBe("true");
-  });
-});
+describe("customize", () => {
+  const open = async (storage) => {
+    const p = await openPopup(storage);
+    p.$("openCustomize").click();
+    return p;
+  };
 
-describe("advanced", () => {
+  it("is a second view with a way back, by button or Escape", async () => {
+    const { $, key } = await open();
+    expect($("customizeView").hidden).toBe(false);
+    expect($("themesView").hidden).toBe(true);
+    expect(document.activeElement).toBe($("back"));
+    $("back").click();
+    expect($("themesView").hidden).toBe(false);
+    expect(document.activeElement).toBe($("openCustomize"));
+    $("openCustomize").click();
+    key(document.activeElement, "Escape");
+    expect($("customizeView").hidden).toBe(true);
+  });
+
   it("shows the chosen theme's five colours and surface", async () => {
     const { byId, $ } = await openPopup();
     byId("ocean").click();
+    $("openCustomize").click();
     expect($("accentHex").value).toBe("#2dd4bf");
     expect($("bubbleBgHex").value).toBe("#073642");
     expect($("bubbleTextHex").value).toBe("#e0fbfc");
@@ -188,15 +225,16 @@ describe("advanced", () => {
   it("edits preview live and only reach the page when applied", async () => {
     const { byId, $, storage, flush } = await openPopup();
     byId("blue").click();
+    $("openCustomize").click();
     $("bubbleBgHex").value = "#aa3300";
     $("bubbleBgHex").dispatchEvent(new Event("input"));
-    expect($("preview").style.getPropertyValue("--p-bubble")).toBe("#aa3300");
+    expect($("preview").parentElement.style.getPropertyValue("--p-bubble")).toBe("#aa3300");
     expect(storage.data.local.live?.roles.bubbleBg).not.toBe("#aa3300"); // not applied yet
     $("save").click();
     flush();
     await vi.waitFor(() => expect(storage.data.sync.settings.roles.bubbleBg).toBe("#aa3300"));
     expect(storage.data.sync.settings.theme).toBe("custom");
-    expect(document.querySelector('.theme-card[aria-checked="true"]')).toBeNull(); // no named theme matches
+    expect(document.querySelector('.theme[aria-checked="true"]')).toBeNull(); // no named theme matches
     expect($("applied").textContent).toBe("Applied");
   });
 
@@ -214,22 +252,24 @@ describe("advanced", () => {
   });
 
   it("explains surfaces per mode and the preview toggles light and dark", async () => {
-    const { $ } = await openPopup();
+    const { $ } = await open();
     $("surface-dark").checked = true;
     $("surface-dark").dispatchEvent(new Event("change"));
     expect($("surfaceNote").textContent).toContain("Light mode keeps ChatGPT's own page");
+    const vars = () => $("preview").parentElement.style;
     $("pv-dark").click();
-    const dark = $("preview").style.getPropertyValue("--p-surface");
+    const dark = vars().getPropertyValue("--p-surface");
     $("pv-light").click();
-    expect($("preview").style.getPropertyValue("--p-surface")).not.toBe(dark);
+    expect(vars().getPropertyValue("--p-surface")).not.toBe(dark);
     expect($("pv-light").getAttribute("aria-pressed")).toBe("true");
     expect($("pv-dark").getAttribute("aria-pressed")).toBe("false");
   });
 
-  it("makes, saves, reloads and applies a custom theme", async () => {
+  it("makes, saves, reloads and applies a custom theme, which gets its own group", async () => {
     const storage = fakeStorage();
     const first = await openPopup(storage);
     first.byId("green").click();
+    first.$("openCustomize").click();
     first.$("accentHex").value = "#123abc";
     first.$("accentHex").dispatchEvent(new Event("input"));
     first.$("saveName").value = "Mine";
@@ -239,15 +279,18 @@ describe("advanced", () => {
     await vi.waitFor(() => expect(storage.data.sync.saved).toHaveLength(2));
     expect(storage.data.sync.saved.map((s) => s.name)).toEqual(["Mine", "Mine (2)"]);
     expect(storage.data.sync.saved[0]).toMatchObject({ light: "#123abc", roles: { bubbleBg: "#064e3b" } });
+    expect(first.tab("saved").textContent).toBe("Saved");
 
     const second = await openPopup(storage);
-    expect([...document.querySelectorAll(".saved-row .name")].map((n) => n.textContent)).toEqual(["Mine", "Mine (2)"]);
-    document.querySelector('.saved-row button[aria-label="Apply Mine"]').click();
+    expect([...second.panel("saved").querySelectorAll(".theme .name")].map((n) => n.textContent)).toEqual(["Mine", "Mine (2)"]);
+    second.panel("saved").querySelector(".theme").click();
     expect(second.$("accentHex").value).toBe("#123abc");
     second.flush();
     await vi.waitFor(() => expect(storage.data.sync.settings).toMatchObject({ enabled: true, theme: "custom", light: "#123abc" }));
-    document.querySelector('.saved-row button[aria-label="Delete Mine"]').click();
+    expect(second.panel("saved").querySelector(".theme").getAttribute("aria-checked")).toBe("true");
+    document.querySelector('.saved-list button[aria-label="Delete Mine"]').click();
     await vi.waitFor(() => expect(storage.data.sync.saved).toHaveLength(1));
+    expect(second.panel("saved").querySelectorAll(".theme")).toHaveLength(1);
   });
 
   it("Reset goes back to ChatGPT's colors", async () => {
@@ -259,8 +302,8 @@ describe("advanced", () => {
   });
 
   it("Surprise me fills the palette with a real theme without applying it", async () => {
-    const { $, cards } = await openPopup();
-    $("random").click();
+    const { $, cards } = await open();
+    $("randomDraft").click();
     expect(THEMES.some((t) => t.accent === $("accentHex").value)).toBe(true);
     expect(checked(cards())).toEqual(["default"]);
   });
@@ -284,7 +327,19 @@ describe("opening with 1.1.0 and 2.0.0 data", () => {
     expect(checked(cards())).toEqual(["crimson"]);
   });
 
-  it("a 2.0.0 custom colour shows as custom, with its accent in Advanced", async () => {
+  it("someone whose theme was retired keeps its colours, selected under Saved", async () => {
+    const deep = ORIGINAL_THEMES.find((t) => t.id === "material_indigo");
+    const settings = { v: 3, enabled: true, theme: deep.id, light: deep.accent, dark: null, roles: { bubbleBg: deep.bubbleBg, bubbleText: deep.bubbleText, submitBg: deep.submitBg, submitText: deep.submitText, link: null }, surface: { kind: "custom", color: deep.surface }, updatedAt: 5 };
+    const storage = fakeStorage({ sync: { settings } });
+    const { tab, panel } = await openPopup(storage);
+    expect(tab("saved").getAttribute("aria-selected")).toBe("true");
+    const item = panel("saved").querySelector(".theme");
+    expect(item.textContent).toContain("Material Deep");
+    expect(item.getAttribute("aria-checked")).toBe("true");
+    expect(storage.data.sync.settings).toMatchObject({ v: 4, theme: "custom", light: deep.accent });
+  });
+
+  it("a 2.0.0 custom colour shows as custom, with its accent in Customize", async () => {
     const storage = fakeStorage({ sync: { settings: { v: 2, enabled: true, light: "#0e7490", dark: "#2dd4bf", tint: 0, preset: null, updatedAt: 5 } } });
     const { cards, $ } = await openPopup(storage);
     expect(checked(cards())).toEqual([]);
@@ -293,7 +348,7 @@ describe("opening with 1.1.0 and 2.0.0 data", () => {
 });
 
 describe("paused warning", () => {
-  const ON = { sync: { settings: { v: 3, enabled: true, light: "#e11d48", updatedAt: 1 } } };
+  const ON = { sync: { settings: { v: 4, enabled: true, light: "#e11d48", updatedAt: 1 } } };
   const failed = { ok: false, reason: "no-effect", effect: { state: "fail", roles: { send: "fail" } } };
 
   it("describes the ChatGPT tab the popup is attached to", async () => {

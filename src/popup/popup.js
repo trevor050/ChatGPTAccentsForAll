@@ -2,7 +2,7 @@ import { normalizeHex } from "../lib/color.js";
 import { MAX_SAVED, applyLook, applyTheme } from "../lib/settings.js";
 import { ext, loadState, readLocal, writeLive, writeSaved, writeSettings } from "../lib/storage.js";
 import { applySurface, rolesFor, surfaceSpec } from "../lib/theme.js";
-import { DEFAULT_THEME, THEMES, backgroundTone, findTheme, themeLook } from "../lib/themes.js";
+import { DEFAULT_THEME, THEMES, THEME_GROUPS, findTheme, sameLook, themeLook } from "../lib/themes.js";
 import { formatDiagnostics } from "./diagnostics.js";
 import { DRAFT_DEFAULTS, draftFromSettings, lookFromDraft, nextGridIndex, nextTabIndex, previewSettings, surfaceNote } from "./model.js";
 
@@ -19,6 +19,8 @@ const PREVIEW_NEUTRALS = {
   light: { fg: "#0d0d0d", line: "#0000001f" },
   dark: { fg: "#ffffff", line: "#ffffff26" },
 };
+// Purple and Black: the two accents ChatGPT once kept for its paid plans.
+const WAS_PAID = { plus: ["$20/mo", "once a ChatGPT Plus color ($20 a month), free here"], pro: ["$200/mo", "once a ChatGPT Pro color ($200 a month), free here"] };
 const darkScheme = () => Boolean(globalThis.matchMedia?.("(prefers-color-scheme: dark)").matches);
 
 const state = {
@@ -26,7 +28,8 @@ const state = {
   saved: [],
   draft: { ...DRAFT_DEFAULTS },
   previewMode: darkScheme() ? "dark" : "light",
-  tab: "basic",
+  group: "classic",
+  view: "themes",
 };
 
 // Firefox closes the popup when a native colour picker opens, so there the hex field is the control.
@@ -59,160 +62,188 @@ addEventListener("pagehide", flushSync);
 document.addEventListener("visibilitychange", () => { if (document.hidden) flushSync(); });
 
 // ---------------------------------------------------------------------------
-// Basic: the theme grid (a radio group with one tab stop and arrow-key movement)
+// Themes: group tabs, each a two-column radio group (one tab stop, arrows move
+// and select). Saved themes are the last group when there are any.
 // ---------------------------------------------------------------------------
-const CARDS = [DEFAULT_THEME, ...THEMES];
-const cardEls = () => [...$("themeGrid").querySelectorAll(".theme-card")];
+const groups = () => [
+  ...THEME_GROUPS.map((g) => ({ ...g, items: [...(g.id === "classic" ? [DEFAULT_THEME] : []), ...THEMES.filter((t) => t.group === g.id)] })),
+  ...(state.saved.length ? [{ id: "saved", name: "Saved", items: state.saved.map((t) => ({ ...t, saved: true })) }] : []),
+];
 
-function buildGrid() {
-  const grid = $("themeGrid");
-  for (const theme of CARDS) {
-    const isDefault = theme === DEFAULT_THEME;
-    const card = document.createElement("button");
-    card.className = "theme-card";
-    card.type = "button";
-    card.setAttribute("role", "radio");
-    card.setAttribute("aria-checked", "false");
-    card.tabIndex = -1;
-    card.dataset.id = theme.id;
-
-    const row = document.createElement("div");
-    row.className = "theme-row";
-    const title = document.createElement("div");
-    title.className = "theme-title";
-
-    const dot = document.createElement("div");
-    dot.className = "dot";
-    dot.style.background = isDefault ? "#bdbdbd" : theme.accent;
-    const name = document.createElement("span");
-    name.textContent = theme.name;
-    title.append(dot, name);
-
-    if (theme.badge) title.append(badge(theme.badge, theme.badge === "plus" ? "Plus" : "Pro"));
-    const tone = isDefault ? null : backgroundTone(theme);
-    if (tone) title.append(badge(tone === "light" ? "bg-light" : "bg-dark", `Background: ${tone === "light" ? "Light" : "Dark"}`));
-
-    // Accent, then the page background (or the bubble when the theme has none), then the send button.
-    const swatches = document.createElement("div");
-    swatches.className = "swatches";
-    swatches.setAttribute("aria-hidden", "true");
-    const colors = isDefault
-      ? Array(3).fill("linear-gradient(90deg,#c8c8c8,#e0e0e0)")
-      : [theme.accent, theme.surface || theme.bubbleBg, theme.submitBg];
-    for (const color of colors) {
-      const pill = document.createElement("div");
-      pill.className = "pill";
-      pill.style.background = color;
-      swatches.append(pill);
-    }
-
-    const ring = document.createElement("div");
-    ring.className = "selected-ring";
-    ring.setAttribute("aria-hidden", "true");
-    row.append(title);
-    card.append(ring, row, swatches);
-    card.addEventListener("click", () => chooseTheme(theme));
-    grid.append(card);
-  }
-  grid.addEventListener("keydown", (e) => {
-    if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const cards = cardEls();
-    const from = cards.indexOf(document.activeElement);
-    if (from < 0) return;
-    const to = nextGridIndex(e.key, from, cards.length);
-    if (to == null) return;
-    e.preventDefault();
-    if (to === from) return;
-    cards[to].focus();
-    cards[to].click(); // like any radio group, selection follows focus
-  });
-}
-
-function badge(cls, text) {
+function chip(theme) {
   const el = document.createElement("span");
-  el.className = `badge ${cls}`;
-  el.textContent = text;
+  el.className = "chip";
+  el.setAttribute("aria-hidden", "true");
+  if (theme === DEFAULT_THEME) el.classList.add("default");
+  else {
+    const look = theme.saved ? theme : null;
+    el.style.setProperty("--chip-accent", look ? look.light : theme.accent);
+    el.style.setProperty("--chip-bubble", (look ? look.roles?.bubbleBg : theme.bubbleBg) || rolesFor("light", { ...applyLook({}, look || themeLook(theme)) }).tint);
+    el.style.setProperty("--chip-send", (look ? look.roles?.submitBg : theme.submitBg) || (look ? look.light : theme.accent));
+    const page = look ? (look.surface?.kind === "custom" ? look.surface.color : look.surface?.kind === "dark" ? "#0f0f10" : null) : theme.surface;
+    if (page) el.style.setProperty("--chip-page", page);
+  }
+  for (const part of ["accent", "bubble", "send"]) el.append(Object.assign(document.createElement("i"), { className: part }));
   return el;
 }
 
-/** Which card is selected: Default while off, the named theme when the colours are exactly its own. */
-function currentThemeId() {
-  const s = state.settings;
-  if (!s.enabled || !s.light) return DEFAULT_THEME.id;
-  return findTheme(s)?.id ?? null;
+function itemButton(item) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "theme";
+  b.setAttribute("role", "radio");
+  b.setAttribute("aria-checked", "false");
+  b.tabIndex = -1;
+  b.dataset.id = item.saved ? `saved:${item.id}` : item.id;
+  const name = Object.assign(document.createElement("span"), { className: "name", textContent: item === DEFAULT_THEME ? "ChatGPT's own" : item.name });
+  name.title = name.textContent;
+  b.append(chip(item), name);
+  const paid = WAS_PAID[item.badge];
+  if (paid) {
+    const was = document.createElement("span");
+    was.className = "was";
+    was.setAttribute("aria-hidden", "true");
+    was.append(Object.assign(document.createElement("s"), { textContent: paid[0] }), " free");
+    b.append(was);
+    b.setAttribute("aria-label", `${item.name}, ${paid[1]}`);
+  }
+  b.addEventListener("click", () => chooseItem(item));
+  return b;
 }
 
-function renderGrid() {
-  const cur = currentThemeId();
-  const cards = cardEls();
-  const stop = cards.find((c) => c.dataset.id === cur) || cards[0];
-  for (const card of cards) {
-    card.setAttribute("aria-checked", String(card.dataset.id === cur));
-    card.tabIndex = card === stop ? 0 : -1;
+function buildGroups() {
+  const tabs = $("groupTabs"), panels = $("groupPanels");
+  tabs.textContent = "";
+  panels.textContent = "";
+  let rows = 1;
+  for (const g of groups()) {
+    const tab = document.createElement("button");
+    tab.type = "button";
+    tab.id = `tab-${g.id}`;
+    tab.dataset.group = g.id;
+    tab.setAttribute("role", "tab");
+    tab.setAttribute("aria-controls", `panel-${g.id}`);
+    tab.textContent = g.name;
+    tab.addEventListener("click", () => setGroup(g.id));
+    tabs.append(tab);
+
+    const panel = document.createElement("div");
+    panel.id = `panel-${g.id}`;
+    panel.setAttribute("role", "tabpanel");
+    panel.setAttribute("aria-labelledby", tab.id);
+    const list = document.createElement("div");
+    list.className = "list";
+    list.setAttribute("role", "radiogroup");
+    list.setAttribute("aria-label", `${g.name} themes`);
+    for (const item of g.items) list.append(itemButton(item));
+    list.addEventListener("keydown", onListKey);
+    panel.append(list);
+    panels.append(panel);
+    rows = Math.max(rows, Math.ceil(g.items.length / 2));
+  }
+  // Every group gets the height of the tallest, so switching never resizes the popup.
+  panels.style.setProperty("--panel-h", `${rows * 38 + (rows - 1) * 2 + 16}px`);
+}
+
+function onListKey(e) {
+  if (e.altKey || e.ctrlKey || e.metaKey) return;
+  const items = [...e.currentTarget.querySelectorAll(".theme")];
+  const from = items.indexOf(document.activeElement);
+  if (from < 0) return;
+  const to = nextGridIndex(e.key, from, items.length, 2);
+  if (to == null) return;
+  e.preventDefault();
+  if (to === from) return;
+  items[to].focus();
+  items[to].click(); // like any radio group, selection follows focus
+}
+
+$("groupTabs").addEventListener("keydown", (e) => {
+  const tabs = [...$("groupTabs").querySelectorAll("[role=tab]")];
+  const to = nextTabIndex(e.key, tabs.findIndex((t) => t.dataset.group === state.group), tabs.length);
+  if (to == null) return;
+  e.preventDefault();
+  setGroup(tabs[to].dataset.group, { focus: true });
+});
+
+function setGroup(id, { focus = false } = {}) {
+  if (!groups().some((g) => g.id === id)) id = "classic";
+  state.group = id;
+  for (const tab of $("groupTabs").querySelectorAll("[role=tab]")) {
+    const on = tab.dataset.group === id;
+    tab.setAttribute("aria-selected", String(on));
+    tab.tabIndex = on ? 0 : -1;
+    if (on && focus) tab.focus();
+    $(`panel-${tab.dataset.group}`).hidden = !on;
   }
 }
 
-function chooseTheme(theme) {
-  if (theme === DEFAULT_THEME) {
-    commit({ enabled: false });
-  } else {
-    commit(applyTheme(state.settings, theme));
+/** Which item is selected: ChatGPT's own while off, else the named or saved theme with exactly these colours. */
+function currentItemId() {
+  const s = state.settings;
+  if (!s.enabled || !s.light) return DEFAULT_THEME.id;
+  const named = findTheme(s);
+  if (named) return named.id;
+  const saved = state.saved.find((t) => sameLook(t, s));
+  return saved ? `saved:${saved.id}` : null;
+}
+
+const groupOf = (itemId) => groups().find((g) => g.items.some((t) => (t.saved ? `saved:${t.id}` : t.id) === itemId))?.id;
+
+function renderThemes() {
+  const cur = currentItemId();
+  for (const list of $("groupPanels").querySelectorAll(".list")) {
+    const items = [...list.querySelectorAll(".theme")];
+    const stop = items.find((b) => b.dataset.id === cur) || items[0];
+    for (const b of items) {
+      b.setAttribute("aria-checked", String(b.dataset.id === cur));
+      b.tabIndex = b === stop ? 0 : -1;
+    }
+  }
+}
+
+function chooseItem(item) {
+  if (item === DEFAULT_THEME) commit({ enabled: false });
+  else commit(item.saved ? applyLook(state.settings, item) : applyTheme(state.settings, item));
+  if (item !== DEFAULT_THEME) {
     state.draft = draftFromSettings(state.settings, state.previewMode);
     writeDraftToInputs();
   }
 }
 
-// ---------------------------------------------------------------------------
-// Tabs
-// ---------------------------------------------------------------------------
-const TABS = ["basic", "advanced"];
-
-function setTab(which, { focus = false } = {}) {
-  state.tab = which;
-  for (const t of TABS) {
-    const on = t === which;
-    const btn = $(`seg-${t}`);
-    btn.classList.toggle("active", on);
-    btn.setAttribute("aria-selected", String(on));
-    btn.tabIndex = on ? 0 : -1;
-    $(t).classList.toggle("active", on);
-    $(t).toggleAttribute("inert", !on);
-  }
-  $("segment").dataset.active = which;
-  if (focus) $(`seg-${which}`).focus();
-  updateStackHeight();
-}
-for (const t of TABS) $(`seg-${t}`).addEventListener("click", () => setTab(t));
-$("segment").addEventListener("keydown", (e) => {
-  const to = nextTabIndex(e.key, TABS.indexOf(state.tab), TABS.length);
-  if (to == null) return;
-  e.preventDefault();
-  setTab(TABS[to], { focus: true });
+$("random").addEventListener("click", () => {
+  const others = THEMES.filter((t) => t.id !== currentItemId());
+  const pick = others[Math.floor(Math.random() * others.length)];
+  chooseItem(pick);
+  setGroup(pick.group);
 });
 
-// The stack is as tall as the active section (it fades between them); resizing is animated.
-const PAD = 8; // room around sections so card shadows and the selection glow aren't clipped
-let measured = false;
-function updateStackHeight() {
-  const stack = $("stack");
-  const content = $(state.tab).firstElementChild;
-  const height = Math.ceil(content.getBoundingClientRect().height);
-  if (!height) return;
-  if (!measured) stack.classList.add("measuring");
-  stack.style.height = `${height + PAD * 2}px`;
-  if (!measured) {
-    measured = true;
-    requestAnimationFrame(() => stack.classList.remove("measuring"));
-  }
+// ---------------------------------------------------------------------------
+// Views: themes, customize
+// ---------------------------------------------------------------------------
+function setView(view) {
+  state.view = view;
+  const custom = view === "customize";
+  $("themesView").hidden = custom;
+  $("customizeView").hidden = !custom;
+  $("back").hidden = !custom;
+  const title = $("title");
+  title.textContent = custom ? "Customize" : "Accents ";
+  if (!custom) title.append(Object.assign(document.createElement("span"), { textContent: "for ChatGPT" }));
+  (custom ? $("back") : $("openCustomize")).focus();
 }
-if (typeof ResizeObserver === "function") {
-  const ro = new ResizeObserver(updateStackHeight);
-  ro.observe($("themeGrid"));
-  ro.observe(document.querySelector(".settings-grid"));
-}
+$("openCustomize").addEventListener("click", () => {
+  state.draft = draftFromSettings(state.settings, state.previewMode);
+  writeDraftToInputs();
+  setView("customize");
+});
+$("back").addEventListener("click", () => setView("themes"));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && state.view === "customize") { e.preventDefault(); setView("themes"); }
+});
 
 // ---------------------------------------------------------------------------
-// Advanced: palette, surfaces, preview
+// Customize: palette, surfaces, preview
 // ---------------------------------------------------------------------------
 function writeDraftToInputs() {
   for (const [id, key] of PALETTE) {
@@ -264,7 +295,7 @@ function renderPreview() {
   const vars = {
     "--p-surface": roles.surface,
     "--p-fg": fg,
-    "--p-assist": `color-mix(in oklab, ${fg} 6%, transparent)`,
+    "--p-muted": `color-mix(in oklab, ${fg} 55%, ${roles.surface})`,
     "--p-line": n.line,
     "--p-bubble": roles.tint,
     "--p-on-bubble": roles.onTint,
@@ -272,7 +303,7 @@ function renderPreview() {
     "--p-submit": roles.submit,
     "--p-on-submit": roles.onSubmit,
   };
-  for (const [k, v] of Object.entries(vars)) $("preview").style.setProperty(k, v);
+  for (const [k, v] of Object.entries(vars)) $("preview").parentElement.style.setProperty(k, v);
   $("surfaceNote").textContent = surfaceNote(state.draft);
   for (const m of ["light", "dark"]) $(`pv-${m}`).setAttribute("aria-pressed", String(m === mode));
 }
@@ -280,7 +311,6 @@ for (const m of ["light", "dark"]) {
   $(`pv-${m}`).addEventListener("click", () => { state.previewMode = m; renderPreview(); });
 }
 
-// Actions
 let appliedTimer = 0;
 function say(text) {
   $("applied").textContent = text;
@@ -300,7 +330,7 @@ $("reset").addEventListener("click", () => {
   say("Back to ChatGPT's colors");
 });
 
-$("random").addEventListener("click", () => {
+$("randomDraft").addEventListener("click", () => {
   const pick = THEMES[Math.floor(Math.random() * THEMES.length)];
   state.draft = draftFromSettings({ ...themeLook(pick), enabled: true }, state.previewMode);
   writeDraftToInputs();
@@ -309,17 +339,27 @@ $("random").addEventListener("click", () => {
 // Saved themes
 const uid = () => `s${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
 
+function setSaved(next) {
+  const group = state.group;
+  state.saved = next;
+  writeSaved(state.saved);
+  buildGroups();
+  setGroup(group);
+  renderThemes();
+  renderSaved();
+}
+
 function saveCurrent() {
   const look = lookFromDraft(state.draft);
-  if (!look.light || state.saved.length >= MAX_SAVED) return;
+  if (!look.light) return;
+  if (state.saved.length >= MAX_SAVED) { say(`${MAX_SAVED} saved is the limit`); return; }
   const base = $("saveName").value.trim().slice(0, 32) || "My theme";
   const names = new Set(state.saved.map((t) => t.name));
   let name = base;
   for (let i = 2; names.has(name); i++) name = `${base} (${i})`;
-  state.saved = [...state.saved, { id: uid(), name, ...look }];
-  writeSaved(state.saved);
   $("saveName").value = "";
-  renderSaved();
+  setSaved([...state.saved, { id: uid(), name, ...look }]);
+  say(`Saved as ${name}`);
 }
 $("saveThemeBtn").addEventListener("click", saveCurrent);
 $("saveName").addEventListener("keydown", (e) => { if (e.key === "Enter") saveCurrent(); });
@@ -327,41 +367,17 @@ $("saveName").addEventListener("keydown", (e) => { if (e.key === "Enter") saveCu
 function renderSaved() {
   const list = $("savedList");
   list.textContent = "";
-  if (!state.saved.length) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "No saved themes yet";
-    list.append(empty);
-    return;
-  }
   for (const item of state.saved) {
     const row = document.createElement("div");
-    row.className = "saved-row";
-    const name = document.createElement("div");
-    name.className = "name";
-    name.textContent = item.name;
-    name.title = item.name;
-    const apply = document.createElement("button");
-    apply.type = "button";
-    apply.className = "btn";
-    apply.textContent = "Apply";
+    row.className = "row";
+    const label = Object.assign(document.createElement("span"), { className: "label", textContent: item.name, title: item.name });
+    const apply = Object.assign(document.createElement("button"), { type: "button", className: "link quiet", textContent: "Apply" });
     apply.setAttribute("aria-label", `Apply ${item.name}`);
-    apply.addEventListener("click", () => {
-      commit(applyLook(state.settings, item));
-      state.draft = draftFromSettings(state.settings, state.previewMode);
-      writeDraftToInputs();
-    });
-    const del = document.createElement("button");
-    del.type = "button";
-    del.className = "btn";
-    del.textContent = "Delete";
+    apply.addEventListener("click", () => chooseItem({ ...item, saved: true }));
+    const del = Object.assign(document.createElement("button"), { type: "button", className: "link quiet", textContent: "Delete" });
     del.setAttribute("aria-label", `Delete ${item.name}`);
-    del.addEventListener("click", () => {
-      state.saved = state.saved.filter((t) => t.id !== item.id);
-      writeSaved(state.saved);
-      renderSaved();
-    });
-    row.append(name, apply, del);
+    del.addEventListener("click", () => setSaved(state.saved.filter((t) => t.id !== item.id)));
+    row.append(chip({ ...item, saved: true }), label, apply, del);
     list.append(row);
   }
 }
@@ -376,13 +392,10 @@ $("enabled").addEventListener("change", (e) => {
 
 function render() {
   $("enabled").checked = state.settings.enabled;
-  renderGrid();
+  renderThemes();
   if (document.body.dataset.ready) renderStatus();
 }
 
-// ---------------------------------------------------------------------------
-// Startup
-// ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // Status of the ChatGPT tab this popup belongs to
 // ---------------------------------------------------------------------------
@@ -433,11 +446,8 @@ function renderStatus() {
       text = `Some of this page isn't taking your colors yet${missing.length ? ` (${missing.join(", ")})` : ""}.`;
     }
   }
-  const box = $("status");
-  const wasHidden = box.hidden;
-  box.hidden = !text;
+  $("status").hidden = !text;
   $("statusText").textContent = text;
-  if (wasHidden !== box.hidden) updateStackHeight();
 }
 
 async function copyDiagnostics(button) {
@@ -474,11 +484,11 @@ async function init() {
   state.settings = settings;
   state.saved = saved;
   state.draft = draftFromSettings(settings, state.previewMode);
-  buildGrid();
+  buildGroups();
   writeDraftToInputs();
   renderSaved();
   render();
-  setTab("basic");
+  setGroup(groupOf(currentItemId()) || "classic");
   await refreshStatus().catch(() => {});
   // A theme change repaints the tab, which re-checks and reports back.
   ext.storage?.onChanged?.addListener((changes, area) => {
