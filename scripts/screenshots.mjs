@@ -1,7 +1,7 @@
 // Captures the README screenshots from the real chatgpt.com (logged out) with the
 // built extension loaded. Needs a visible browser. Usage: npm run build && node scripts/screenshots.mjs
 import { chromium } from "playwright";
-import crypto from "node:crypto";
+import { unpackedExtensionId } from "./extension-id.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -11,8 +11,7 @@ const out = path.join(root, "readme-imgs");
 const profile = path.join(root, ".e2e-profile");
 fs.rmSync(profile, { recursive: true, force: true });
 fs.mkdirSync(out, { recursive: true });
-const extId = [...crypto.createHash("sha256").update(fs.realpathSync(extDir)).digest("hex").slice(0, 32)]
-  .map((c) => String.fromCharCode(97 + parseInt(c, 16))).join("");
+const extId = unpackedExtensionId(fs.realpathSync(extDir));
 
 const SHOTS = [
   { file: "chatgpt-default-light.png", scheme: "light", settings: null },

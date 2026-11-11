@@ -1,7 +1,7 @@
 // Offline popup regression checks in Chromium. No ChatGPT account or network needed.
 // Usage: npm run build && node scripts/e2e-popup.mjs
 import assert from "node:assert/strict";
-import crypto from "node:crypto";
+import { unpackedExtensionId } from "./extension-id.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright";
@@ -9,8 +9,7 @@ import { chromium } from "playwright";
 const root = path.resolve(import.meta.dirname, "..");
 const extDir = path.join(root, "dist/chrome");
 const profile = path.join(root, ".e2e-profile-popup");
-const extId = [...crypto.createHash("sha256").update(fs.realpathSync(extDir)).digest("hex").slice(0, 32)]
-  .map((c) => String.fromCharCode(97 + parseInt(c, 16))).join("");
+const extId = unpackedExtensionId(fs.realpathSync(extDir));
 fs.rmSync(profile, { recursive: true, force: true });
 const ctx = await chromium.launchPersistentContext(profile, {
   channel: "chromium", headless: true, viewport: { width: 344, height: 640 },

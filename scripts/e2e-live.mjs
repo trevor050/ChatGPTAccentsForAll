@@ -2,7 +2,7 @@
 // it needs a visible browser window (Cloudflare challenges headless Chromium).
 // Usage: npm run build && node scripts/e2e-live.mjs [--shots dir]
 import { chromium } from "playwright";
-import crypto from "node:crypto";
+import { unpackedExtensionId } from "./extension-id.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -14,8 +14,7 @@ const profile = path.join(root, ".e2e-profile");
 fs.rmSync(profile, { recursive: true, force: true }); // fresh install every run
 
 // Chromium derives unpacked extension IDs from the absolute path.
-const extId = [...crypto.createHash("sha256").update(fs.realpathSync(extDir)).digest("hex").slice(0, 32)]
-  .map((c) => String.fromCharCode(97 + parseInt(c, 16))).join("");
+const extId = unpackedExtensionId(fs.realpathSync(extDir));
 
 const results = [];
 const check = (name, ok, detail = "") => { results.push({ name, ok, detail }); console.log(`${ok ? "PASS" : "FAIL"} ${name}${detail ? "  " + detail : ""}`); };

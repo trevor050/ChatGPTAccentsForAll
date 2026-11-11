@@ -4,7 +4,7 @@
 // Usage: npm run build && node scripts/e2e-upgrade.mjs [v1-ref]
 import { chromium } from "playwright";
 import { execFileSync } from "node:child_process";
-import crypto from "node:crypto";
+import { unpackedExtensionId } from "./extension-id.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -18,8 +18,7 @@ fs.mkdirSync(slot, { recursive: true });
 for (const f of ["manifest.json", "content.js", "popup.html", "popup.js"]) {
   fs.writeFileSync(path.join(slot, f), execFileSync("git", ["show", `${ref}:${f}`], { cwd: root }));
 }
-const extId = [...crypto.createHash("sha256").update(fs.realpathSync(slot)).digest("hex").slice(0, 32)]
-  .map((c) => String.fromCharCode(97 + parseInt(c, 16))).join("");
+const extId = unpackedExtensionId(fs.realpathSync(slot));
 const launch = () => chromium.launchPersistentContext(profile, {
   channel: "chromium", headless: false, viewport: { width: 1280, height: 800 },
   ignoreDefaultArgs: ["--enable-automation"],

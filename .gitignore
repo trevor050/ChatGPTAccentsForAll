@@ -7,5 +7,5 @@ dist/
 coverage/
 
 # Local browser profiles and scratch from live checks
-.e2e-profile/
+.e2e-profile*/
 .probe/
