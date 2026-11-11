@@ -102,7 +102,9 @@ node scripts/screenshots.mjs    # regenerates the README screenshots
 node scripts/e2e-popup.mjs      # offline, headless: drives the popup with a keyboard
 ```
 
-For the Firefox check, install Firefox and put [geckodriver](https://github.com/mozilla/geckodriver/releases) on your `PATH` (`brew install geckodriver` on macOS). Windows and Linux use Selenium's installed-browser detection; set `FIREFOX_BIN` to test a different Firefox-compatible executable, such as Zen. These scripts always use fresh test profiles.
+For the Firefox check, install Firefox and put [geckodriver](https://github.com/mozilla/geckodriver/releases) on your `PATH` (`brew install geckodriver` on macOS). Windows and Linux use Selenium's installed-browser detection; set `FIREFOX_BIN` to test a different Firefox-compatible executable, such as Zen. Each run uses a fresh test profile unless you set `ACCENTS_TEST_PROFILE` to a folder to reuse across runs.
+
+The Chromium scripts use Playwright's bundled Chromium by default. To test your installed Chrome or Edge instead, set `ACCENTS_BROWSER` to its executable. Branded Chrome has ignored `--load-extension` since version 137, so the scripts then load the extension through the DevTools protocol and remove it again when they finish.
 
 ### Contributing
 

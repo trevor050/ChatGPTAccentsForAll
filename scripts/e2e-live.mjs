@@ -1,8 +1,7 @@
 // Live end-to-end check against the real chatgpt.com (logged out). Not run in CI:
 // it needs a visible browser window (Cloudflare challenges headless Chromium).
 // Usage: npm run build && node scripts/e2e-live.mjs [--shots dir]
-import { chromium } from "playwright";
-import { unpackedExtensionId } from "./extension-id.mjs";
+import { launchWithExtension } from "./launch.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -10,20 +9,12 @@ const root = path.resolve(import.meta.dirname, "..");
 const extDir = path.join(root, "dist/chrome");
 const shotsArg = process.argv.indexOf("--shots");
 const shots = shotsArg > 0 ? path.resolve(process.argv[shotsArg + 1]) : null;
-const profile = path.join(root, ".e2e-profile");
-fs.rmSync(profile, { recursive: true, force: true }); // fresh install every run
-
-// Chromium derives unpacked extension IDs from the absolute path.
-const extId = unpackedExtensionId(fs.realpathSync(extDir));
 
 const results = [];
 const check = (name, ok, detail = "") => { results.push({ name, ok, detail }); console.log(`${ok ? "PASS" : "FAIL"} ${name}${detail ? "  " + detail : ""}`); };
 
-const ctx = await chromium.launchPersistentContext(profile, {
-  channel: "chromium", headless: false, viewport: { width: 1280, height: 800 },
-  ignoreDefaultArgs: ["--enable-automation"],
-  args: ["--disable-blink-features=AutomationControlled", `--disable-extensions-except=${extDir}`, `--load-extension=${extDir}`],
-});
+// A fresh install every run (see launch.mjs for installed browsers and reused profiles).
+const { ctx, extId, close } = await launchWithExtension(extDir, { profileName: ".e2e-profile", viewport: { width: 1280, height: 800 } });
 try {
   const page = ctx.pages()[0] || await ctx.newPage();
   await page.goto("https://chatgpt.com/", { waitUntil: "domcontentloaded", timeout: 60_000 });
@@ -84,7 +75,7 @@ try {
     await popup.screenshot({ path: path.join(shots, "e2e-popup.png") });
   }
 } finally {
-  await ctx.close();
+  await close();
 }
 const failed = results.filter((r) => !r.ok).length;
 console.log(`\n${results.length - failed}/${results.length} checks passed`);

@@ -4,8 +4,7 @@
 // engine says it should be. Finishes by making, saving and reloading a custom theme in Advanced.
 // Needs a visible browser (Cloudflare challenges headless). Not run in CI.
 // Usage: npm run build && node scripts/e2e-themes.mjs [--shots dir] [theme-id ...]
-import { chromium } from "playwright";
-import { unpackedExtensionId } from "./extension-id.mjs";
+import { launchWithExtension } from "./launch.mjs";
 import { contrastRatio, parseColor, toHex } from "../src/lib/color.js";
 import { applyTheme, DEFAULT_SETTINGS, normalizeSettings } from "../src/lib/settings.js";
 import { rolesFor } from "../src/lib/theme.js";
@@ -20,21 +19,14 @@ const shotsArg = args.indexOf("--shots");
 const shots = shotsArg >= 0 ? path.resolve(args[shotsArg + 1]) : null;
 const ids = args.filter((a, i) => !a.startsWith("--") && args[i - 1] !== "--shots");
 const THEMES = ids.length ? ids : ["blue", "crimson", "sunset", "mocha", "ocean", "midnight", "synthwave", "black_bg", "gameboy", "pastel_mint", "frost", "cream"];
-const profile = path.join(root, ".e2e-profile-themes");
-fs.rmSync(profile, { recursive: true, force: true });
 if (shots) fs.mkdirSync(shots, { recursive: true });
-const extId = unpackedExtensionId(fs.realpathSync(extDir));
 
 let failed = 0;
 const check = (name, ok, detail = "") => { if (!ok) failed++; console.log(`${ok ? "PASS" : "FAIL"} ${name}${detail ? "  " + detail : ""}`); };
 const rgbHex = (css) => { const c = parseColor(css.replace(/\s+/g, "")); return c ? toHex({ ...c, a: 1 }) : css; };
 const MESSAGE = "In two short sentences: why do people care so much about accent colors in apps?";
 
-const ctx = await chromium.launchPersistentContext(profile, {
-  channel: "chromium", headless: false, viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1,
-  ignoreDefaultArgs: ["--enable-automation"],
-  args: ["--disable-blink-features=AutomationControlled", `--disable-extensions-except=${extDir}`, `--load-extension=${extDir}`],
-});
+const { ctx, extId, close } = await launchWithExtension(extDir, { profileName: ".e2e-profile-themes", viewport: { width: 1280, height: 800 }, deviceScaleFactor: 1 });
 try {
   const page = ctx.pages()[0] || await ctx.newPage();
   await page.goto("https://chatgpt.com/", { waitUntil: "domcontentloaded", timeout: 60_000 });
@@ -128,8 +120,7 @@ try {
     await popup.screenshot({ path: path.join(shots, "popup-advanced-after-reload.png") });
   }
 } finally {
-  await ctx.close();
-  fs.rmSync(profile, { recursive: true, force: true });
+  await close();
 }
 console.log(failed ? `\n${failed} checks FAILED` : "\nall checks passed");
 process.exit(failed ? 1 : 0);

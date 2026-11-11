@@ -1,17 +1,13 @@
 // Captures the README screenshots from the real chatgpt.com (logged out) with the
 // built extension loaded. Needs a visible browser. Usage: npm run build && node scripts/screenshots.mjs
-import { chromium } from "playwright";
-import { unpackedExtensionId } from "./extension-id.mjs";
+import { launchWithExtension } from "./launch.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
 const extDir = path.join(root, "dist/chrome");
 const out = path.join(root, "readme-imgs");
-const profile = path.join(root, ".e2e-profile");
-fs.rmSync(profile, { recursive: true, force: true });
 fs.mkdirSync(out, { recursive: true });
-const extId = unpackedExtensionId(fs.realpathSync(extDir));
 
 // Chosen by clicking the theme's card in the real popup, so the screenshots also exercise it.
 const SHOTS = [
@@ -24,11 +20,7 @@ const SHOTS = [
 ];
 const POPUP_THEME = "pink"; // selected in the popup screenshots
 
-const ctx = await chromium.launchPersistentContext(profile, {
-  channel: "chromium", headless: false, viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2,
-  ignoreDefaultArgs: ["--enable-automation"],
-  args: ["--disable-blink-features=AutomationControlled", `--disable-extensions-except=${extDir}`, `--load-extension=${extDir}`],
-});
+const { ctx, extId, close } = await launchWithExtension(extDir, { profileName: ".e2e-profile", viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2 });
 const page = ctx.pages()[0] || await ctx.newPage();
 await page.goto("https://chatgpt.com/", { waitUntil: "domcontentloaded", timeout: 60_000 });
 await page.waitForTimeout(6000);
@@ -70,5 +62,4 @@ for (const scheme of ["light", "dark"]) {
   await popup.screenshot({ path: path.join(out, `popup-advanced-${scheme}.png`) });
   console.log(`wrote popup-basic-${scheme}.png, popup-advanced-${scheme}.png`);
 }
-await ctx.close();
-fs.rmSync(profile, { recursive: true, force: true });
+await close();

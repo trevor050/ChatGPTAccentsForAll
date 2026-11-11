@@ -2,44 +2,36 @@
 // the current build at the same path (same extension ID and storage) and confirm the
 // user's colour survives the migration. Needs a visible browser, like e2e-live.
 // Usage: npm run build && node scripts/e2e-upgrade.mjs [v1-ref]
-import { chromium } from "playwright";
 import { execFileSync } from "node:child_process";
-import { unpackedExtensionId } from "./extension-id.mjs";
+import { launchWithExtension } from "./launch.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
 const ref = process.argv[2] || "13f2f89"; // last v1.1.0 commit on main
 const slot = path.join(root, "dist/upgrade-slot");
-const profile = path.join(root, ".e2e-profile-upgrade");
 fs.rmSync(slot, { recursive: true, force: true });
-fs.rmSync(profile, { recursive: true, force: true });
 fs.mkdirSync(slot, { recursive: true });
 for (const f of ["manifest.json", "content.js", "popup.html", "popup.js"]) {
   fs.writeFileSync(path.join(slot, f), execFileSync("git", ["show", `${ref}:${f}`], { cwd: root }));
 }
-const extId = unpackedExtensionId(fs.realpathSync(slot));
-const launch = () => chromium.launchPersistentContext(profile, {
-  channel: "chromium", headless: false, viewport: { width: 1280, height: 800 },
-  ignoreDefaultArgs: ["--enable-automation"],
-  args: ["--disable-blink-features=AutomationControlled", `--disable-extensions-except=${slot}`, `--load-extension=${slot}`],
-});
+const launch = (fresh) => launchWithExtension(slot, { profileName: ".e2e-profile-upgrade", viewport: { width: 1280, height: 800 }, fresh });
 
 let ok = true;
 // 1. v1: choose the "Ocean" preset through the old popup UI.
-let ctx = await launch();
+let { ctx, extId, close } = await launch(true);
 let popup = await ctx.newPage();
 await popup.goto(`chrome-extension://${extId}/popup.html`);
 await popup.locator('.theme-card[data-id="ocean"]').click();
 await popup.waitForTimeout(500);
 const v1 = await popup.evaluate(() => new Promise((r) => chrome.storage.sync.get(null, r)));
 console.log("v1 storage:", JSON.stringify(v1).slice(0, 160), "...");
-await ctx.close();
+await close({ keep: true });
 
 // 2. Upgrade in place.
 fs.rmSync(slot, { recursive: true, force: true });
 fs.cpSync(path.join(root, "dist/chrome"), slot, { recursive: true });
-ctx = await launch();
+({ ctx, extId, close } = await launch(false));
 const page = ctx.pages()[0] || await ctx.newPage();
 await page.goto("https://chatgpt.com/", { waitUntil: "domcontentloaded", timeout: 60_000 });
 await page.waitForTimeout(6000);
@@ -63,6 +55,5 @@ const fill = await page.evaluate(() => {
 });
 pass(`page painted with the migrated send-button colour (${fill})`, fill.includes(expectSubmit));
 await popup.screenshot({ path: path.join(root, "dist/upgrade-popup.png") });
-await ctx.close();
-fs.rmSync(profile, { recursive: true, force: true });
+await close();
 process.exit(ok ? 0 : 1);

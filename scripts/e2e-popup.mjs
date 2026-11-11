@@ -2,20 +2,12 @@
 // tabs, Advanced editing and saved themes. No ChatGPT account or network needed.
 // Usage: npm run build && node scripts/e2e-popup.mjs
 import assert from "node:assert/strict";
-import { unpackedExtensionId } from "./extension-id.mjs";
-import fs from "node:fs";
+import { launchWithExtension } from "./launch.mjs";
 import path from "node:path";
-import { chromium } from "playwright";
 
 const root = path.resolve(import.meta.dirname, "..");
 const extDir = path.join(root, "dist/chrome");
-const profile = path.join(root, ".e2e-profile-popup");
-const extId = unpackedExtensionId(fs.realpathSync(extDir));
-fs.rmSync(profile, { recursive: true, force: true });
-const ctx = await chromium.launchPersistentContext(profile, {
-  channel: "chromium", headless: true, viewport: { width: 352, height: 600 },
-  args: [`--disable-extensions-except=${extDir}`, `--load-extension=${extDir}`],
-});
+const { ctx, extId, close } = await launchWithExtension(extDir, { profileName: ".e2e-profile-popup", headless: true, viewport: { width: 352, height: 600 } });
 const active = (page) => page.evaluate(() => document.activeElement?.dataset?.id ?? document.activeElement?.id ?? null);
 const checkedIds = (page) => page.$$eval('.theme-card[aria-checked="true"]', (els) => els.map((e) => e.dataset.id));
 const pass = (msg) => console.log(`PASS ${msg}`);
@@ -102,6 +94,5 @@ try {
   assert.equal(await page.evaluate(() => document.fonts.check('13px "DM Sans"')), true);
   pass("DM Sans is bundled; no network requests");
 } finally {
-  await ctx.close();
-  fs.rmSync(profile, { recursive: true, force: true });
+  await close();
 }
