@@ -13,14 +13,17 @@ const cached = discoverTokens(fixture.rules);
 
 // Run the actual content script with a minimal CSSOM/storage boundary. No browser
 // dependency: these regressions must also run in the normal CI unit suite.
-async function boot(rules, tokens = cached) {
+async function boot(rules, tokens = cached, { build = "prod-1", readyState = "complete", page = {}, waitForStorage = false } = {}) {
   const local = { tokens, status: { ok: true } };
+  const localStorage = { getItem: (k) => page[k] ?? null, setItem: (k, v) => { page[k] = String(v); }, removeItem: (k) => { delete page[k]; } };
+  let answer;
+  const storageAnswered = waitForStorage ? new Promise((r) => { answer = r; }) : Promise.resolve();
   const timers = new Map(), elements = new Map(), events = new Map();
   const frames = [];
   let timerId = 0;
-  const root = { dataset: {}, appendChild: (el) => { el.isConnected = true; elements.set(el.id, el); } };
+  const root = { dataset: { build }, appendChild: (el) => { el.isConnected = true; elements.set(el.id, el); } };
   const document = {
-    documentElement: root, head: root, readyState: "complete",
+    documentElement: root, head: root, readyState,
     styleSheets: [],
     getElementById: (id) => elements.get(id),
     createElement: () => ({ isConnected: false, textContent: "", remove() { elements.delete(this.id); this.isConnected = false; } }),
@@ -33,19 +36,21 @@ async function boot(rules, tokens = cached) {
     })) }];
   };
   setRules(rules);
-  await vm.runInNewContext(source, {
-    document, window: { addEventListener() {} }, console,
+  const started = vm.runInNewContext(source, {
+    document, window: { addEventListener() {} }, console, localStorage,
     buildCss, discoverTokens, sameDiscovery, normalizeSettings, newest,
     ext: { storage: { onChanged: { addListener() {} } } },
-    loadState: async () => ({ settings }), readLocal: async () => local,
+    loadState: async () => { await storageAnswered; return { settings }; }, readLocal: async () => { await storageAnswered; return local; },
     writeLocal: async (patch) => Object.assign(local, patch),
     setTimeout: (fn) => { timers.set(++timerId, fn); return timerId; },
     clearTimeout: (id) => timers.delete(id),
     requestAnimationFrame: (fn) => { frames.push(fn); return frames.length; },
   });
+  if (!waitForStorage) await started;
   const flush = () => { const pending = [...timers.values()]; timers.clear(); pending.forEach((fn) => fn()); };
   const paint = () => { const pending = frames.splice(0); pending.forEach((fn) => fn()); };
-  return { local, setRules, flush, paint, load: () => events.get("load")({ target: { tagName: "LINK" } }), css: () => elements.get("chatgpt-accents-for-all")?.textContent || "" };
+  const answerStorage = async () => { answer(); await started; await new Promise((r) => setImmediate(r)); };
+  return { local, page, document, answerStorage, setRules, flush, paint, load: () => events.get("load")({ target: { tagName: "LINK" } }), css: () => elements.get("chatgpt-accents-for-all")?.textContent || "" };
 }
 
 describe("content script fails closed when ChatGPT changes", () => {
@@ -104,5 +109,47 @@ describe("content script fails closed when ChatGPT changes", () => {
     page.paint();
     expect(page.css()).toBe("");
     expect(page.local.status.ok).toBe(false);
+  });
+});
+
+describe("content script paints before ChatGPT's first frame", () => {
+  const KEY = "chatgpt-accents-for-all:paint";
+  it("applies the last validated stylesheet synchronously when the build matches", async () => {
+    const page = await boot([], cached, { readyState: "loading", waitForStorage: true, page: { [KEY]: JSON.stringify({ build: "prod-1", css: "EARLY" }) } });
+    // Extension storage has not answered and no site CSS exists yet.
+    expect(page.css()).toBe("EARLY");
+  });
+  it("does not apply a stylesheet cached for another ChatGPT build", async () => {
+    const page = await boot([], cached, { build: "prod-2", readyState: "loading", waitForStorage: true, page: { [KEY]: JSON.stringify({ build: "prod-1", css: "EARLY" }) } });
+    expect(page.css()).toBe("");
+  });
+  it("keeps the early paint and reports nothing while no site CSS has loaded", async () => {
+    const page = await boot([], cached, { readyState: "loading", waitForStorage: true, page: { [KEY]: JSON.stringify({ build: "prod-1", css: "EARLY" }) } });
+    await page.answerStorage();
+    page.paint();
+    expect(page.css()).toBe("EARLY");
+    expect(page.local.status.ok).toBe(true);
+  });
+  it("replaces the early paint once the site CSS validates", async () => {
+    const page = await boot([], cached, { readyState: "loading", waitForStorage: true, page: { [KEY]: JSON.stringify({ build: "prod-1", css: "EARLY" }) } });
+    page.setRules(fixture.rules);
+    page.load();
+    await page.answerStorage();
+    expect(page.css()).toContain("#e11d48");
+    expect(JSON.parse(page.page[KEY])).toEqual({ build: "prod-1", css: page.css() });
+  });
+  it("removes the early paint as soon as loaded site CSS rejects it, even before storage answers", async () => {
+    const page = await boot([], cached, { readyState: "loading", waitForStorage: true, page: { [KEY]: JSON.stringify({ build: "prod-1", css: "EARLY" }) } });
+    page.setRules([{ selector: ":root", decls: { "--x1e4keym": "#fff" } }]);
+    page.load();
+    expect(page.css()).toBe("");
+    expect(page.page[KEY]).toBeUndefined();
+    await page.answerStorage();
+    expect(page.local.status.ok).toBe(false);
+  });
+  it("forgets the early paint when discovery fails on a finished page", async () => {
+    const page = await boot([], cached, { page: { [KEY]: JSON.stringify({ build: "prod-1", css: "EARLY" }) } });
+    expect(page.css()).toBe("");
+    expect(page.page[KEY]).toBeUndefined();
   });
 });

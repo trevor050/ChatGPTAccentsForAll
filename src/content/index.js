@@ -1,5 +1,7 @@
 // Content script for chatgpt.com. Runs at document_start.
 //
+// 0. Synchronously re-apply the last validated stylesheet when ChatGPT's build
+//    is unchanged, so the first paint already has the user's colours.
 // 1. Validate the previous token map against this page's loaded stylesheets.
 // 2. As ChatGPT's stylesheets load, rediscover tokens from the live CSS and
 //    repaint if anything moved (ChatGPT ships hashed StyleX variable names).
@@ -14,11 +16,37 @@ import { ext, loadState, newest, readLocal, writeLocal } from "../lib/storage.js
 const STYLE_ID = "chatgpt-accents-for-all";
 const THEME_OR_ROOT = /:root|^\.([\w-]+)\.\1/;
 const LEGACY_PROBES = ["--interactive-bg-accent-default", "--theme-user-msg-bg"];
+// chatgpt.com's own localStorage is the only storage a content script can read
+// synchronously at document_start; extension storage answers after the page may
+// already have painted. It holds the last stylesheet that was validated against
+// this build's CSS: { build, css }.
+const PAINT_CACHE = "chatgpt-accents-for-all:paint";
 
 let settings = null;
-let tokens = null;
+let tokens = null; // only ever a map discovered from this page's current CSS
+let cachedTokens = null; // last stored discovery, compared to avoid rewriting it
 let legacy = false;
 let lastCss = null;
+
+const pageBuild = () => document.documentElement?.dataset?.build || null;
+
+function readPaintCache() {
+  try {
+    const hit = JSON.parse(localStorage.getItem(PAINT_CACHE) || "null");
+    return hit && typeof hit.css === "string" && hit.css && hit.build && hit.build === pageBuild() ? hit.css : null;
+  } catch { return null; }
+}
+
+let lastCached = null;
+function writePaintCache(css) {
+  const entry = css && pageBuild() ? JSON.stringify({ build: pageBuild(), css }) : "";
+  if (entry === lastCached) return;
+  lastCached = entry;
+  try {
+    if (entry) localStorage.setItem(PAINT_CACHE, entry);
+    else localStorage.removeItem(PAINT_CACHE);
+  } catch { /* storage blocked or full: only the early paint is lost */ }
+}
 
 function styleElement() {
   let el = document.getElementById(STYLE_ID);
@@ -31,14 +59,19 @@ function styleElement() {
   return el;
 }
 
+function paint(css) {
+  const el = document.getElementById(STYLE_ID);
+  if (css === lastCss && (el?.isConnected || !css)) return;
+  lastCss = css;
+  if (!css) { el?.remove(); return; }
+  styleElement().textContent = css;
+}
+
 function render() {
   try {
     const css = settings ? buildCss(tokens, settings, { legacy }) : "";
-    const el = document.getElementById(STYLE_ID);
-    if (css === lastCss && (el?.isConnected || !css)) return;
-    lastCss = css;
-    if (!css) { el?.remove(); return; }
-    styleElement().textContent = css;
+    paint(css);
+    writePaintCache(css);
   } catch (err) {
     console.debug("[ChatGPT Accents] render skipped:", err);
   }
@@ -81,13 +114,24 @@ function rediscover() {
   try {
     const { rules, sawLegacy } = readRules();
     const found = discoverTokens(rules);
-    const changed = !sameDiscovery(found, tokens);
+    // Nothing themeable has loaded yet while the document is still loading: that
+    // proves nothing either way, so keep the current paint and decide later.
+    if (!found && !sawLegacy && !rules.length && document.readyState !== "complete") return;
     // A cached map is only a candidate. Never keep styling a new site version
     // with yesterday's tokens when its current CSS no longer matches.
     tokens = found;
     legacy = sawLegacy;
+    if (!settings) {
+      // Extension storage has not answered yet. If this page's CSS already
+      // rejects the map, drop the early paint now rather than after the read.
+      if (!found && !sawLegacy) { paint(""); writePaintCache(""); }
+      return;
+    }
     render();
-    if (changed) writeLocal({ tokens: found });
+    if (!sameDiscovery(found, cachedTokens)) {
+      cachedTokens = found;
+      writeLocal({ tokens: found });
+    }
     const status = {
       ok: Boolean(tokens) || legacy,
       accentTokens: tokens ? Object.keys(tokens.accent).length : 0,
@@ -117,17 +161,14 @@ function rediscoverBeforePaint() {
 }
 
 async function start() {
-  const [{ settings: s }, cached] = await Promise.all([loadState(), readLocal(["tokens"])]);
-  settings = s;
-  tokens = cached.tokens || null;
-  // Reading extension storage is asynchronous, so styles may already be ready.
-  // Validate now rather than optimistically applying a potentially stale cache.
-  rediscover();
-  rediscoverBeforePaint();
+  // Same build as the last validated paint: apply it before the first frame.
+  // The CSS below re-validates it and removes it if this page disagrees.
+  try { const early = readPaintCache(); if (early) paint(early); } catch { /* never block the page */ }
 
   // Stylesheet <link>s fire "load" (non-bubbling, so listen in capture phase).
   // Validate in this event, before rendering, instead of painting the site's
   // default accent for a debounce interval after a new stylesheet arrives.
+  // Registered before the async storage read below so no load is missed.
   document.addEventListener("load", (e) => {
     if (e.target?.tagName === "LINK" || e.target?.tagName === "STYLE") {
       rediscover();
@@ -136,6 +177,13 @@ async function start() {
       rediscoverBeforePaint();
     }
   }, true);
+
+  const [{ settings: s }, cached] = await Promise.all([loadState(), readLocal(["tokens"])]);
+  settings = s;
+  cachedTokens = cached.tokens || null;
+  // Reading extension storage is asynchronous, so styles may already be ready.
+  rediscover();
+  rediscoverBeforePaint();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => { rediscover(); rediscoverBeforePaint(); }, { once: true });
   window.addEventListener("load", () => { rediscover(); rediscoverBeforePaint(); setTimeout(render, 3000); }, { once: true });
   // SPA navigations can load route stylesheets and occasionally rebuild <head>.
