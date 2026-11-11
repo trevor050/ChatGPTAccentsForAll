@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  contrastRatio, ensureContrast, hexToHsv, hexToOklch, hsvToHex, normalizeHex, oklchToHex, onColor, parseColor, toHex,
+  contrastRatio, ensureContrast, hexToOklch, normalizeHex, oklchToHex, onColor, parseColor, toHex,
 } from "../src/lib/color.js";
 
 describe("parseColor", () => {
@@ -84,11 +84,5 @@ describe("ensureContrast", () => {
     const out = ensureContrast("#7aa7ff", ["#ffffff", "#edf3fe"], 4.5);
     expect(contrastRatio(out, "#ffffff")).toBeGreaterThanOrEqual(4.5);
     expect(contrastRatio(out, "#edf3fe")).toBeGreaterThanOrEqual(4.5);
-  });
-});
-
-describe("HSV", () => {
-  it.each(["#3566f0", "#000000", "#ffffff", "#e11d48", "#808080"])("%s round trips", (hex) => {
-    expect(hsvToHex(hexToHsv(hex))).toBe(hex);
   });
 });

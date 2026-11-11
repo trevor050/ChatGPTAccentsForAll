@@ -30,8 +30,7 @@ html, body { height: 100%; }
 body {
   font: 13.5px "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
   margin: 0;
-  width: 352px;
-  box-sizing: border-box;
+  width: 352px; /* plus 14px padding each side: the popup is 380px wide, as in 1.x */
   padding: 14px;
   color: CanvasText;
   /* Non-repeating, full-bleed subtle gradient over the system canvas */
@@ -122,7 +121,7 @@ html[data-native-picker="off"] input[type="color"]:focus-visible { outline: none
 .msg.assistant .link { color: var(--p-text); font-weight: 600; }
 .msg.user { background: var(--p-bubble); color: var(--p-on-bubble); border: 1px solid color-mix(in oklab, var(--p-on-bubble) 12%, transparent); }
 .composer { display: flex; gap: 8px; justify-content: flex-end; padding-top: 6px; }
-.composer .secondary { background: transparent; color: var(--p-fg); border: 1px solid var(--p-line); padding: 6px 10px; border-radius: 8px; font-weight: 600; }
+.composer .secondary { background: transparent; color: var(--p-text); border: 1px solid color-mix(in oklab, var(--p-text) 55%, transparent); padding: 6px 10px; border-radius: 8px; font-weight: 600; }
 .composer .primary { background: var(--p-submit); color: var(--p-on-submit); border: 1px solid color-mix(in oklab, var(--p-on-submit) 16%, transparent); padding: 6px 10px; border-radius: 8px; font-weight: 700; }
 .note { margin-top: 6px; font-size: 11px; opacity: 0.7; }
 

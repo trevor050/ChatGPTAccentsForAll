@@ -4,13 +4,14 @@
 
 Store listing text:
 
-> Rebuilt for the current ChatGPT. Pick any accent color, with separate colors for light and dark mode, optional background tint, and automatic contrast fixes so text always stays readable. 16 presets plus your own saved favorites. Your previous color carries over automatically.
+> Rebuilt for the current ChatGPT, with the original popup back: 72 named themes in one click, or build your own with separate colors for the accent, message bubble, send button and page background. Text contrast is fixed automatically. Your previous theme carries over by name.
 
 - Works with ChatGPT's current design again (1.x stopped working after ChatGPT's redesign).
-- Any color via a new picker, separate light/dark accents, background tint slider.
-- Text colors are checked against WCAG contrast and adjusted automatically.
-- Live preview in the popup and in open ChatGPT tabs.
-- Settings from 1.x migrate automatically, including saved themes.
+- The 1.x popup is back: Basic (themes) and Advanced (live preview, five core colors, surfaces, saved themes), with the same themes and colors.
+- Each theme sets its accent, bubble, bubble text, send button and send button text independently.
+- Text colors are checked against WCAG contrast and adjusted only when a pair would be unreadable.
+- Page backgrounds (Dark, Light, Custom, or a theme's own) work in both modes without forcing a dark page into light mode.
+- Settings from 1.x migrate automatically: the theme you picked comes back under the same name, saved themes included.
 - Firefox build (not yet on addons.mozilla.org).
 - No remote fonts or network requests (1.x loaded Google Fonts in the popup).
 

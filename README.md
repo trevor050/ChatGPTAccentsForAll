@@ -1,28 +1,37 @@
 ## ChatGPT Accents For All
 
-A browser extension that lets you give ChatGPT any accent color you want. Not a menu of five. Any color, one for light mode and one for dark mode, and it fixes the text contrast for you so you can't accidentally make your chats unreadable.
+A browser extension that themes ChatGPT. Click one of 72 named themes, or build your own: accent, message bubble, send button, even the page background. It checks the contrast for you, so you can't accidentally make your chats unreadable.
 
 I originally built this because I wanted the black accent and ChatGPT wanted 200 bucks a month for it. ChatGPT has since added its own accent setting, so this has a new job: everything the built-in setting doesn't do.
 
-| Crimson, light mode | Ocean, dark mode with tinted backgrounds |
-| --- | --- |
-| ![ChatGPT with a crimson accent in light mode](readme-imgs/crimson-light.png) | ![ChatGPT with a teal accent and teal-tinted backgrounds in dark mode](readme-imgs/ocean-dark.png) |
-| **Synthwave, dark mode** | **Mocha, light mode** |
-| ![ChatGPT with a hot pink accent and magenta-tinted backgrounds](readme-imgs/synthwave-dark.png) | ![ChatGPT with a brown accent and warm-tinted backgrounds](readme-imgs/mocha-light.png) |
+| Default | Crimson, light mode | Ocean, dark mode |
+| --- | --- | --- |
+| ![Stock ChatGPT in light mode](readme-imgs/chatgpt-default-light.png) | ![ChatGPT with the Crimson theme in light mode](readme-imgs/crimson-light.png) | ![ChatGPT with the Ocean theme in dark mode: teal send button, deep teal page](readme-imgs/ocean-dark.png) |
+| **Synthwave, dark mode** | **Mocha, dark mode** | **Pastel Mint, light mode** |
+| ![ChatGPT with the Synthwave theme: dark purple bubble, hot pink send button](readme-imgs/synthwave-dark.png) | ![ChatGPT with the Mocha theme: warm brown page and bubble](readme-imgs/mocha-dark.png) | ![ChatGPT with the Pastel Mint theme: pale green page, green send button](readme-imgs/pastel-mint-light.png) |
 
-For comparison, here's [stock ChatGPT](readme-imgs/chatgpt-default-light.png). All of these are real screenshots of chatgpt.com with the extension loaded, taken by `scripts/screenshots.mjs`.
+Real screenshots of chatgpt.com with the extension loaded, taken by `scripts/screenshots.mjs`.
+
+### The popup
+
+| Basic | Basic, dark | Advanced | Advanced, dark |
+| --- | --- | --- | --- |
+| <img src="readme-imgs/popup-basic-light.png" alt="Basic tab: a two-column grid of named themes" width="190"> | <img src="readme-imgs/popup-basic-dark.png" alt="Basic tab in dark mode" width="190"> | <img src="readme-imgs/popup-advanced-light.png" alt="Advanced tab: live preview and the five-color core palette" width="190"> | <img src="readme-imgs/popup-advanced-dark.png" alt="Advanced tab in dark mode" width="190"> |
+
+**Basic** is the fast way. Every card is a complete look: an accent, a message bubble and its text, a send button and its arrow, and for some themes a whole page background. One click and ChatGPT changes. "Default" puts ChatGPT's own colors back.
+
+**Advanced** is for tinkering. A live preview (flip it between light and dark), the five core colors each with a color box and a hex field, a Surfaces choice, then *Apply*, *Reset* and *Surprise me*. Save the ones you like under a name. Edits show up in the preview right away and reach ChatGPT when you hit *Apply*.
+
+The little switch in the corner turns the colors on and off without forgetting your theme.
 
 ### What you get
 
-<img src="readme-imgs/popup-light.png" alt="The extension popup: live preview, preset swatches, color picker, background tint slider" width="316" align="right">
-
-- **Any color.** A proper picker plus a hex box, not a fixed list.
-- **Separate light and dark accents.** By default the dark one is derived for you (and stays visible on ChatGPT's dark background). Pick your own if you want something completely different at night.
-- **Readable no matter what.** Every text color the extension touches gets checked against WCAG contrast (4.5:1, or 7:1 if your OS asks for more contrast) and nudged lighter or darker until it passes. Pick neon yellow and the bubble text quietly turns into a readable dark gold.
-- **Tint backgrounds.** Optional slider that pulls the whole interface (page, sidebar, composer) toward your accent's hue without changing lightness, so contrast stays where ChatGPT put it.
-- **Presets + favorites.** 16 presets, including true black, plus a `+` button to save your own.
-- **Live preview.** Changes show up instantly in every open ChatGPT tab, and in a little preview inside the popup.
-- **Syncs** through your browser profile, so your colors follow you to your other computers.
+- **72 themes** with their original colors, from plain accents (Blue, Green, Pink) to full looks (Mocha, Ocean, Synthwave, Game Boy, Pastel Mint). Plus *Black*, the one I built this for.
+- **Every role is its own color.** Accent, bubble, bubble text, send button and send button text are chosen separately, so a theme can have a pink accent, an orange send button and a brown bubble. Leave a role empty and it's derived from the accent.
+- **Readable no matter what.** Bubble text is checked against its bubble (4.5:1, or 7:1 if your OS asks for more contrast) and the arrow on the send button against the button (3:1). A pair that already passes is left exactly as designed. A pair that doesn't gets nudged just enough: 7 of the 72 themes needed it (Game Boy's bubble text gets lighter, and the white arrow on the Mint, Pastel Mint, Pastel Peach, Soft Rose, Warm Sand and Frost buttons turns dark). The list is pinned in `test/roles.test.js`.
+- **Surfaces that can't wreck your eyes.** *Dark*, *Light* and *Custom* change ChatGPT's page, sidebar and composer. They never force a dark page onto light mode (dark text on a dark page was the old bug): a dark background reshapes dark mode and only lightly tints light mode, and a light one does the reverse. The popup says what each choice does.
+- **Live and synced.** Changes show up instantly in every open ChatGPT tab, and your themes follow your browser profile to your other computers.
+- **Works logged out.** The built-in accent setting doesn't.
 
 ### ChatGPT's own setting vs this
 
@@ -30,17 +39,17 @@ To be honest about it: if one of ChatGPT's built-in accents is good enough for y
 
 | | ChatGPT's accent setting | This extension |
 | --- | --- | --- |
-| Colors | A fixed set of presets | Any color |
-| Light and dark | Same preset in both | Separate accents per mode |
-| Backgrounds | Neutral grey only | Optional accent tint |
-| Contrast | Tuned by OpenAI for its presets | Computed and fixed for whatever you pick |
+| Colors | A fixed set of presets | 72 themes or any colors you pick |
+| Parts | One accent | Accent, bubble, bubble text, send button, send button text |
+| Backgrounds | Neutral grey only | Themes can reshape or tint them |
+| Contrast | Tuned by OpenAI for its presets | Checked and fixed for whatever you pick |
 | Logged out | No accent option | Works |
 | Phone apps | Yes | No, desktop browsers only |
 | Can break when ChatGPT updates | No | Yes (see below) |
 
 ### What it changes
 
-Colors only. It recolors ChatGPT's accent (send button, toggles, your message bubble and its text, accent-colored text) and, if you turn on the tint, the grey surfaces and borders. It never touches the layout, never reads your chats, and never adds anything to the page except one `<style>` tag.
+Colors only. It recolors ChatGPT's accent (send button, toggles, your message bubble and its text, accent-colored text) and, when a theme or Surfaces choice has its own background, the grey surfaces and borders. It never touches the layout, never reads your chats, and never adds anything to the page except one `<style>` tag.
 
 ### Install
 
@@ -63,18 +72,18 @@ Then open `chrome://extensions`, turn on Developer mode, click *Load unpacked* a
 
 ChatGPT's CSS is generated by StyleX, so its color variables have hashed names like `--x1e4keym` that can change whenever OpenAI ships. Instead of hardcoding those names, the extension reads ChatGPT's stylesheets and looks for the *shape* of its accent system: a group of theme classes (the ones ChatGPT's own accent picker switches between) that all override the same handful of variables with different hues. Once it finds them, it works out which variable is the button color, which is the bubble, which is text, and so on, from the colors themselves. Then it writes one stylesheet with slightly more specific selectors that wins over ChatGPT's.
 
-Your color is mapped onto ChatGPT's own blue palette in OKLCH, so a "very light bubble tint" stays a very light tint in your hue, and a "text color" stays dark enough to read. The last token map is cached, but it is validated against the current page before any colors are applied. If the styles are still loading, colors wait for discovery rather than risk applying stale overrides.
+A theme's colors go where their jobs are: the send button color replaces the button's fill, the bubble colors replace the bubble's background and text, and the accent is mapped onto ChatGPT's own blue palette in OKLCH for everything else, so accent text stays dark enough to read. Any role a theme leaves empty is derived from the accent the same way. A page background reshapes ChatGPT's greys while keeping their lightness steps (so text contrast barely moves). The last token map is cached, but it is validated against the current page before any colors are applied. If the styles are still loading, colors wait for discovery rather than risk applying stale overrides.
 
 If ChatGPT changes so much that nothing matches anymore, the extension simply does nothing and the popup tells you it couldn't find ChatGPT's colors. No half-broken page.
 
 ### Privacy
 
-No analytics, no network requests, no remote code. Your settings live in your browser's extension storage (synced through your browser profile if you have that on). Full policy: [PRIVACY.md](PRIVACY.md).
+No analytics, no network requests, no remote code. The popup's font (DM Sans, SIL Open Font License) is bundled, not loaded from Google. Your settings live in your browser's extension storage (synced through your browser profile if you have that on). Full policy: [PRIVACY.md](PRIVACY.md).
 
 ### Development
 
 ```sh
-npm test          # unit tests: color math, contrast, token discovery, v1 migration
+npm test          # unit tests: color math, contrast, token discovery, theme roles, migrations, the popup
 npm run lint      # eslint + Mozilla's web-ext linter
 npm run zip       # store-ready zips in dist/
 npm run watch     # rebuild on change
@@ -85,11 +94,12 @@ The token discovery is tested against a real snapshot of chatgpt.com's CSS in `t
 ```sh
 npx playwright install chromium # one-time browser download for the Chromium scripts
 npm run zip                    # the Firefox check installs the packaged zip
-node scripts/e2e-live.mjs       # Chromium: pick a color, reload, check it stuck
-node scripts/e2e-upgrade.mjs    # install v1.1.0, pick a theme, upgrade in place, check migration
+node scripts/e2e-live.mjs       # Chromium: pick a theme, reload, check it stuck
+node scripts/e2e-themes.mjs     # Chromium: 12 themes in light and dark, compares what the page painted
+node scripts/e2e-upgrade.mjs    # install v1.1.0, pick a theme, upgrade in place, check it comes back by name
 node scripts/e2e-firefox.mjs    # same idea in real Firefox (needs geckodriver)
 node scripts/screenshots.mjs    # regenerates the README screenshots
-node scripts/e2e-popup.mjs      # offline, headless popup keyboard/visibility checks
+node scripts/e2e-popup.mjs      # offline, headless: drives the popup with a keyboard
 ```
 
 For the Firefox check, install Firefox and put [geckodriver](https://github.com/mozilla/geckodriver/releases) on your `PATH` (`brew install geckodriver` on macOS). Windows and Linux use Selenium's installed-browser detection; set `FIREFOX_BIN` to test a different Firefox-compatible executable, such as Zen. These scripts always use fresh test profiles.

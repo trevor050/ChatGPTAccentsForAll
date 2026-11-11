@@ -195,28 +195,3 @@ export function ensureContrast(fg, bgs, min = 4.5) {
   }
   return best;
 }
-
-// --- HSV, for the popup's picker (h 0..360, s/v 0..1) ---
-
-export function hexToHsv(hex) {
-  const c = parseColor(hex);
-  if (!c) return null;
-  const max = Math.max(c.r, c.g, c.b), min = Math.min(c.r, c.g, c.b), d = max - min;
-  let h = 0;
-  if (d) {
-    if (max === c.r) h = ((c.g - c.b) / d) % 6;
-    else if (max === c.g) h = (c.b - c.r) / d + 2;
-    else h = (c.r - c.g) / d + 4;
-    h *= 60;
-    if (h < 0) h += 360;
-  }
-  return { h, s: max ? d / max : 0, v: max };
-}
-
-export function hsvToHex({ h, s, v }) {
-  const f = (n) => {
-    const k = (n + h / 60) % 6;
-    return v - v * s * Math.max(0, Math.min(k, 4 - k, 1));
-  };
-  return toHex({ r: f(5), g: f(3), b: f(1) });
-}
