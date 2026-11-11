@@ -5,7 +5,7 @@
 //    repaint if anything moved (ChatGPT ships hashed StyleX variable names).
 // 3. Repaint whenever settings change (popup edits arrive via storage.local).
 // Every step is wrapped so a ChatGPT redesign degrades to "no colours", never
-// to a broken page. No MutationObserver: stylesheet load events are enough.
+// to a broken page. A coalesced pre-paint check covers late sheet activation.
 import { buildCss } from "../lib/css.js";
 import { discoverTokens, sameDiscovery } from "../lib/discover.js";
 import { normalizeSettings } from "../lib/settings.js";
@@ -106,10 +106,14 @@ function rediscover() {
   }
 }
 
-let timer = 0;
-function scheduleRediscover(delay = 60) {
-  clearTimeout(timer);
-  timer = setTimeout(rediscover, delay);
+let beforePaintPending = false;
+function rediscoverBeforePaint() {
+  if (beforePaintPending) return;
+  beforePaintPending = true;
+  requestAnimationFrame(() => {
+    beforePaintPending = false;
+    rediscover();
+  });
 }
 
 async function start() {
@@ -119,17 +123,23 @@ async function start() {
   // Reading extension storage is asynchronous, so styles may already be ready.
   // Validate now rather than optimistically applying a potentially stale cache.
   rediscover();
+  rediscoverBeforePaint();
 
   // Stylesheet <link>s fire "load" (non-bubbling, so listen in capture phase).
   // Validate in this event, before rendering, instead of painting the site's
   // default accent for a debounce interval after a new stylesheet arrives.
   document.addEventListener("load", (e) => {
-    if (e.target?.tagName === "LINK" || e.target?.tagName === "STYLE") rediscover();
+    if (e.target?.tagName === "LINK" || e.target?.tagName === "STYLE") {
+      rediscover();
+      // A page's own target/bubble listener can activate a preloaded stylesheet
+      // after this capture listener. Check again before that sheet is painted.
+      rediscoverBeforePaint();
+    }
   }, true);
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", rediscover, { once: true });
-  window.addEventListener("load", () => { rediscover(); setTimeout(render, 3000); }, { once: true });
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => { rediscover(); rediscoverBeforePaint(); }, { once: true });
+  window.addEventListener("load", () => { rediscover(); rediscoverBeforePaint(); setTimeout(render, 3000); }, { once: true });
   // SPA navigations can load route stylesheets and occasionally rebuild <head>.
-  document.addEventListener("visibilitychange", () => { if (!document.hidden) { render(); scheduleRediscover(); } });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { rediscover(); rediscoverBeforePaint(); } });
 
   ext.storage.onChanged.addListener((changes, area) => {
     const next = area === "local" ? changes.live?.newValue : area === "sync" ? changes.settings?.newValue : null;

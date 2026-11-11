@@ -16,6 +16,7 @@ const cached = discoverTokens(fixture.rules);
 async function boot(rules, tokens = cached) {
   const local = { tokens, status: { ok: true } };
   const timers = new Map(), elements = new Map(), events = new Map();
+  const frames = [];
   let timerId = 0;
   const root = { dataset: {}, appendChild: (el) => { el.isConnected = true; elements.set(el.id, el); } };
   const document = {
@@ -40,9 +41,11 @@ async function boot(rules, tokens = cached) {
     writeLocal: async (patch) => Object.assign(local, patch),
     setTimeout: (fn) => { timers.set(++timerId, fn); return timerId; },
     clearTimeout: (id) => timers.delete(id),
+    requestAnimationFrame: (fn) => { frames.push(fn); return frames.length; },
   });
   const flush = () => { const pending = [...timers.values()]; timers.clear(); pending.forEach((fn) => fn()); };
-  return { local, setRules, flush, load: () => events.get("load")({ target: { tagName: "LINK" } }), css: () => elements.get("chatgpt-accents-for-all")?.textContent || "" };
+  const paint = () => { const pending = frames.splice(0); pending.forEach((fn) => fn()); };
+  return { local, setRules, flush, paint, load: () => events.get("load")({ target: { tagName: "LINK" } }), css: () => elements.get("chatgpt-accents-for-all")?.textContent || "" };
 }
 
 describe("content script fails closed when ChatGPT changes", () => {
@@ -86,5 +89,20 @@ describe("content script fails closed when ChatGPT changes", () => {
     page.setRules(fixture.rules);
     page.load();
     expect(page.css()).toContain("#e11d48");
+  });
+  it("catches CSS activated by a page handler after our capture-phase load listener", async () => {
+    const page = await boot([]);
+    page.load();
+    // A preload's own onload handler activates the sheet after capture listeners.
+    page.setRules(fixture.rules);
+    page.paint();
+    expect(page.css()).toContain("#e11d48");
+  });
+  it("revalidates a changed stylesheet before painting a previously valid map", async () => {
+    const page = await boot(fixture.rules);
+    page.setRules([]);
+    page.paint();
+    expect(page.css()).toBe("");
+    expect(page.local.status.ok).toBe(false);
   });
 });
