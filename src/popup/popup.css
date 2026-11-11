@@ -60,6 +60,7 @@ button:focus-visible, input:focus-visible, .switch:has(input:focus-visible) .tra
 .switch input:checked + .track { background: var(--ring); border-color: transparent; }
 .switch input:checked + .track .knob { transform: translateX(14px); background: #fff; }
 
+.status .text-btn { display: inline; margin-left: 4px; padding: 0; border: 0; background: none; color: inherit; font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
 .status { margin: 0 0 12px; padding: 10px 12px; border-radius: 10px; font-size: 12px; line-height: 1.4; border: 1px solid color-mix(in oklab, #f59e0b 55%, transparent); background: color-mix(in oklab, #f59e0b 14%, transparent); }
 
 /* Stack that crossfades between sections */

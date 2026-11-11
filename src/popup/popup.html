@@ -19,7 +19,10 @@
       </label>
     </div>
 
-    <p id="status" class="status" role="status" hidden></p>
+    <div id="status" class="status" role="status" hidden>
+      <span id="statusText"></span>
+      <button id="copyDiagWarn" class="text-btn" type="button">Copy diagnostics</button>
+    </div>
 
     <div id="stack" class="stack">
       <div id="basic" class="section active" role="tabpanel" aria-labelledby="seg-basic">
@@ -78,6 +81,7 @@
               <button id="save" class="btn primary" type="button">Apply</button>
               <button id="reset" class="btn" type="button">Reset</button>
               <button id="random" class="btn" type="button">Surprise me</button>
+              <button id="copyDiag" class="btn" type="button" title="Copy a short report of what the extension found on ChatGPT (no messages, no account details)">Copy diagnostics</button>
               <span id="applied" class="applied" role="status"></span>
             </div>
           </div>

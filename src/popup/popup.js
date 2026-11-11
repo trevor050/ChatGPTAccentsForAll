@@ -1,8 +1,9 @@
 import { normalizeHex } from "../lib/color.js";
 import { MAX_SAVED, applyLook, applyTheme } from "../lib/settings.js";
-import { loadState, readLocal, writeLive, writeSaved, writeSettings } from "../lib/storage.js";
+import { ext, loadState, readLocal, writeLive, writeSaved, writeSettings } from "../lib/storage.js";
 import { applySurface, rolesFor, surfaceSpec } from "../lib/theme.js";
 import { DEFAULT_THEME, THEMES, backgroundTone, findTheme, themeLook } from "../lib/themes.js";
+import { formatDiagnostics } from "./diagnostics.js";
 import { DRAFT_DEFAULTS, draftFromSettings, lookFromDraft, nextGridIndex, nextTabIndex, previewSettings, surfaceNote } from "./model.js";
 
 const $ = (id) => document.getElementById(id);
@@ -376,13 +377,100 @@ $("enabled").addEventListener("change", (e) => {
 function render() {
   $("enabled").checked = state.settings.enabled;
   renderGrid();
+  if (document.body.dataset.ready) renderStatus();
 }
 
 // ---------------------------------------------------------------------------
 // Startup
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Status of the ChatGPT tab this popup belongs to
+// ---------------------------------------------------------------------------
+const ROLE_LABELS = { send: "send button", bubble: "message bubble" };
+
+/**
+ * Ask the active tab's content script how it is doing. Resolves to its status, or
+ * null when the active tab is not a ChatGPT page (or has not checked yet), in which
+ * case the popup says nothing rather than repeating another tab's result.
+ */
+function askActiveTab() {
+  return new Promise((resolve) => {
+    const done = (v) => { clearTimeout(timer); resolve(v); };
+    const timer = setTimeout(() => resolve(null), 600);
+    try {
+      ext.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const id = tabs?.[0]?.id;
+        if (id == null) return done(null);
+        ext.tabs.sendMessage(id, { type: "chatgpt-accents:status" }, (reply) => {
+          void ext.runtime?.lastError; // no content script in that tab
+          done(reply?.status ?? null);
+        });
+      });
+    } catch { done(null); }
+  });
+}
+
+const tabStatus = { status: null, source: "none" };
+
+async function refreshStatus() {
+  const live = await askActiveTab();
+  if (live) Object.assign(tabStatus, { status: live, source: "active-tab" });
+  else {
+    const { status } = await readLocal(["status"]);
+    Object.assign(tabStatus, { status: status || null, source: status ? "stored" : "none" });
+  }
+  renderStatus();
+}
+
+function renderStatus() {
+  const { status, source } = tabStatus;
+  let text = "";
+  // Only describe the ChatGPT tab this popup is attached to.
+  if (state.settings.enabled && source === "active-tab" && status && status.effect?.state !== "pending") {
+    if (!status.ok) text = "ChatGPT changed its styles, so colors are paused until the extension is updated.";
+    else if (status.reason === "partial") {
+      const missing = Object.entries(status.effect?.roles || {}).filter(([r, v]) => v === "fail" && ROLE_LABELS[r]).map(([r]) => ROLE_LABELS[r]);
+      text = `Some of this page isn't taking your colors yet${missing.length ? ` (${missing.join(", ")})` : ""}.`;
+    }
+  }
+  const box = $("status");
+  const wasHidden = box.hidden;
+  box.hidden = !text;
+  $("statusText").textContent = text;
+  if (wasHidden !== box.hidden) updateStackHeight();
+}
+
+async function copyDiagnostics(button) {
+  await refreshStatus().catch(() => {});
+  const text = formatDiagnostics({
+    version: ext.runtime?.getManifest?.().version ?? "?",
+    ua: navigator.userAgent,
+    settings: state.settings,
+    status: tabStatus.status,
+    source: tabStatus.source,
+  });
+  let ok = false;
+  try { await navigator.clipboard.writeText(text); ok = true; } catch {
+    // Fallback for browsers that refuse the async clipboard in extension popups.
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    try { ok = document.execCommand("copy"); } catch { /* clipboard unavailable */ }
+    area.remove();
+  }
+  const label = button.textContent;
+  button.textContent = ok ? "Copied" : "Copy failed";
+  setTimeout(() => { button.textContent = label; }, 1500);
+}
+$("copyDiag").addEventListener("click", (e) => copyDiagnostics(e.currentTarget));
+$("copyDiagWarn").addEventListener("click", (e) => copyDiagnostics(e.currentTarget));
+
 async function init() {
-  const [{ settings, saved }, { status }] = await Promise.all([loadState(), readLocal(["status"])]);
+  const { settings, saved } = await loadState();
   state.settings = settings;
   state.saved = saved;
   state.draft = draftFromSettings(settings, state.previewMode);
@@ -391,12 +479,11 @@ async function init() {
   renderSaved();
   render();
   setTab("basic");
-  // Only speak up when the last ChatGPT page load found nothing to recolour.
-  if (status && !status.ok && settings.enabled) {
-    $("status").hidden = false;
-    $("status").textContent = "ChatGPT changed its styles, so colors are paused until the extension is updated.";
-    updateStackHeight();
-  }
+  await refreshStatus().catch(() => {});
+  // A theme change repaints the tab, which re-checks and reports back.
+  ext.storage?.onChanged?.addListener((changes, area) => {
+    if (area === "local" && changes.status) refreshStatus().catch(() => {});
+  });
   document.body.dataset.ready = "true";
 }
 
