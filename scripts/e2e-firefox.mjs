@@ -60,10 +60,8 @@ try {
   await driver.switchTo().window(popupTab);
   await driver.wait(() => driver.executeScript("return Boolean(document.title && document.body?.children.length);"), 10_000,
     "Firefox did not load the extension resource document; inspect the browser console and package path.");
-  const status = await driver.executeAsyncScript("const done = arguments[0]; chrome.storage.local.get(['status', 'tokens'], done);");
-  check("discovery found accent tokens", status.status?.accentTokens > 5, JSON.stringify(status.status));
-  const t = status.tokens;
-  const fillVar = Object.entries(t.accent).find(([, v]) => v.kind === "color" && v.light === t.referenceFill && v.dark === t.referenceFill)?.[0];
+  const status = await driver.executeAsyncScript("const done = arguments[0]; chrome.storage.local.get(['status'], done);");
+  check("ChatGPT's theme variables recognised", status.status?.ok && (status.status.appVars > 5 || status.status.accentTokens > 5), JSON.stringify(status.status?.shell));
 
   // Advanced tab: type the send-button colour into its hex field (Firefox closes the popup for
   // the native picker, so the field is the control there), then Apply.
@@ -79,8 +77,9 @@ try {
   const popupHandle = await driver.getWindowHandle();
 
   await driver.switchTo().window(chatHandle);
-  const read = () => driver.executeScript(`return getComputedStyle(document.documentElement).getPropertyValue(${JSON.stringify(fillVar)}).trim();`);
-  const isOurs = (v) => /^#7c3aed$|^light-dark\(#7c3aed,/i.test(v);
+  // What the user sees: the composer's send/voice button colour.
+  const read = () => driver.executeScript(`const el = document.querySelector("[data-composer-voice-start], #composer-submit-button, [data-testid=send-button]"); return el ? getComputedStyle(el).backgroundColor : "";`);
+  const isOurs = (v) => v === "rgb(124, 58, 237)";
   check("popup Apply recolours the live page", isOurs(await read()), await read());
   await driver.navigate().refresh();
   await sleep(6000);

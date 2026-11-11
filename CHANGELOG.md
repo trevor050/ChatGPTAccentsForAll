@@ -14,6 +14,9 @@ Store listing text:
 - Settings from 1.x migrate automatically: the theme you picked comes back under the same name, saved themes included.
 - Firefox build (not yet on addons.mozilla.org).
 - No remote fonts or network requests (1.x loaded Google Fonts in the popup).
+- Works on today's ChatGPT, signed in and out: its new theme system (appearance presets such as Linear or Codex, light and dark) is recognised by variable name, including the send button and bubble overrides ChatGPT re-declares inside the composer.
+- Checks its own work: after recoloring, it confirms the bubble and send button really changed. If nothing did, it removes its colors and the popup says so, for the ChatGPT tab it is attached to.
+- "Copy diagnostics" (Advanced, and in the warning) copies a short report of what it found: no messages, no account details.
 
 ## 1.1.0 (2025-08-12)
 

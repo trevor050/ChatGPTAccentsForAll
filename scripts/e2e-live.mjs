@@ -14,7 +14,7 @@ const results = [];
 const check = (name, ok, detail = "") => { results.push({ name, ok, detail }); console.log(`${ok ? "PASS" : "FAIL"} ${name}${detail ? "  " + detail : ""}`); };
 
 // A fresh install every run (see launch.mjs for installed browsers and reused profiles).
-const { ctx, extId, close } = await launchWithExtension(extDir, { profileName: ".e2e-profile", viewport: { width: 1280, height: 800 } });
+const { ctx, extId, close } = await launchWithExtension(extDir, { profileName: ".e2e-profile", viewport: { width: 1280, height: 800 }, headless: process.env.ACCENTS_HEADLESS === "1" });
 try {
   const page = ctx.pages()[0] || await ctx.newPage();
   await page.goto("https://chatgpt.com/", { waitUntil: "domcontentloaded", timeout: 60_000 });
@@ -25,33 +25,38 @@ try {
   await popup.goto(`chrome-extension://${extId}/popup.html`);
   await popup.waitForSelector(".theme-card");
 
-  const status = await popup.evaluate(() => new Promise((r) => chrome.storage.local.get(["status", "tokens"], r)));
-  check("discovery found accent tokens", status.status?.accentTokens > 5, JSON.stringify(status.status));
-  const tokens = status.tokens;
-  const fillVar = Object.entries(tokens.accent).find(([, t]) => t.kind === "color" && t.light === tokens.referenceFill && t.dark === tokens.referenceFill)?.[0];
-  check("reference fill token identified", Boolean(fillVar), `${fillVar} = ${tokens.referenceFill}`);
+  const status = await popup.evaluate(() => new Promise((r) => chrome.storage.local.get(["status"], r)));
+  check("ChatGPT's theme variables recognised", status.status?.ok && (status.status.appVars > 5 || status.status.accentTokens > 5), JSON.stringify({ shell: status.status?.shell, appVars: status.status?.appVars, accentTokens: status.status?.accentTokens }));
 
-  const read = (name) => page.evaluate((n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim(), name);
-  const before = await read(fillVar);
+  // What the user sees: the composer's send/voice button colour.
+  const sendColor = () => page.evaluate(() => {
+    const el = document.querySelector("[data-composer-voice-start], #composer-submit-button, [data-testid=send-button]");
+    return el ? getComputedStyle(el).backgroundColor : "";
+  });
+  const before = await sendColor();
 
-  // Click a named theme: its send-button colour becomes the page's accent fill.
+  // Click a named theme: its send-button colour lands on the page.
   await popup.locator('.theme-card[data-id="crimson"]').click();
   await page.waitForTimeout(800);
-  const after = await read(fillVar);
-  check("clicking a theme recolours the live page", /b91c1c/i.test(after), `${before} -> ${after}`);
+  check("clicking a theme recolours the live page", (await sendColor()) === "rgb(185, 28, 28)", `${before} -> ${await sendColor()}`);
+
+  // The effect check runs ~1 s after painting and must confirm it.
+  await page.waitForTimeout(2500);
+  const after = await popup.evaluate(() => new Promise((r) => chrome.storage.local.get(["status"], r)));
+  check("effect check confirms the colours took", after.status?.effect?.state === "pass", JSON.stringify(after.status?.effect?.roles));
 
   // Reload the ChatGPT tab: colour must persist (and be painted from cache at document_start).
   await page.reload({ waitUntil: "domcontentloaded" });
-  const early = await read(fillVar).catch(() => "");
+  const early = await page.evaluate(() => document.getElementById("chatgpt-accents-for-all")?.getAttribute("data-early") ?? "none").catch(() => "");
   await page.waitForTimeout(3000);
-  check("colour persists across reload", /b91c1c/i.test(await read(fillVar)), `at DOMContentLoaded: "${early}"`);
+  check("colour persists across reload", (await sendColor()) === "rgb(185, 28, 28)", `early paint at ${early} ms`);
 
   // Advanced: make a custom theme, apply it.
   await popup.click("#seg-advanced");
   await popup.fill("#submitBgHex", "#7c3aed");
   await popup.click("#save");
   await page.waitForTimeout(800);
-  check("Advanced Apply recolours the live page", /7c3aed/i.test(await read(fillVar)), await read(fillVar));
+  check("Advanced Apply recolours the live page", (await sendColor()) === "rgb(124, 58, 237)", await sendColor());
   await popup.click("#seg-basic");
 
   const stored = await popup.evaluate(() => new Promise((r) => chrome.storage.sync.get(["settings"], r)));
@@ -60,7 +65,7 @@ try {
   // Turning it off restores ChatGPT's own value.
   await popup.click(".switch");
   await page.waitForTimeout(600);
-  check("switch off restores ChatGPT default", (await read(fillVar)) === before, await read(fillVar));
+  check("switch off restores ChatGPT default", (await sendColor()) === before, await sendColor());
   await popup.click(".switch");
   await page.waitForTimeout(600);
 
