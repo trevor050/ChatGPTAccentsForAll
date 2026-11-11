@@ -65,7 +65,7 @@ try {
 
   // Advanced tab: type the send-button colour into its hex field (Firefox closes the popup for
   // the native picker, so the field is the control there), then Apply.
-  await driver.findElement(By.id("seg-advanced")).click();
+  await driver.findElement(By.id("openCustomize")).click();
   await sleep(400);
   const hex = await driver.findElement(By.id("submitBgHex"));
   await hex.click();

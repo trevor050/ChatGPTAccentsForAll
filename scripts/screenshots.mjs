@@ -1,6 +1,7 @@
 // Captures the README screenshots from the real chatgpt.com (logged out) with the
 // built extension loaded. Needs a visible browser. Usage: npm run build && node scripts/screenshots.mjs
 import { launchWithExtension } from "./launch.mjs";
+import { pickTheme } from "./popup-helpers.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -49,7 +50,7 @@ await popup.goto(`chrome-extension://${extId}/popup.html`);
 await popup.locator("body[data-ready]").waitFor({ state: "attached" });
 
 for (const shot of SHOTS) {
-  await popup.locator(`.theme-card[data-id="${shot.theme}"]`).click();
+  await pickTheme(popup, shot.theme);
   await page.bringToFront();
   await page.emulateMedia({ colorScheme: shot.scheme });
   await page.waitForTimeout(1200);
@@ -59,14 +60,14 @@ for (const shot of SHOTS) {
 }
 
 // The popup itself (Chrome shows it at most 600px tall), Basic and Advanced, in both schemes.
-await popup.locator(`.theme-card[data-id="${POPUP_THEME}"]`).click();
+await pickTheme(popup, POPUP_THEME);
 for (const scheme of ["light", "dark"]) {
   await popup.emulateMedia({ colorScheme: scheme });
   await popup.reload();
   await popup.locator("body[data-ready]").waitFor({ state: "attached" });
   await popup.waitForTimeout(400);
   await popup.screenshot({ path: path.join(out, `popup-basic-${scheme}.png`) });
-  await popup.click("#seg-advanced");
+  await popup.click("#openCustomize");
   await popup.waitForTimeout(500);
   await popup.screenshot({ path: path.join(out, `popup-advanced-${scheme}.png`) });
   console.log(`wrote popup-basic-${scheme}.png, popup-advanced-${scheme}.png`);

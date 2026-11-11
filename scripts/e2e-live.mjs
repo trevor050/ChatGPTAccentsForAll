@@ -2,6 +2,7 @@
 // it needs a visible browser window (Cloudflare challenges headless Chromium).
 // Usage: npm run build && node scripts/e2e-live.mjs [--shots dir]
 import { launchWithExtension } from "./launch.mjs";
+import { pickTheme } from "./popup-helpers.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -23,7 +24,7 @@ try {
 
   const popup = await ctx.newPage();
   await popup.goto(`chrome-extension://${extId}/popup.html`);
-  await popup.waitForSelector(".theme-card");
+  await popup.waitForSelector(".theme");
 
   const status = await popup.evaluate(() => new Promise((r) => chrome.storage.local.get(["status"], r)));
   check("ChatGPT's theme variables recognised", status.status?.ok && (status.status.appVars > 5 || status.status.accentTokens > 5), JSON.stringify({ shell: status.status?.shell, appVars: status.status?.appVars, accentTokens: status.status?.accentTokens }));
@@ -36,7 +37,7 @@ try {
   const before = await sendColor();
 
   // Click a named theme: its send-button colour lands on the page.
-  await popup.locator('.theme-card[data-id="crimson"]').click();
+  await pickTheme(popup, "crimson");
   await page.waitForTimeout(800);
   check("clicking a theme recolours the live page", (await sendColor()) === "rgb(185, 28, 28)", `${before} -> ${await sendColor()}`);
 
@@ -52,12 +53,12 @@ try {
   check("colour persists across reload", (await sendColor()) === "rgb(185, 28, 28)", `early paint at ${early} ms`);
 
   // Advanced: make a custom theme, apply it.
-  await popup.click("#seg-advanced");
+  await popup.click("#openCustomize");
   await popup.fill("#submitBgHex", "#7c3aed");
   await popup.click("#save");
   await page.waitForTimeout(800);
   check("Advanced Apply recolours the live page", (await sendColor()) === "rgb(124, 58, 237)", await sendColor());
-  await popup.click("#seg-basic");
+  await popup.click("#back");
 
   const stored = await popup.evaluate(() => new Promise((r) => chrome.storage.sync.get(["settings"], r)));
   check("settings saved to storage.sync", stored.settings?.theme === "custom" && stored.settings?.roles?.submitBg === "#7c3aed", JSON.stringify(stored.settings));

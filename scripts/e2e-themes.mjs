@@ -5,6 +5,7 @@
 // Needs a visible browser (Cloudflare challenges headless). Not run in CI.
 // Usage: npm run build && node scripts/e2e-themes.mjs [--shots dir] [theme-id ...]
 import { launchWithExtension } from "./launch.mjs";
+import { pickTheme } from "./popup-helpers.mjs";
 import { contrastRatio, parseColor, toHex } from "../src/lib/color.js";
 import { applyTheme, DEFAULT_SETTINGS, normalizeSettings } from "../src/lib/settings.js";
 import { rolesFor } from "../src/lib/theme.js";
@@ -18,7 +19,7 @@ const args = process.argv.slice(2);
 const shotsArg = args.indexOf("--shots");
 const shots = shotsArg >= 0 ? path.resolve(args[shotsArg + 1]) : null;
 const ids = args.filter((a, i) => !a.startsWith("--") && args[i - 1] !== "--shots");
-const THEMES = ids.length ? ids : ["blue", "crimson", "sunset", "mocha", "ocean", "midnight", "synthwave", "black_bg", "gameboy", "pastel_mint", "frost", "cream"];
+const THEMES = ids.length ? ids : ["blue", "crimson", "purple_plus", "mocha", "ocean", "midnight", "synthwave", "amber", "gameboy", "pastel_mint", "nord", "cream"];
 if (shots) fs.mkdirSync(shots, { recursive: true });
 
 let failed = 0;
@@ -66,7 +67,7 @@ try {
 
   for (const id of THEMES) {
     const theme = themeById(id);
-    await popup.locator(`.theme-card[data-id="${id}"]`).click();
+    await pickTheme(popup, id);
     for (const mode of ["light", "dark"]) {
       await page.bringToFront();
       await page.emulateMedia({ colorScheme: mode });
@@ -85,7 +86,7 @@ try {
 
   // Advanced: make a custom theme, save it, reload everything, find it again.
   await popup.bringToFront();
-  await popup.click("#seg-advanced");
+  await popup.click("#openCustomize");
   await popup.fill("#bubbleBgHex", "#223344");
   await popup.fill("#bubbleTextHex", "#ffeecc");
   await popup.fill("#submitBgHex", "#ff6600");
@@ -112,7 +113,7 @@ try {
   check("custom theme persists across a page reload", rgbHex(after.sendBg) === "#ff6600", rgbHex(after.sendBg));
   await popup.reload();
   await popup.locator("body[data-ready]").waitFor({ state: "attached" });
-  await popup.click("#seg-advanced");
+  await popup.click("#openCustomize");
   check("saved theme survives a popup reload", (await popup.locator(".saved-row .name").allTextContents()).includes("E2E custom"));
   check("applied colours survive a popup reload", (await popup.inputValue("#submitBgHex")) === "#ff6600");
   if (shots) {

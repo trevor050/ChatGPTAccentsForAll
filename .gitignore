@@ -9,3 +9,4 @@ coverage/
 # Local browser profiles and scratch from live checks
 .e2e-profile*/
 .probe/
+.directions/

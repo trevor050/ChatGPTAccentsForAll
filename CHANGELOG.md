@@ -4,10 +4,11 @@
 
 Store listing text:
 
-> Rebuilt for the current ChatGPT, with the original popup back: 72 named themes in one click, or build your own with separate colors for the accent, message bubble, send button and page background. Text contrast is fixed automatically. Your previous theme carries over by name.
+> Rebuilt for the current ChatGPT: 40 named themes in one click, or build your own with separate colors for the accent, message bubble, send button and page background. Text contrast is fixed automatically. Your previous theme carries over by name.
 
 - Works with ChatGPT's current design again (1.x stopped working after ChatGPT's redesign).
-- The 1.x popup is back: Basic (themes) and Advanced (live preview, five core colors, surfaces, saved themes), with the same themes and colors.
+- A calmer popup: themes in four short groups (Classic, Dark, Light, Characters), each drawn as a tiny chat in its colors, and a separate Customize view (live preview, five colors, page background, saved themes).
+- 40 themes instead of 72: near-duplicates merged, a few weak ones dropped, Nord and Amber CRT added, and every theme now passes its own contrast check. Anyone using a theme that was removed or recolored keeps its exact colors, saved under the old name.
 - Each theme sets its accent, bubble, bubble text, send button and send button text independently.
 - Text colors are checked against WCAG contrast and adjusted only when a pair would be unreadable.
 - Page backgrounds (Dark, Light, Custom, or a theme's own) work in both modes without forcing a dark page into light mode.

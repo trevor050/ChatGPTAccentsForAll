@@ -4,6 +4,7 @@
 // Usage: npm run build && node scripts/e2e-upgrade.mjs [v1-ref]
 import { execFileSync } from "node:child_process";
 import { launchWithExtension } from "./launch.mjs";
+import { pickTheme } from "./popup-helpers.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -22,7 +23,7 @@ let ok = true;
 let { ctx, extId, close } = await launch(true);
 let popup = await ctx.newPage();
 await popup.goto(`chrome-extension://${extId}/popup.html`);
-await popup.locator('.theme-card[data-id="ocean"]').click();
+await pickTheme(popup, "ocean");
 await popup.waitForTimeout(500);
 const v1 = await popup.evaluate(() => new Promise((r) => chrome.storage.sync.get(null, r)));
 console.log("v1 storage:", JSON.stringify(v1).slice(0, 160), "...");
@@ -48,7 +49,7 @@ pass("comes back as the same named theme", v2.settings?.theme === "ocean");
 pass("all five colours carried over", v2.settings?.roles?.bubbleBg === "#073642" && v2.settings?.roles?.submitBg === expectSubmit && v2.settings?.roles?.submitText === "#002b36");
 pass("background theme became a surface", v2.settings?.surface?.kind === "custom");
 pass("v1 keys cleaned up", !("themeVars" in v2));
-pass("popup shows that theme selected", await popup.locator('.theme-card[data-id="ocean"][aria-checked="true"]').count() === 1);
+pass("popup shows that theme selected", await popup.locator('.theme[data-id="ocean"][aria-checked="true"]').count() === 1);
 const fill = await page.evaluate(() => {
   const css = document.getElementById("chatgpt-accents-for-all")?.textContent || "";
   return css.includes("--x1e4keym") ? getComputedStyle(document.documentElement).getPropertyValue("--x1e4keym").trim() : css.slice(0, 80);
