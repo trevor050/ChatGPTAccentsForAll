@@ -14,12 +14,14 @@ const shotsArg = process.argv.indexOf("--shots");
 const shots = shotsArg > 0 ? path.resolve(process.argv[shotsArg + 1]) : null;
 const ADDON_ID = "chatgpt-accents-for-all@trevor050.github.io";
 const UUID = "5e7b2a1c-0000-4000-8000-00000000c0de";
-const binary = process.env.FIREFOX_BIN || "/Applications/Firefox.app/Contents/MacOS/firefox";
+// Let Selenium locate the installed Firefox on Windows/Linux. A macOS app
+// bundle path is not a valid fallback on either of those platforms.
+const binary = process.env.FIREFOX_BIN || (process.platform === "darwin" ? "/Applications/Firefox.app/Contents/MacOS/firefox" : null);
 
 const options = new firefox.Options()
-  .setBinary(binary)
   .setPreference("extensions.webextensions.uuids", JSON.stringify({ [ADDON_ID]: UUID }))
   .windowSize({ width: 1280, height: 860 });
+if (binary) options.setBinary(binary);
 // geckodriver must be told to allow chrome-context scripts (used to open the popup page).
 const service = new firefox.ServiceBuilder().addArguments("--allow-system-access");
 const driver = await new Builder().forBrowser("firefox").setFirefoxOptions(options).setFirefoxService(service).build();

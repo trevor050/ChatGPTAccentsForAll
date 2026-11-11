@@ -83,11 +83,16 @@ npm run watch     # rebuild on change
 The token discovery is tested against a real snapshot of chatgpt.com's CSS in `test/fixtures/`. There are also live checks that drive a real browser against chatgpt.com (they need a visible window, so they don't run in CI):
 
 ```sh
+npx playwright install chromium # one-time browser download for the Chromium scripts
+npm run zip                    # the Firefox check installs the packaged zip
 node scripts/e2e-live.mjs       # Chromium: pick a color, reload, check it stuck
 node scripts/e2e-upgrade.mjs    # install v1.1.0, pick a theme, upgrade in place, check migration
 node scripts/e2e-firefox.mjs    # same idea in real Firefox (needs geckodriver)
 node scripts/screenshots.mjs    # regenerates the README screenshots
+node scripts/e2e-popup.mjs      # offline, headless popup keyboard/visibility checks
 ```
+
+For the Firefox check, install Firefox and put [geckodriver](https://github.com/mozilla/geckodriver/releases) on your `PATH` (`brew install geckodriver` on macOS). Windows and Linux use Selenium's installed-browser detection; set `FIREFOX_BIN` to test a different Firefox-compatible executable, such as Zen. These scripts always use fresh test profiles.
 
 ### Contributing
 
