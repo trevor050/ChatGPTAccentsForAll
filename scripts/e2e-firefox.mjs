@@ -13,6 +13,7 @@ const { version } = JSON.parse(fs.readFileSync(path.join(root, "package.json"), 
 const xpi = path.join(root, `dist/chatgpt-accents-firefox-${version}.zip`);
 const shotsArg = process.argv.indexOf("--shots");
 const shots = shotsArg > 0 ? path.resolve(process.argv[shotsArg + 1]) : null;
+if (shots) fs.mkdirSync(shots, { recursive: true });
 const ADDON_ID = "chatgpt-accents-for-all@trevor050.github.io";
 // Let Selenium locate the installed Firefox on Windows/Linux. A macOS app
 // bundle path is not a valid fallback on either of those platforms.
