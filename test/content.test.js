@@ -2,8 +2,11 @@ import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import { describe, expect, it } from "vitest";
 import fixture from "./fixtures/chatgpt-2026-11-10.json" with { type: "json" };
-import { buildCss } from "../src/lib/css.js";
+import signedIn from "./fixtures/chatgpt-signed-in-2026-11-11.json" with { type: "json" };
+import { COMPONENT_VARS, discoverAppShell } from "../src/lib/appshell.js";
+import { buildPlan } from "../src/lib/css.js";
 import { discoverTokens, sameDiscovery } from "../src/lib/discover.js";
+import { COLOR_PROPS, judgeEffect, planProbes, sameColor, varRef } from "../src/lib/effect.js";
 import { normalizeSettings } from "../src/lib/settings.js";
 import { newest } from "../src/lib/storage.js";
 
@@ -13,7 +16,9 @@ const cached = discoverTokens(fixture.rules);
 
 // Run the actual content script with a minimal CSSOM/storage boundary. No browser
 // dependency: these regressions must also run in the normal CI unit suite.
-async function boot(rules, tokens = cached, { build = "prod-1", readyState = "complete", page = {}, waitForStorage = false } = {}) {
+// `dom` (optional) models the page for the effect check: { attrs, elements: [{ selector,
+// style: { prop: value } (computed with our sheet), base?: { prop: value } (without) }] }.
+async function boot(rules, tokens = cached, { build = "prod-1", readyState = "complete", page = {}, waitForStorage = false, dom = null, usageRules = [] } = {}) {
   const local = { tokens, status: { ok: true } };
   const localStorage = { getItem: (k) => page[k] ?? null, setItem: (k, v) => { page[k] = String(v); }, removeItem: (k) => { delete page[k]; } };
   let answer;
@@ -21,24 +26,41 @@ async function boot(rules, tokens = cached, { build = "prod-1", readyState = "co
   const timers = new Map(), elements = new Map(), events = new Map();
   const frames = [];
   let timerId = 0;
-  const root = { dataset: { build }, appendChild: (el) => { el.isConnected = true; elements.set(el.id, el); } };
+  const attrs = dom?.attrs || {};
+  const root = {
+    dataset: { build }, getAttribute: (n) => attrs[n] ?? null, classList: Object.assign([], { contains: () => false }),
+    appendChild: (el) => { el.isConnected = true; elements.set(el.id, el); },
+  };
+  let sheetDisabled = false;
   const document = {
     documentElement: root, head: root, readyState,
     styleSheets: [],
     getElementById: (id) => elements.get(id),
-    createElement: () => ({ isConnected: false, textContent: "", remove() { elements.delete(this.id); this.isConnected = false; } }),
+    createElement: () => ({
+      isConnected: false, textContent: "",
+      get sheet() { return { set disabled(v) { sheetDisabled = v; }, get disabled() { return sheetDisabled; } }; },
+      remove() { elements.delete(this.id); this.isConnected = false; },
+    }),
     addEventListener: (name, callback) => events.set(name, callback),
+    querySelectorAll: (sel) => (dom?.elements || []).filter((e) => e.selector === sel),
   };
-  const setRules = (next) => {
-    document.styleSheets = [{ cssRules: next.map(({ selector, decls }) => ({
-      selectorText: selector,
-      style: { length: Object.keys(decls).length, item: (i) => Object.keys(decls)[i], getPropertyValue: (name) => decls[name] || "" },
-    })) }];
-  };
+  // Computed style: an element shows `style` while our sheet is painted and enabled, else `base`.
+  const getComputedStyle = (el) => ({
+    getPropertyValue: (prop) => {
+      const ours = elements.get("chatgpt-accents-for-all")?.isConnected && !sheetDisabled;
+      return ((ours ? el.style : el.base ?? el.style)?.[prop]) ?? "";
+    },
+  });
+  const toSheet = (list) => ({ cssRules: list.map(({ selector, decls }) => ({
+    selectorText: selector,
+    style: { length: Object.keys(decls).length, item: (i) => Object.keys(decls)[i], getPropertyValue: (name) => decls[name] || "" },
+  })) });
+  const setRules = (next) => { document.styleSheets = [toSheet(next), toSheet(usageRules)]; };
   setRules(rules);
   const started = vm.runInNewContext(source, {
     document, window: { addEventListener() {} }, console, localStorage,
-    buildCss, discoverTokens, sameDiscovery, normalizeSettings, newest,
+    buildPlan, discoverTokens, sameDiscovery, normalizeSettings, newest,
+    COMPONENT_VARS, discoverAppShell, COLOR_PROPS, judgeEffect, planProbes, sameColor, varRef, getComputedStyle,
     ext: { storage: { onChanged: { addListener() {} } } },
     loadState: async () => { await storageAnswered; return { settings }; }, readLocal: async () => { await storageAnswered; return local; },
     writeLocal: async (patch) => Object.assign(local, patch),
@@ -50,7 +72,8 @@ async function boot(rules, tokens = cached, { build = "prod-1", readyState = "co
   const flush = () => { const pending = [...timers.values()]; timers.clear(); pending.forEach((fn) => fn()); };
   const paint = () => { const pending = frames.splice(0); pending.forEach((fn) => fn()); };
   const answerStorage = async () => { answer(); await started; await new Promise((r) => setImmediate(r)); };
-  return { local, page, document, answerStorage, setRules, flush, paint, load: () => events.get("load")({ target: { tagName: "LINK" } }), css: () => elements.get("chatgpt-accents-for-all")?.textContent || "" };
+  const ours = () => elements.get("chatgpt-accents-for-all");
+  return { ours, local, page, document, answerStorage, setRules, flush, paint, load: () => events.get("load")({ target: { tagName: "LINK" } }), css: () => elements.get("chatgpt-accents-for-all")?.textContent || "" };
 }
 
 describe("content script fails closed when ChatGPT changes", () => {
@@ -151,5 +174,54 @@ describe("content script paints before ChatGPT's first frame", () => {
     const page = await boot([], cached, { page: { [KEY]: JSON.stringify({ build: "prod-1", css: "EARLY" }) } });
     expect(page.css()).toBe("");
     expect(page.page[KEY]).toBeUndefined();
+  });
+});
+
+describe("effect check on signed-in ChatGPT", () => {
+  // Old shell's names still declared by a stylesheet, new shell in control: the
+  // exact situation in the owner's first signed-in report.
+  const legacyRules = signedIn.reconstructed.legacySheet;
+  const usages = [
+    { selector: ".bg-user-message", decls: { "background-color": "var(--color-background-user-message)" } },
+    { selector: ".bg-composer-primary", decls: { "background-color": "var(--color-background-composer-primary)" } },
+  ];
+  const stock = { "background-color": "rgb(96, 106, 204)" };
+  const run = async (page) => { for (let i = 0; i < 6; i++) page.flush(); };
+
+  it("pauses and reports when familiar names change nothing on the page", async () => {
+    const page = await boot(legacyRules, null, { usageRules: usages, dom: { elements: [{ selector: ".bg-composer-primary", style: stock, base: stock }, { selector: ".bg-user-message", style: { "background-color": "rgb(24, 26, 51)" }, base: { "background-color": "rgb(24, 26, 51)" } }] } });
+    expect(page.css()).toContain("--theme-user-msg-bg"); // painted first...
+    await run(page);
+    expect(page.css()).toBe(""); // ...then taken off
+    expect(page.local.status).toMatchObject({ ok: false, reason: "no-effect", shell: "legacy" });
+    expect(page.local.status.effect.state).toBe("fail");
+    expect(page.page["chatgpt-accents-for-all:paint"]).toBeUndefined();
+  });
+
+  it("keeps the colours and reports healthy when the bubble and send button change", async () => {
+    const rules = [...signedIn.rules, ...legacyRules];
+    const page = await boot(rules, null, {
+      usageRules: usages,
+      dom: {
+        attrs: signedIn.html,
+        elements: [
+          { selector: ".bg-composer-primary", style: { "background-color": "rgb(225, 29, 72)" }, base: stock },
+          { selector: ".bg-user-message", style: { "background-color": "rgb(253, 236, 240)" }, base: { "background-color": "rgb(24, 26, 51)" } },
+        ],
+      },
+    });
+    await run(page);
+    expect(page.css()).toContain("--color-background-composer-primary");
+    expect(page.local.status).toMatchObject({ ok: true, shell: "signed-in", reason: null });
+    expect(page.local.status.effect.state).toBe("pass");
+    expect(page.local.status.page).toMatchObject({ "data-appearance-preset": "linear", "data-theme": "dark" });
+    expect(JSON.stringify(page.local.status.page)).not.toMatch(/account|user-id/);
+  });
+
+  it("pauses when nothing on the page ever uses the overridden variables", async () => {
+    const page = await boot(signedIn.rules, null, { usageRules: usages, dom: { attrs: signedIn.html, elements: [] } });
+    await run(page);
+    expect(page.css()).toBe("");
+    expect(page.local.status.ok).toBe(false);
   });
 });

@@ -22,7 +22,13 @@ function fakeStorage(initial = {}) {
     set: (items, cb) => { Object.assign(data[name], structuredClone(items)); cb?.(); },
     remove: (keys, cb) => { for (const k of [].concat(keys)) delete data[name][k]; cb?.(); },
   });
-  return { data, chrome: { storage: { sync: area("sync"), local: area("local"), onChanged: { addListener() {} } } } };
+  // `initial.tab`: what the active tab's content script answers ({ status }), or
+  // undefined for a tab without one (not ChatGPT).
+  const tabs = {
+    query: (_q, cb) => cb([{ id: 7 }]),
+    sendMessage: (_id, _msg, cb) => cb(initial.tab),
+  };
+  return { data, chrome: { storage: { sync: area("sync"), local: area("local"), onChanged: { addListener() {} } }, tabs, runtime: { getManifest: () => ({ version: "9.9.9" }) } } };
 }
 
 /** Load the popup fresh against `storage`; resolves once it has rendered. */
@@ -287,20 +293,47 @@ describe("opening with 1.1.0 and 2.0.0 data", () => {
 });
 
 describe("paused warning", () => {
-  it("appears only when colors are on and the last page load found nothing", async () => {
-    const off = await openPopup(fakeStorage({ local: { status: { ok: false } } }));
-    expect(off.$("status").hidden).toBe(true);
-    const on = await openPopup(fakeStorage({
-      sync: { settings: { v: 3, enabled: true, light: "#e11d48", updatedAt: 1 } },
-      local: { status: { ok: false } },
-    }));
+  const ON = { sync: { settings: { v: 3, enabled: true, light: "#e11d48", updatedAt: 1 } } };
+  const failed = { ok: false, reason: "no-effect", effect: { state: "fail", roles: { send: "fail" } } };
+
+  it("describes the ChatGPT tab the popup is attached to", async () => {
+    const off = await openPopup(fakeStorage({ tab: { status: failed } }));
+    expect(off.$("status").hidden).toBe(true); // colors are off: nothing to warn about
+    const on = await openPopup(fakeStorage({ ...ON, tab: { status: failed } }));
     expect(on.$("status").hidden).toBe(false);
-    expect(on.$("status").textContent).toMatch(/paused/i);
+    expect(on.$("statusText").textContent).toMatch(/paused/i);
     expect(on.$("status").getAttribute("role")).toBe("status");
-    const fine = await openPopup(fakeStorage({
-      sync: { settings: { v: 3, enabled: true, light: "#e11d48", updatedAt: 1 } },
-      local: { status: { ok: true } },
-    }));
+    const fine = await openPopup(fakeStorage({ ...ON, tab: { status: { ok: true, effect: { state: "pass", roles: { send: "pass" } } } } }));
     expect(fine.$("status").hidden).toBe(true);
+  });
+
+  it("does not repeat another tab's result when the active tab is not ChatGPT", async () => {
+    // A popup opened as its own tab, or over any other site: no content script answers.
+    const page = await openPopup(fakeStorage({ ...ON, local: { status: failed } }));
+    expect(page.$("status").hidden).toBe(true);
+  });
+
+  it("stays quiet while the tab is still checking", async () => {
+    const page = await openPopup(fakeStorage({ ...ON, tab: { status: { ok: true, effect: { state: "pending" } } } }));
+    expect(page.$("status").hidden).toBe(true);
+  });
+
+  it("names the parts that did not take the colors", async () => {
+    const page = await openPopup(fakeStorage({ ...ON, tab: { status: { ok: true, reason: "partial", effect: { state: "partial", roles: { send: "fail", bubble: "pass" } } } } }));
+    expect(page.$("status").hidden).toBe(false);
+    expect(page.$("statusText").textContent).toMatch(/send button/);
+  });
+
+  it("copies a diagnostics report from the warning and from Advanced", async () => {
+    const writes = [];
+    Object.defineProperty(globalThis.navigator, "clipboard", { configurable: true, value: { writeText: async (t) => { writes.push(t); } } });
+    const page = await openPopup(fakeStorage({ ...ON, tab: { status: { ...failed, shell: "signed-in", page: { "data-appearance-preset": "linear" } } } }));
+    page.$("copyDiagWarn").click();
+    await vi.waitFor(() => expect(writes).toHaveLength(1));
+    expect(writes[0]).toMatch(/ChatGPT Accents 9\.9\.9 diagnostics/);
+    expect(writes[0]).toMatch(/status from: this ChatGPT tab/);
+    expect(writes[0]).toMatch(/data-appearance-preset=linear/);
+    page.$("copyDiag").click();
+    await vi.waitFor(() => expect(writes).toHaveLength(2));
   });
 });
