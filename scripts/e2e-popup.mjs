@@ -27,6 +27,12 @@ try {
   assert.equal(await page.locator("#tab-dark").getAttribute("aria-selected"), "true");
   assert.equal(await page.locator("#auto-row").isVisible(), true);
   console.log("PASS Auto is hidden in light mode and arrow navigation opens dark mode");
+  await page.getByRole("button", { name: "Crimson", exact: true }).focus();
+  await page.keyboard.press("Space");
+  assert.equal(await page.evaluate(() => document.activeElement?.getAttribute("aria-label")), "Crimson", "Choosing a preset must retain keyboard focus");
+  await page.keyboard.press("Tab");
+  assert.equal(await page.evaluate(() => document.activeElement?.getAttribute("aria-label")), "Orange");
+  console.log("PASS preset selection keeps focus and Tab continues to the next preset");
 } finally {
   await ctx.close();
   fs.rmSync(profile, { recursive: true, force: true });

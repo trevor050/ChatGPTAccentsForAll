@@ -104,6 +104,9 @@ function renderPicker() {
 
 function renderSwatches() {
   const list = $("swatches");
+  const buttons = [...list.querySelectorAll("button")];
+  const focusedIndex = buttons.indexOf(document.activeElement);
+  const focusedId = buttons[focusedIndex]?.dataset.swatchId;
   list.textContent = "";
   const s = state.settings;
   const matches = (item) => s.enabled && s.light === item.light && (s.dark || null) === (item.dark || null) && s.tint === item.tint;
@@ -113,6 +116,7 @@ function renderSwatches() {
     wrap.role = "listitem";
     const b = document.createElement("button");
     b.type = "button";
+    b.dataset.swatchId = item.id;
     b.className = "swatch" + (item.tint ? " tinted" : "");
     b.title = item.name;
     b.setAttribute("aria-label", item.name);
@@ -148,6 +152,7 @@ function renderSwatches() {
     wrap.role = "listitem";
     const add = document.createElement("button");
     add.type = "button";
+    add.dataset.swatchId = "save-current";
     add.className = "add";
     add.textContent = "+";
     add.title = "Save these colors";
@@ -155,6 +160,12 @@ function renderSwatches() {
     add.addEventListener("click", saveCurrent);
     wrap.append(add);
     list.append(wrap);
+  }
+  // Rendering replaces the buttons, including the one activated with Space.
+  // Keep the keyboard position; after removal, use its nearest surviving peer.
+  if (focusedIndex >= 0) {
+    const next = [...list.querySelectorAll("button")];
+    (next.find((b) => b.dataset.swatchId === focusedId) || next[Math.min(focusedIndex, next.length - 1)])?.focus({ preventScroll: true });
   }
 }
 
