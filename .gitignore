@@ -1,5 +1,12 @@
 # macOS
 .DS_Store
 
-# Node / tooling leftovers
-node_modules/ 
+# Tooling
+node_modules/
+dist/
+coverage/
+
+# Local browser profiles and scratch from live checks
+.e2e-profile*/
+.probe/
+.directions/

@@ -1,0 +1,149 @@
+/* DM Sans (SIL Open Font License, see fonts/OFL.txt), self-hosted: the popup makes no network requests. */
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: block;
+  src: url("fonts/DMSans-latin-wght.woff2") format("woff2");
+}
+
+/* Neutral chrome: the theme swatches are the only colour in the popup. */
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #18181b;
+  --muted: color-mix(in oklab, var(--fg) 55%, var(--bg));
+  --hush: color-mix(in oklab, var(--fg) 38%, var(--bg));
+  --line: color-mix(in oklab, var(--fg) 9%, var(--bg));
+  --wash: color-mix(in oklab, var(--fg) 5%, var(--bg));
+  --page: #f0f0f2; /* stands in for ChatGPT's page in theme chips that keep it */
+  --warn: #b45309;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --w: 360px;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #18181b; --fg: #ececef; --page: #2b2b30; --warn: #f5b25c; }
+}
+
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  margin: 0;
+  width: var(--w);
+  color: var(--fg);
+  background: var(--bg);
+  font: 400 13px/1.4 "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 1.5px solid var(--fg); outline-offset: 2px; border-radius: 6px; }
+
+/* Header */
+.top { display: flex; align-items: center; gap: 6px; height: 48px; padding: 0 16px; }
+.title { flex: 1; margin: 0; font-size: 14px; font-weight: 500; letter-spacing: -0.01em; }
+.title span { font-weight: 400; color: var(--muted); }
+.back { display: grid; place-items: center; width: 26px; height: 26px; margin-left: -6px; padding: 0; border: 0; border-radius: 6px; background: none; }
+.back svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.back:hover { background: var(--wash); }
+
+.switch { position: relative; display: inline-flex; cursor: pointer; }
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.switch .track { width: 30px; height: 18px; border-radius: 9px; background: var(--line); transition: background 0.2s var(--ease); position: relative; }
+.switch .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); box-shadow: 0 0 0 0.5px color-mix(in oklab, var(--fg) 20%, transparent); transition: transform 0.2s var(--ease); }
+.switch input:checked + .track { background: var(--fg); }
+.switch input:checked + .track::after { transform: translateX(12px); box-shadow: none; }
+.switch input:focus-visible + .track { outline: 1.5px solid var(--fg); outline-offset: 2px; }
+
+/* Status (paused / partly applied) */
+.status { margin: 0 16px 8px; font-size: 12px; line-height: 1.45; color: var(--warn); }
+.status .link { color: var(--fg); margin-left: 4px; }
+
+/* Text buttons */
+.link { padding: 0; border: 0; background: none; font-size: 12.5px; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.link:hover { text-decoration-color: currentColor; }
+.link.quiet { color: var(--muted); text-decoration: none; }
+.link.quiet:hover { color: var(--fg); }
+
+/* Group tabs */
+.tabs { display: flex; gap: 18px; padding: 0 16px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.tabs [role="tab"] { flex: none; padding: 6px 0 9px; border: 0; background: none; color: var(--muted); font-size: 12.5px; box-shadow: inset 0 -1.5px 0 transparent; transition: color 0.15s, box-shadow 0.15s; }
+.tabs [role="tab"]:hover { color: var(--fg); }
+.tabs [role="tab"][aria-selected="true"] { color: var(--fg); box-shadow: inset 0 -1.5px 0 var(--fg); }
+
+/* Theme lists: two columns, the chip and the name */
+.panels { min-height: var(--panel-h, 0px); padding: 8px; }
+.list { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 4px; }
+.theme { display: flex; align-items: center; gap: 10px; min-width: 0; height: 38px; padding: 0 8px; border: 0; border-radius: 8px; background: none; text-align: left; }
+.theme:hover { background: var(--wash); }
+.theme[aria-checked="true"] { background: var(--wash); font-weight: 500; }
+.theme .name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.theme .was { flex: none; margin-left: auto; font-size: 11px; font-weight: 400; color: var(--muted); }
+.theme .was s { text-decoration-thickness: 1px; }
+.empty { grid-column: 1 / -1; padding: 12px 8px; color: var(--muted); font-size: 12.5px; }
+
+/* A theme in miniature: its page, your bubble, the send button, an accent dot */
+.chip { position: relative; flex: none; width: 30px; height: 21px; border-radius: 6px; background: var(--chip-page, var(--page)); box-shadow: inset 0 0 0 0.5px color-mix(in oklab, var(--fg) 12%, transparent); }
+.chip i { position: absolute; display: block; }
+.chip .bubble { right: 4px; top: 4px; width: 15px; height: 6px; border-radius: 3px; background: var(--chip-bubble); }
+.chip .send { right: 4px; bottom: 3px; width: 6px; height: 6px; border-radius: 50%; background: var(--chip-send); }
+.chip .accent { left: 4px; top: 5px; width: 4px; height: 4px; border-radius: 50%; background: var(--chip-accent); }
+.chip.default { --chip-bubble: color-mix(in oklab, var(--fg) 22%, var(--page)); --chip-send: var(--fg); --chip-accent: var(--muted); }
+
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 46px; padding: 0 16px; border-top: 1px solid var(--line); }
+
+/* Customize */
+#customizeView { display: flex; flex-direction: column; }
+.scroll { max-height: 470px; overflow-y: auto; padding: 0 16px 8px; scrollbar-width: thin; }
+.preview-wrap { position: relative; }
+.mini-seg { position: absolute; right: 6px; top: 6px; z-index: 1; display: flex; gap: 2px; }
+.mini-seg button { padding: 3px 8px; border: 0; border-radius: 5px; background: none; font-size: 11px; color: var(--p-muted, var(--muted)); }
+.mini-seg button[aria-pressed="true"] { color: var(--p-fg, var(--fg)); background: color-mix(in oklab, var(--p-fg, var(--fg)) 10%, transparent); }
+.preview { display: flex; flex-direction: column; gap: 8px; padding: 34px 14px 14px; border-radius: 12px; background: var(--p-surface); color: var(--p-fg); box-shadow: inset 0 0 0 0.5px var(--p-line); transition: background 0.2s; }
+.preview p { margin: 0; font-size: 12.5px; }
+.preview .accent-word { color: var(--p-text); text-decoration: underline; text-underline-offset: 2px; }
+.preview .user { align-self: flex-end; max-width: 80%; padding: 6px 10px; border-radius: 14px; background: var(--p-bubble); color: var(--p-on-bubble); }
+.preview .composer { display: flex; align-items: center; justify-content: space-between; height: 34px; padding: 0 4px 0 12px; border-radius: 17px; box-shadow: inset 0 0 0 1px var(--p-line); color: var(--p-muted); font-size: 12px; }
+.preview .send { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--p-submit); }
+.preview .send svg { width: 14px; height: 14px; fill: none; stroke: var(--p-on-submit); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.note { margin: 6px 2px 0; min-height: 1.4em; font-size: 11.5px; color: var(--muted); }
+
+.fields { margin-top: 10px; }
+.field { display: flex; align-items: center; gap: 10px; height: 36px; }
+.field + .field { border-top: 1px solid var(--line); }
+.field label { flex: 1; }
+.field input[type="color"] { flex: none; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
+.field input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.field input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 50%; box-shadow: inset 0 0 0 0.5px color-mix(in oklab, var(--fg) 25%, transparent); }
+.field input[type="color"]::-moz-color-swatch { border: 0; border-radius: 50%; }
+.hex { width: 68px; padding: 5px 0 1px; line-height: 18px; border: 0; border-bottom: 1px solid transparent; background: none; font-variant-numeric: tabular-nums; font-size: 12.5px; color: var(--muted); }
+.hex:hover, .hex:focus { color: var(--fg); border-bottom-color: var(--line); outline: none; }
+.hex[aria-invalid="true"] { border-bottom-color: var(--warn); }
+.hidden { display: none !important; }
+html[data-native-picker="off"] .field input[type="color"] { pointer-events: none; }
+
+.block { margin-top: 16px; }
+.block h2 { margin: 0 0 6px; font-size: 11.5px; font-weight: 400; color: var(--muted); }
+.block .field { border-top: 1px solid var(--line); }
+.seg { display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--wash); }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { flex: 1; padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px; color: var(--muted); cursor: pointer; }
+.seg input:checked + label { background: var(--bg); color: var(--fg); box-shadow: 0 0 0 0.5px var(--line), 0 1px 2px rgb(0 0 0 / 6%); }
+.seg input:focus-visible + label { outline: 1.5px solid var(--fg); outline-offset: 1px; }
+
+.save-row { display: flex; align-items: center; gap: 10px; height: 34px; border-bottom: 1px solid var(--line); }
+.save-row .name { flex: 1; min-width: 0; padding: 4px 0; border: 0; background: none; outline: none; }
+.save-row .name::placeholder { color: var(--hush); }
+.saved-list .row { display: flex; align-items: center; gap: 10px; height: 34px; }
+.saved-list .row + .row { border-top: 1px solid var(--line); }
+.saved-list .row .label { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+.more { display: flex; gap: 16px; margin: 18px 0 4px; }
+.btn { height: 30px; padding: 0 16px; border: 0; border-radius: 8px; background: var(--fg); color: var(--bg); font-size: 12.5px; font-weight: 500; }
+.btn:hover { background: color-mix(in oklab, var(--fg) 86%, var(--bg)); }
+.applied { font-size: 12px; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

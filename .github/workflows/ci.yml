@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, dev]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npm run lint
+      - name: Package store zips
+        run: npm run zip
+      - uses: actions/upload-artifact@v7
+        with:
+          name: chatgpt-accents-${{ github.sha }}
+          path: dist/*.zip
+          if-no-files-found: error

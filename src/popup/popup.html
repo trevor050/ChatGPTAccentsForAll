@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>ChatGPT Accents</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="top">
+      <button id="back" class="back" type="button" aria-label="Back to themes" hidden>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" /></svg>
+      </button>
+      <h1 id="title" class="title">Accents <span>for ChatGPT</span></h1>
+      <label class="switch" title="Turn colors on or off">
+        <input id="enabled" type="checkbox" role="switch" aria-label="Apply colors on ChatGPT" />
+        <span class="track" aria-hidden="true"></span>
+      </label>
+    </header>
+
+    <div id="status" class="status" role="status" hidden>
+      <span id="statusText"></span>
+      <button id="copyDiagWarn" class="link" type="button">Copy diagnostics</button>
+    </div>
+
+    <!-- Themes: one group at a time -->
+    <main id="themesView" class="view">
+      <div id="groupTabs" class="tabs" role="tablist" aria-label="Theme groups"></div>
+      <div id="groupPanels" class="panels"></div>
+      <footer class="foot">
+        <button id="openCustomize" class="link" type="button">Customize</button>
+        <button id="random" class="link quiet" type="button">Surprise me</button>
+      </footer>
+    </main>
+
+    <!-- Customize -->
+    <main id="customizeView" class="view" hidden>
+      <div class="scroll">
+        <section class="preview-wrap" aria-label="Preview">
+          <div class="mini-seg" role="group" aria-label="Preview mode">
+            <button id="pv-light" type="button" aria-pressed="false">Light</button>
+            <button id="pv-dark" type="button" aria-pressed="false">Dark</button>
+          </div>
+          <div id="preview" class="preview" aria-hidden="true">
+            <p class="assistant">Links and accents use your <span class="accent-word">accent color</span>.</p>
+            <p class="user">This is your message bubble.</p>
+            <div class="composer"><span>Ask anything</span><i class="send"><svg viewBox="0 0 16 16"><path d="M8 12.5V4M4.5 7.5 8 4l3.5 3.5" /></svg></i></div>
+          </div>
+          <p id="surfaceNote" class="note"></p>
+        </section>
+
+        <section class="fields" aria-label="Colors">
+          <div class="field"><label for="accent">Accent</label><input id="accent" type="color" value="#66b5ff" /><input id="accentHex" class="hex" value="#66b5ff" aria-label="Accent hex" spellcheck="false" maxlength="7" /></div>
+          <div class="field"><label for="bubbleBg">Bubble</label><input id="bubbleBg" type="color" value="#003f7a" /><input id="bubbleBgHex" class="hex" value="#003f7a" aria-label="Bubble hex" spellcheck="false" maxlength="7" /></div>
+          <div class="field"><label for="bubbleText">Bubble text</label><input id="bubbleText" type="color" value="#f5faff" /><input id="bubbleTextHex" class="hex" value="#f5faff" aria-label="Bubble text hex" spellcheck="false" maxlength="7" /></div>
+          <div class="field"><label for="submitBg">Send button</label><input id="submitBg" type="color" value="#0169cc" /><input id="submitBgHex" class="hex" value="#0169cc" aria-label="Send button hex" spellcheck="false" maxlength="7" /></div>
+          <div class="field"><label for="submitText">Send icon</label><input id="submitText" type="color" value="#ffffff" /><input id="submitTextHex" class="hex" value="#ffffff" aria-label="Send icon hex" spellcheck="false" maxlength="7" /></div>
+        </section>
+
+        <section class="block" aria-labelledby="surfaceLabel">
+          <h2 id="surfaceLabel">Page</h2>
+          <div class="seg" role="radiogroup" aria-labelledby="surfaceLabel">
+            <input type="radio" id="surface-default" name="surfaceMode" value="default" checked /><label for="surface-default">ChatGPT's</label>
+            <input type="radio" id="surface-dark" name="surfaceMode" value="dark" /><label for="surface-dark">Dark</label>
+            <input type="radio" id="surface-light" name="surfaceMode" value="light" /><label for="surface-light">Light</label>
+            <input type="radio" id="surface-custom" name="surfaceMode" value="custom" /><label for="surface-custom">Custom</label>
+          </div>
+          <div id="customSurfaceRow" class="field hidden"><label for="surfaceColor">Page color</label><input id="surfaceColor" type="color" value="#0f0f10" /><input id="surfaceColorHex" class="hex" value="#0f0f10" aria-label="Page color hex" spellcheck="false" maxlength="7" /></div>
+        </section>
+
+        <section class="block" aria-labelledby="saveLabel">
+          <h2 id="saveLabel">Save as a theme</h2>
+          <div class="save-row">
+            <input id="saveName" class="name" placeholder="Name" maxlength="32" aria-labelledby="saveLabel" />
+            <button id="saveThemeBtn" class="link" type="button">Save</button>
+          </div>
+          <div id="savedList" class="saved-list"></div>
+        </section>
+
+        <p class="more">
+          <button id="reset" class="link quiet" type="button">Reset</button>
+          <button id="randomDraft" class="link quiet" type="button">Surprise me</button>
+          <button id="copyDiag" class="link quiet" type="button" title="Copy a short report of what the extension found on ChatGPT (no messages, no account details)">Copy diagnostics</button>
+        </p>
+      </div>
+      <footer class="foot">
+        <span id="applied" class="applied" role="status"></span>
+        <button id="save" class="btn" type="button">Apply</button>
+      </footer>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

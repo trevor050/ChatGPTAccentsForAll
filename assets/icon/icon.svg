@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- ChatGPT Accents icon, 128 grid. Rendered to 128/96/64/48 px by scripts/icons.mjs.
+       Artwork spans x 16-112 (Chrome Web Store: 96 px of art, 16 px transparent padding).
+       Band edges and body edges land on whole pixels at 48, 64 and 96 px. -->
+  <defs>
+    <path id="bubble" d="M40 24H88A24 24 0 0 1 112 48V104L86.4 88H40A24 24 0 0 1 16 64V48A24 24 0 0 1 40 24Z"/>
+    <clipPath id="clip"><use href="#bubble"/></clipPath>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0.25" stop-color="#fff" stop-opacity="0.14"/>
+      <stop offset="0.7" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="halo" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+  </defs>
+  <use href="#bubble" fill="#7479f2" opacity="0.32" filter="url(#halo)"/>
+  <g clip-path="url(#clip)">
+    <rect x="0" y="0" width="48" height="128" fill="#a9aeff"/>
+    <rect x="48" y="0" width="32" height="128" fill="#8288ff"/>
+    <rect x="80" y="0" width="48" height="128" fill="#5f63e6"/>
+    <rect x="0" y="0" width="128" height="128" fill="url(#sheen)"/>
+  </g>
+</svg>

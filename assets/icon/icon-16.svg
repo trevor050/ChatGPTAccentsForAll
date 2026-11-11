@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- 16 px toolbar icon. Drawn on its own pixel grid: 14x11 body, 3 px corners, 5/4/5 px bands. -->
+  <defs>
+    <clipPath id="clip"><path d="M4 1H12A3 3 0 0 1 15 4V15L11.5 12H4A3 3 0 0 1 1 9V4A3 3 0 0 1 4 1Z"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect x="0" y="0" width="6" height="16" fill="#a9aeff"/>
+    <rect x="6" y="0" width="4" height="16" fill="#8288ff"/>
+    <rect x="10" y="0" width="6" height="16" fill="#5f63e6"/>
+  </g>
+</svg>

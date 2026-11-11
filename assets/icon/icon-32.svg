@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- 32 px toolbar icon (2x toolbar). Drawn on its own pixel grid, not scaled from icon.svg. -->
+  <defs>
+    <clipPath id="clip"><path d="M8 4H24A6 6 0 0 1 30 10V29L23.5 24H8A6 6 0 0 1 2 18V10A6 6 0 0 1 8 4Z"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect x="0" y="0" width="11" height="32" fill="#a9aeff"/>
+    <rect x="11" y="0" width="10" height="32" fill="#8288ff"/>
+    <rect x="21" y="0" width="11" height="32" fill="#5f63e6"/>
+  </g>
+</svg>

@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT Accents For All",
+  "short_name": "Accents",
+  "version": "2.0.0",
+  "description": "Pick any accent color for ChatGPT, separately for light and dark mode, with automatic contrast fixes.",
+  "permissions": ["storage"],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "64": "icons/icon-64.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "ChatGPT Accents",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
