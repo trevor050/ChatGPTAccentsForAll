@@ -1,5 +1,6 @@
 // Captures the README screenshots from the real chatgpt.com (logged out) with the
 // built extension loaded. Needs a visible browser. Usage: npm run build && node scripts/screenshots.mjs
+import { assertCapture } from "./capture-check.mjs";
 import { launchWithExtension } from "./launch.mjs";
 import { pickTheme } from "./popup-helpers.mjs";
 import fs from "node:fs";
@@ -19,7 +20,6 @@ const SHOTS = [
   { file: "mocha-dark.png", scheme: "dark", theme: "mocha" },
   { file: "pastel-mint-light.png", scheme: "light", theme: "pastel_mint" },
 ];
-const POPUP_THEME = "pink"; // selected in the popup screenshots
 
 const { ctx, extId, close } = await launchWithExtension(extDir, { profileName: ".e2e-profile", viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2 });
 const page = ctx.pages()[0] || await ctx.newPage();
@@ -55,21 +55,11 @@ for (const shot of SHOTS) {
   await page.emulateMedia({ colorScheme: shot.scheme });
   await page.waitForTimeout(1200);
   await page.keyboard.press("Escape");
-  await page.screenshot({ path: path.join(out, shot.file) });
+  const png = await page.screenshot();
+  await assertCapture(ctx, png, { width: 1280, height: 800, scale: 2, name: shot.file });
+  fs.writeFileSync(path.join(out, shot.file), png);
   console.log("wrote", shot.file);
 }
 
-// The popup itself (Chrome shows it at most 600px tall), Basic and Advanced, in both schemes.
-await pickTheme(popup, POPUP_THEME);
-for (const scheme of ["light", "dark"]) {
-  await popup.emulateMedia({ colorScheme: scheme });
-  await popup.reload();
-  await popup.locator("body[data-ready]").waitFor({ state: "attached" });
-  await popup.waitForTimeout(400);
-  await popup.screenshot({ path: path.join(out, `popup-basic-${scheme}.png`) });
-  await popup.click("#openCustomize");
-  await popup.waitForTimeout(500);
-  await popup.screenshot({ path: path.join(out, `popup-advanced-${scheme}.png`) });
-  console.log(`wrote popup-basic-${scheme}.png, popup-advanced-${scheme}.png`);
-}
+// The popup's own screenshots come from scripts/popup-shots.mjs (offline, headless).
 await close();
